@@ -1,0 +1,61 @@
+body{
+  content: "";
+  background: url("../images/watermarkIE.png");
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
+  background-position: top;
+  
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;   
+}
+
+body .container.csf{width:86%;}
+.csf .col-sm-6{width:50%; float:left;}
+.label { padding: 4px 7px; 
+    	
+    border-top-color: ;
+    border-right-color: ;
+    border-bottom-color: ;
+    border-left-color: ;
+    border-top-width: medium;
+    border-right-width: medium;
+    border-bottom-width: medium;
+    border-left-width: medium;
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    position: relative;
+    zoom: 1;
+ }
+.martop20{margin-top:20px;}
+INPUT[type='text']{height:auto;}
+.row.homeshopper{clear:both;}
+.csf .homeshopper .spanRadio{margin-top:12px;}
+#bill_table .pad15{margin:3px 0px 3px 0px;padding:2px 4px 6px 8px;}
+.csf .homeshopper .input-xlarge, .csf .homeshopper .input-large, .csf .homeshopper .input-medium, .csf .shopper_delivered .right{padding:7px 5px 9px 5px;}
+.csf .HSStr .height{height:34px;}
+.csf .table > TBODY > TR > TD{padding-top:0px;}
+.open > .dropdown-menu{left:65.2%;}
+.csf #HSS SELECT{margin:0px; height:23px; padding:0px 0px 0px 4px;}
+/*.csf .homeshopper input, .csf .homeshopper select, .csf .homeshopper textarea{margin:0px; padding:0px;}*/
+.csf .homeshopper {width:75%;}
+.col-sm-4{width: 33.33%;}
+.col-sm-7{width: 61.33%; float: left; padding-left: 0px;}
+.shopper_delivered textarea{width: 500px;}
+.csf .addedinput{margin-top: 4px; background-color: transparent; padding-top: 0px;}
+.csf .addedtd{width: 34%; height: 17px;}
+.csf .marbot29{margin-bottom:29px; }
+
+.dashboard #recentRequests{margin-right: 15px;}
+.dashmenuCol, .dashmenu, .dashmenu .navbar-collapse, 
+    .dashmenu .container-fluid, .navbar-form{padding-right: 0px; margin-bottom: 0px;}
+.dashboard #searchForm input{padding: 5px; margin-top: 0px;} 
+.dashboard #searchForm .col-sm-6{width: 50%; float: left;}   
+.dashboard .col-md-4 {width: 33.33333333%; float: left;}
+.dashboard .col-md-3 {width: 25%; float: left; padding: 5px 0px 5px 5px;}
+.dashboard .col-md-12{width: 100%; padding: 5px 0px 5px 5px;}
+.dashbaord .col-md-6, .dashboard .OSO .col-md-6{width: 50%; padding: 5px 0px 5px 5px;}
