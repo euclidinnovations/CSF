@@ -7,20 +7,20 @@
 	<link href="../resources/css/bootstrap.css" rel="stylesheet">
 	<link href="../resources/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="../resources/css/style.css" rel="stylesheet">	
-<!--[if gte IE 8]>
-<link href="../resources/css/ie8-and-up.css" rel="stylesheet"  /></link>
-<![endif]-->
+	<!--[if gte IE 8]>
+	<link href="../resources/css/ie8-and-up.css" rel="stylesheet"  /></link>
+	<![endif]-->
 
-<link href="../resources/css/jquery-ui.css" rel="stylesheet">	
-<!-- <link href="../resources/css/chosen.css" rel="stylesheet"> -->
+	<link href="../resources/css/jquery-ui.css" rel="stylesheet">	
+	<!-- <link href="../resources/css/chosen.css" rel="stylesheet"> -->
 
-<script src="../resources/js/jquery-1.11.1.min.js"></script>
-<script src="../resources/js/bootstrap.min.js"></script>	
-<script src="../resources/js/jquery-ui.js"></script>
-<script src="../resources/js/jqueryDobPicker.js"></script>
-<script src="../resources/js/jquery.placeholder.js"></script>
-<script src="../resources/js/jquery.corner.js"></script>	
-<script src="../resources/js/siteJquery.js"></script>
+	<script src="../resources/js/jquery-1.11.1.min.js"></script>
+	<script src="../resources/js/bootstrap.min.js"></script>	
+	<script src="../resources/js/jquery-ui.js"></script>
+	<script src="../resources/js/jqueryDobPicker.js"></script>
+	<script src="../resources/js/jquery.placeholder.js"></script>
+	<script src="../resources/js/jquery.corner.js"></script>	
+	<script src="../resources/js/siteJquery.js"></script>
 </head>
 <body>    
 	<div class="container csf gtie8">
@@ -41,9 +41,9 @@
 			<h4>
 				<span class="label label-default left w100">VIC Card :</span><span class="custtext">41111111111</span>
 			</h4>
-			<h4>
+			<!-- <h4>
 				<span class="label label-default left w100">Address :</span><span class="custtext">13836, Ballantyne Meadows Drive, Charlotte, NC 28277</span>
-			</h4>
+			</h4> -->
 			<h4>
 				<span class="label label-default left w100">Phone # :</span><span class="custtext">(555)444-3333</span>
 			</h4>
@@ -61,7 +61,12 @@
 		</div>
 	</div> <!-- .col-sm-12 */ -->
 </div><!-- .row */ -->	
-<div class="row martop20">
+<div class="row dlvrdetails box-border-background pad10 floatnone martop20">
+	<div class="col-sm-12 nopad marbot10 marbot29">
+		<h5><div class="left">Special Instructions : </div><div class="font15 text-info left marleft15">I want my order to be delivered after 1week.</div></h5>
+	</div>
+</div>
+<div class="row">
 	<!-- <hr width=97.6% align=left> -->
 	<div class="col-sm-12">
 		<!-- <h3 class="success">Add out of stock items</h3> -->
@@ -192,11 +197,12 @@
 								</button>
 							</td>
 						</tr>
-						<tr id="tr6" class="outofstockrow">
-							<td colspan="3"><span class="title">Customer called and added item : </span><img src="../resources/images/plus24.png" id="addNewRow" /></td>
-						</tr>
+						
 					</tbody>
-				</table>				
+				</table>		
+				<div>
+					<span class="title marleft9">Add an additional item : </span><img src="../resources/images/plus24.png" id="addNewRow" />
+				</div>		
 			</div><!-- /.billing_items_div -->
 		</div>
 	</div><!-- /.col-sm-12 -->	
@@ -214,11 +220,7 @@
 		<h6 class="left nomar"><br>Please call us @ 555-555-1212 and let us know about your experience and how we can make it better!</h6>
 	</div>	
 </div>		
-<div class="row dlvrdetails box-border-background pad10">
-<div class="col-sm-12 nopad marbot10 marbot29">
-<h5><div class="left">Special Instructions : </div><div class="font15 text-info left marleft15">I want my order to be delivered after 1week.</div></h5>
-</div>
-</div> 
+ 
 <div class="row homeshopper">
 	<div class="col-sm-9" style="float:none;margin:0 auto;">
 		<div class="bs-example" data-example-id="simple-responsive-table">
@@ -322,7 +324,7 @@
 				<td colspan="2">Received : <input type="text" class="form-contorl input-large w202 martop10 height" name="couponReceived" value="N/A" /></td>                  
 			</tr>
 			<tr id="HStr11" class="HSStr">
-				<td class="valignmiddle toppad10">Additional Notes</td>
+				<td class="valignmiddle toppad10">Bulk Items</td>
 				<td colspan="3"><textarea class="input-xxlarge" name="notesspace">1. Ruffles potato chips&#13;&#10;2. Tropicana orange juice - no pulp
 				</textarea></td>                  
 			</tr>         

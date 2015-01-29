@@ -6,59 +6,37 @@
 	<title>Sign in Panel - Bootsnipp.com</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="../resources/css/bootstrap.min.css" rel="stylesheet">
-	<link href="../resources/css/style.css" rel="stylesheet">
+	<link href="../resources/css/bootstrap.css" rel="stylesheet">
+	<link href="../resources/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="../resources/css/style.css" rel="stylesheet">	
+	<!--[if gte IE 8]>
+	<link href="../resources/css/ie8-and-up.css" rel="stylesheet"  /></link>
+	<![endif]-->
 	<style type="text/css">
-		.panel-heading {
-			padding: 5px 15px;
-		}
-
-		.panel-footer {
-			padding: 1px 15px;
-			color: #A0A0A0;
-		}
-
-		.profile-img {
-			width: 96px;
-			height: 96px;
-			margin: 0 auto 10px;
-			display: block;
-			-moz-border-radius: 50%;
-			-webkit-border-radius: 50%;
-			border-radius: 50%;
-		}
-	</style>
-	<script src="../resources/js/jquery-1.11.1.min.js"></script>
-	<script src="../resources/js/bootstrap.min.js"></script>
-	<script src="../resources/js/siteJquery.js"></script>
-	<script>
-		$(document).ready(function(){ 
-			$("table.table tr").click(function(){				
-				// similar behavior as an HTTP redirect
-				window.location.replace("pages/csf.jsp");
-
-				// similar behavior as clicking on a link
-				window.location.href = "pages/csf.jsp";
-			});
-			$( ".top-profile" ).click(function() {				
-			  $( ".dropdown-menu" ).toggle( "slow", function() {
-			    // Animation complete.
-			  });
-			});
-		});
 		
-	</script>		
+	</style>
+	<link href="../resources/css/jquery-ui.css" rel="stylesheet">	
+	<!-- <link href="../resources/css/chosen.css" rel="stylesheet"> -->
+
+	<script src="../resources/js/jquery-1.11.1.min.js"></script>
+	<script src="../resources/js/bootstrap.min.js"></script>	
+	<script src="../resources/js/jquery-ui.js"></script>
+	<script src="../resources/js/jqueryDobPicker.js"></script>
+	<script src="../resources/js/jquery.placeholder.js"></script>
+	<script src="../resources/js/jquery.corner.js"></script>	
+	<script src="../resources/js/siteJquery.js"></script>		
 </head>
 <body>
-	<div class="container">
+	<div class="container dashboard">
 		<div class="row">
 			<div class="col-sm-12 nopad">
 				<div class="col-sm-12 nopad"><img src="../resources/images/logo.jpg" /><div class="profile-menu right">
 					 <div class="top-profile">
-					  	 <span class="glyphicon glyphicon-user" aria-hidden="true"><span class="uname">Matthew</span></span>
+					  	 <span class="usericon" aria-hidden="true"><span class="uname">Matthew</span></span>
 					  	 <ul class="dropdown-menu">
 								<!-- User image -->
 								<li class="user-header bg-light-blue">
-									<img src="../resources/images/avatar3.png" class="img-circle" alt="User Image">
+									<img src="../resources/images/avatar.png" class="img-circle" alt="User Image" />
 									<p>
 									Matthew Smithson<!--  - Businessman -->
 									<small>Member since Nov. 2012</small>
@@ -75,67 +53,121 @@
 								</li>
 						 </ul><!-- */ .dropdown-menu -->
 					 </div>								 					 							 
-					</div><!-- */ .profile-menu --></div>
+					</div><!-- */ .profile-menu -->
+				</div>
 			</div>
 			<div class="col-sm-12 dashmenuCol">
-			<div class="col-sm-12 dashmenu">
-					<nav class="navbar navbar-default">
-						<div class="container-fluid">
-							<!-- Brand and toggle get grouped for better mobile display -->
-							<div class="navbar-header">
-								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-									<span class="sr-only">Toggle navigation</span>
-									<span class="icon-bar"></span>
-									<span class="icon-bar"></span>
-									<span class="icon-bar"></span>
-								</button>      
-							</div>
-
-							<!-- Collect the nav links, forms, and other content for toggling -->
-							<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">								
-								<div class="col-sm-12">
-									<form class="navbar-form navbar-right" role="search">
-										<button type="submit" class="btn btn-success">Recent Requests</button>
-										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Search Orders">
-										</div>																		
-									</form>
-								</div>
-							</div><!-- /.navbar-collapse -->
-						</div><!-- /.container-fluid -->
-					</nav>
+				<div class="col-sm-12 dashmenu">					
+					<form id="searchForm" class="navbar-form navbar-right" role="search">
+						<a class="btn btn-info" id="recentRequests">Recent Requests</a>
+						<div class="row dropdown-menu col-sm-12">
+						  <div class="col-sm-6">
+						    <div class="input-group">
+						      <span class="input-group-btn">
+						        <button class="btn btn-default" type="button">Order ID</button>
+						      </span>
+						      <input type="text" class="form-control">
+						    </div><!-- /input-group -->
+						  </div><!-- /.col-lg-6 -->
+						  <div class="col-sm-6">
+						    <div class="input-group">
+						      <input type="text" class="form-control">
+						      <span class="input-group-btn">
+						        <button class="btn btn-default" type="button">Phone</button>
+						      </span>
+						    </div><!-- /input-group -->
+						  </div><!-- /.col-lg-6 -->
+						  <div class="col-sm-6 martop10">
+						    <div class="input-group">
+						      <span class="input-group-btn">
+						        <button class="btn btn-default" type="button">Last name</button>
+						      </span>
+						      <input type="text" class="form-control">
+						    </div><!-- /input-group -->
+						  </div><!-- /.col-lg-6 -->
+						  <div class="col-sm-6 martop10">
+						    <div class="input-group">
+						      <input type="text" class="form-control">
+						      <span class="input-group-btn">
+						        <button class="btn btn-default" type="button">VIC</button>
+						      </span>
+						    </div><!-- /input-group -->
+						  </div><!-- /.col-lg-6 -->
+						  <button type="submit" class="btn btn-success">Search</button>
+						</div><!-- /.row -->					 		
+					</form>
 				</div>
 			</div> 
-			<div class="row dashboard">
-				<div class="bs-example" data-example-id="table-within-panel">
-					<div class="panel panel-default" style="clear:both;">
-						<!-- Default panel contents -->
-						<div class="panel-heading">Outstanding Orders</div>
-						<!-- Table -->
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Order #</th>
-									<th>Time</th>            
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<th scope="row"><span class="spancenter">1</span></th>
-									<td>2.00 PM</td>
-								</tr>
-								<tr>
-									<th scope="row"><span class="spancenter">2</span></th>
-									<td>3.30 PM</td>
-								</tr>
-								<tr>
-									<th scope="row"><span class="spancenter">3</span></th>
-									<td>6.00 PM</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+			<div class="searchResults OSO">
+				<div class="row">
+			        <div class="col-md-12 f6 maintitle">Search results</div>			        
 				</div>
+				<div class="row header">
+			        <div class="col-md-3 ff bold title">Order ID</div>
+			        <div class="col-md-3 ff bold title">Last Name</div>
+			        <div class="col-md-3 ff bold title">Date/Time</div>
+			        <div class="col-md-3 ff bold title">Store</div>
+				</div>				
+				<div class="row data">
+			        <div class="col-md-3 f6">457845</div>
+			        <div class="col-md-3 f6">Larson</div>
+			        <div class="col-md-3 f6">1/25/15 @ 3.45PM</div>
+			        <div class="col-md-3 f6">ABC</div>
+				</div>
+				<div class="row data">
+			        <div class="col-md-3 ff">784512</div>
+			        <div class="col-md-3 ff">Clarke</div>
+			        <div class="col-md-3 ff">4/24/15 @ 11.11AM</div>
+			        <div class="col-md-3 ff">XMY</div>
+				</div>
+				<div class="row data">
+			        <div class="col-md-3 f6">457845</div>
+			        <div class="col-md-3 f6">Larson</div>
+			        <div class="col-md-3 f6">1/25/15 @ 3.45PM</div>
+			        <div class="col-md-3 f6">ABC</div>
+				</div>
+				<div class="row data">
+			        <div class="col-md-3 ff">784512</div>
+			        <div class="col-md-3 ff">Clarke</div>
+			        <div class="col-md-3 ff">4/24/15 @ 11.11AM</div>
+			        <div class="col-md-3 ff">XMY</div>
+				</div>				
+			</div>
+			<div class="blank_space"></div>
+			<div class="OSO">
+				<div class="row">
+			        <div class="col-md-12 f6 maintitle">Outstanding Orders</div>			        
+				</div>
+				<div class="row header">
+			        <div class="col-md-6 ff bold title">Order ID</div>
+			        
+			        <div class="col-md-6 ff bold title">Date/Time</div>
+			        
+				</div>				
+				<div class="row data">
+			        <div class="col-md-6 f6">457845</div>
+			        
+			        <div class="col-md-6 f6">1/25/15 @ 3.45PM</div>
+			        
+				</div>
+				<div class="row data">
+			        <div class="col-md-6 ff">784512</div>
+			        
+			        <div class="col-md-6 ff">4/24/15 @ 11.11AM</div>
+			        
+				</div>
+				<div class="row data">
+			        <div class="col-md-6 f6">457845</div>
+			        
+			        <div class="col-md-6 f6">1/25/15 @ 3.45PM</div>
+			        
+				</div>
+				<div class="row data">
+			        <div class="col-md-6 ff">784512</div>
+			        
+			        <div class="col-md-6 ff">4/24/15 @ 11.11AM</div>
+			        
+				</div>				
 			</div>
 		</body>
 		</html>
