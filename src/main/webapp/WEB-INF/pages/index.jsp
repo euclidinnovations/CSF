@@ -40,7 +40,7 @@
 						<strong> Sign in to continue</strong>
 					</div>
 					<div class="panel-body">
-						<form role="form" action="views/csf.jsp" method="GET">
+						<form method="POST" action="${pageContext.request.contextPath}/login">
 							<fieldset>
 <!-- 								<div class="row">
 									<div class="center-block">
@@ -55,7 +55,7 @@
 												<span class="input-group-addon">
 													<i class="glyphicon glyphicon-user"></i>
 												</span> 
-												<input class="form-control" placeholder="Username" name="loginname" type="text" autofocus>
+												<input class="form-control" placeholder="Username" name="loginname" type="text" autofocus="" path="userid">
 											</div>
 										</div>
 										<div class="form-group">
@@ -63,7 +63,7 @@
 												<span class="input-group-addon">
 													<i class="glyphicon glyphicon-lock"></i>
 												</span>
-												<input class="form-control" placeholder="Password" name="password" type="password" value="">
+												<input class="form-control" placeholder="Password" name="password" type="password" value="" >
 											</div>
 										</div>
 										<div class="form-group">

@@ -177,24 +177,41 @@ var itemCount = 2;
         
 
     /*DASHBORAD*/
-	    $("table.table tr").click(function(){				
+	    /*$("table.table tr").click(function(){				
 			// similar behavior as an HTTP redirect
 			window.location.replace("pages/csf.jsp");
 
 			// similar behavior as clicking on a link
 			window.location.href = "pages/csf.jsp";
-		});
-		$( ".top-profile" ).click(function() {				
-		  $( ".top-profile .dropdown-menu" ).toggle( "slow", function() {
-		    // Animation complete.
-		  });
+		});*/
+		$( ".top-profile" ).click(function() {			
+			
+			$( "#searchForm .dropdown-menu" ).hide();
+		  	$( ".top-profile .dropdown-menu" ).slideToggle( "slow", function() {
+		   	 // Animation complete.
+		  	});
+		  	//event.stopPropagation();
 		});
 
-		$("#recentRequests").click(function(){
-			$( "#searchForm .dropdown-menu" ).toggle( "slow", function() {
+		$("#doSearch").click(function(){
+			
+			$(".top-profile .dropdown-menu").hide();
+			$( "#searchForm .dropdown-menu" ).slideToggle( "slow", function() {
 		    	// Animation complete.
 		  	});
+		  	//event.stopPropagation();
 		});
+
+
+		$(document).click(function(e) {
+			//alert(e.target.id == "searchForm"+$(e.target).parents("#searchForm").size());
+	        if (!e.target.id == "searchForm" || !$(e.target).parents("#searchForm").size()) { 
+	           $( "#searchForm .dropdown-menu" ).hide("slow");
+	        }
+	        if (!e.target.id == "top-profile" || !$(e.target).parents("#top-profile").size()) { 
+	           $(".top-profile .dropdown-menu").hide("slow");
+	        }
+   	 	});
     /*DASHBOARD*/
 
 	});

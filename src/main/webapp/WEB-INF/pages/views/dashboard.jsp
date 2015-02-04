@@ -5,38 +5,38 @@
 	<!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
 	<title>Sign in Panel - Bootsnipp.com</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="../resources/css/bootstrap.min.css" rel="stylesheet">
-	<link href="../resources/css/bootstrap.css" rel="stylesheet">
-	<link href="../resources/css/bootstrap-responsive.css" rel="stylesheet">
-	<link href="../resources/css/style.css" rel="stylesheet">	
+	<link href="resources/css/bootstrap.min.css" rel="stylesheet">
+	<link href="resources/css/bootstrap.css" rel="stylesheet">
+	<link href="resources/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="resources/css/style.css" rel="stylesheet">	
 	<!--[if gte IE 8]>
 	<link href="../resources/css/ie8-and-up.css" rel="stylesheet"  /></link>
 	<![endif]-->
 	<style type="text/css">
 		
 	</style>
-	<link href="../resources/css/jquery-ui.css" rel="stylesheet">	
+	<link href="resources/css/jquery-ui.css" rel="stylesheet">	
 	<!-- <link href="../resources/css/chosen.css" rel="stylesheet"> -->
 
-	<script src="../resources/js/jquery-1.11.1.min.js"></script>
-	<script src="../resources/js/bootstrap.min.js"></script>	
-	<script src="../resources/js/jquery-ui.js"></script>
-	<script src="../resources/js/jqueryDobPicker.js"></script>
-	<script src="../resources/js/jquery.placeholder.js"></script>
-	<script src="../resources/js/jquery.corner.js"></script>	
-	<script src="../resources/js/siteJquery.js"></script>		
+	<script src="resources/js/jquery-1.11.1.min.js"></script>
+	<script src="resources/js/bootstrap.min.js"></script>	
+	<script src="resources/js/jquery-ui.js"></script>
+	<script src="resources/js/jqueryDobPicker.js"></script>
+	<script src="resources/js/jquery.placeholder.js"></script>
+	<script src="resources/js/jquery.corner.js"></script>	
+	<script src="resources/js/siteJquery.js"></script>		
 </head>
 <body>
 	<div class="container dashboard">
 		<div class="row">
 			<div class="col-sm-12 nopad">
-				<div class="col-sm-12 nopad"><img src="../resources/images/logo.jpg" /><div class="profile-menu right">
+				<div class="col-sm-12 nopad"><img src="resources/images/logo.jpg" /><div class="profile-menu right">
 					 <div class="top-profile">
 					  	 <span class="usericon" aria-hidden="true"><span class="uname">Matthew</span></span>
 					  	 <ul class="dropdown-menu">
 								<!-- User image -->
 								<li class="user-header bg-light-blue">
-									<img src="../resources/images/avatar.png" class="img-circle" alt="User Image" />
+									<img src="resources/images/avatar.png" class="img-circle" alt="User Image" />
 									<p>
 									Matthew Smithson<!--  - Businessman -->
 									<small>Member since Nov. 2012</small>
