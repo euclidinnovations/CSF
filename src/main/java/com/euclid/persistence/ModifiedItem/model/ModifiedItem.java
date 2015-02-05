@@ -20,10 +20,10 @@ public class ModifiedItem {
     private int orderId;
     
     @Column(name = "itemOrderedSKU")
-    private double itemOrderedSKU;
+    private String itemOrderedSKU;
  
     @Column(name = "itemRecievedSKU")
-    private double itemRecievedSKU;
+    private String itemRecievedSKU;
      
     @Column(name = "itemOrderedQty")
     private int itemOrderedQty;
@@ -54,28 +54,28 @@ public class ModifiedItem {
 
 
 
-	public double getItemOrderedSKU() {
+	public String getItemOrderedSKU() {
 		return itemOrderedSKU;
 	}
 
 
 
 
-	public void setItemOrderedSKU(double itemOrderedSKU) {
+	public void setItemOrderedSKU(String itemOrderedSKU) {
 		this.itemOrderedSKU = itemOrderedSKU;
 	}
 
 
 
 
-	public double getItemRecievedSKU() {
+	public String getItemRecievedSKU() {
 		return itemRecievedSKU;
 	}
 
 
 
 
-	public void setItemRecievedSKU(double itemRecievedSKU) {
+	public void setItemRecievedSKU(String itemRecievedSKU) {
 		this.itemRecievedSKU = itemRecievedSKU;
 	}
 

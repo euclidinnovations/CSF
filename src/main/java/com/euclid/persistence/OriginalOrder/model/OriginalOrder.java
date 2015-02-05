@@ -20,7 +20,7 @@ public class OriginalOrder {
     private int orderId;
     
     @Column(name = "SKU")
-    private double SKU;
+    private String SKU;
  
     @Column(name = "Qty")
     private int qty;
@@ -42,14 +42,14 @@ public class OriginalOrder {
 
 
 
-	public double getSKU() {
+	public String getSKU() {
 		return SKU;
 	}
 
 
 
-	public void setSKU(double sKU) {
-		SKU = sKU;
+	public void setSKU(String SKU) {
+		this.SKU = SKU;
 	}
 
 

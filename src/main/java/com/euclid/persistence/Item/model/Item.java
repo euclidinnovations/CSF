@@ -17,7 +17,7 @@ public class Item {
 
     @Id
     @Column(name = "SKU", nullable = false)
-    private double SKU;
+    private String SKU;
     
     @Column(name = "name")
     private String itemName;
@@ -37,15 +37,15 @@ public class Item {
     
 
 	    
-    public double getSKU() {
+    public String getSKU() {
 		return SKU;
 	}
 
 
 
 
-	public void setSKU(double sKU) {
-		SKU = sKU;
+	public void setSKU(String SKU) {
+		this.SKU = SKU;
 	}
 
 
