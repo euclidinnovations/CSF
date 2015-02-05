@@ -31,16 +31,16 @@ public class LoginController extends MultiActionController{
 			cus.setCustomerId("123");
 			cus.setFirstName("Madhuri");
 			cus.setLastName("Atluri");
-			cus.setPhone(123456789);
+			cus.setPhone("123456789");
 			cus.setAddress("VJA");
 			cus.setEmail("matluri139@gmail.com");
 			CustomerService cusService = (CustomerService) context.getBean("customerService");
 			cusService.persistCustomer(cus);
 			System.out.println("Updated phone :" + cusService.findCustomerById("123").getPhone());
-			cus.setPhone(1230996);
+			cus.setPhone("1230996");
 			cusService.updateCustomer(cus);
 			System.out.println("Updated phone :" + cusService.findCustomerById("123").getPhone());
-			cusService.deleteCustomer(cus);
+			//cusService.deleteCustomer(cus);
 			context.close();
 	      return "views/dashboard"; 
 	   }
