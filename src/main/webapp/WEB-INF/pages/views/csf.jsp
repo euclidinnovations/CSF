@@ -22,7 +22,7 @@
 	<script src="resources/js/jquery.corner.js"></script>	
 	<script src="resources/js/siteJquery.js"></script>
 </head>
-<body>    
+<body>     
 	<div class="container csf gtie8">
 		<form method="post" action="sendEmail.do">
 <!-- <div class="row">
@@ -33,10 +33,10 @@
 	<div class="col-sm-12">
 		<div class="col-sm-7">
 			<h4>
-				<span class="label label-default left w100">Shopping for :</span><span class="custname custtext underline">MATTHEW SMITHSON</span>
+				<span class="label label-default left w100">Shopping for :</span><span class="custname custtext underline">${message.firstName} ${message.lastName}</span>
 			</h4>
 			<h4>
-				<span class="label label-default left w100">Picking UP on :</span><span class="custtext">10/3/2015 @ 3:00 PM</span>
+				<span class="label label-default left w100">Picking UP on :</span><span class="custtext">${message.pickup} </span>
 			</h4>
 			<h4>
 				<span class="label label-default left w100">VIC Card :</span><span class="custtext">41111111111</span>
@@ -45,15 +45,15 @@
 				<span class="label label-default left w100">Address :</span><span class="custtext">13836, Ballantyne Meadows Drive, Charlotte, NC 28277</span>
 			</h4> -->
 			<h4>
-				<span class="label label-default left w100">Phone # :</span><span class="custtext">(555)444-3333</span>
+				<span class="label label-default left w100">Phone # :</span><span class="custtext">${message.phone}</span>
 			</h4>
 		</div>
 		<div class="col-sm-4 right">
 			<h4>
-				<span class="custname custtext">$100.79</span><span class="label label-default left w100">Order total :</span>
+				<span class="custname custtext">$ ${message.orderTotal} </span><span class="label label-default left w100">Order total :</span>
 			</h4>
 			<h4 class="orderH4">
-				<span class="custtext">7890123</span><span class="label label-default left w100 marright">Order # :</span>
+				<span class="custtext">${message.orderId}</span><span class="label label-default left w100 marright">Order # :</span>
 			</h4>					
 			<h4 class="vicsavingsH4">
 				<span class="custtext">$35</span><span class="label label-default left w100 marright">VIC Savings :</span>
@@ -63,7 +63,7 @@
 </div><!-- .row */ -->	
 <div class="row dlvrdetails box-border-background pad10 floatnone martop20">
 	<div class="col-sm-12 nopad marbot10 marbot29">
-		<h5><div class="left">Special Instructions : </div><div class="font15 text-info left marleft15">I want my order to be delivered after 1week.</div></h5>
+		<h5><div class="left">Special Instructions : </div><div class="font15 text-info left marleft15">${message.specialInstructions }</div></h5>
 	</div>
 </div>
 <div class="row">
@@ -311,9 +311,9 @@
 				</tr>
 				<tr id="HStr9" class="payment HSStr">
 					<td>Payment</td>
-					<td colspan="3"><select name="ci_dd" id="ci_dd">
-						<option value="Credit">Credit</option>
-						<option value="Check">Check</option>
+					<td colspan="3"><select name="ci_dd" id="ci_dd"}}>
+						<option  value="Credit">Credit</option>
+						<option if(${message.paymentType} == "Pay With Check") value="Check">Check</option>
 						<option value="Cash">Cash</option>
 					</select>
 				</td>            

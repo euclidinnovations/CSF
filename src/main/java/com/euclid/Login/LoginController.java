@@ -7,23 +7,27 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-import com.euclid.persistence.Customer.model.Customer;
-import com.euclid.persistence.Customer.service.CustomerService;
+import com.euclid.csf.CSFController;
+import com.euclid.persistence.Orders.model.Customer;
+import com.euclid.persistence.Orders.service.CustomerService;
+
  
 @Controller
 public class LoginController extends MultiActionController{
 		
-	 @RequestMapping(value = "/login", method = RequestMethod.POST)
+	 @RequestMapping(value = "/csf", method = RequestMethod.POST)
 	   public String addLogin(HttpServletRequest request,
 				HttpServletResponse response) throws IOException {
 	      
-		 	System.out.println("load context");
+		 	
+		 CSFController csf = new CSFController();
+		 
+		 /*System.out.println("load context");
 		 	
 			ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
 			System.out.println(context);
@@ -41,7 +45,9 @@ public class LoginController extends MultiActionController{
 			cusService.updateCustomer(cus);
 			System.out.println("Updated phone :" + cusService.findCustomerById("123").getPhone());
 			//cusService.deleteCustomer(cus);
-			context.close();
-	      return "views/dashboard"; 
+			context.close();*/
+		 
+		 
+	      return "views/csf"; 
 	   }
 }

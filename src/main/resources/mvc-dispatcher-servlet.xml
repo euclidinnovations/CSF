@@ -34,11 +34,12 @@
 
   <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
     <property name="dataSource" ref="dataSource"></property>
-     <property name="annotatedClasses">
-            <list>
-                <value>com.euclid.persistence.Customer.model.Customer</value>
-            </list>
-        </property>
+            
+     <property name="packagesToScan">
+   		<list>
+       		<value>com.euclid.persistence.Orders.model</value>
+    	</list>
+	</property>
     <property name="hibernateProperties">
       <props>
         <prop 
@@ -84,6 +85,12 @@
 	</bean>-->
  	<mvc:annotation-driven />
 	<context:annotation-config />
+ 
+ 
+    <bean class="org.springframework.context.support.ResourceBundleMessageSource" 
+    		id="messageSource" p:basename="Messages">
+ 	</bean>
+ 	
     <mvc:resources mapping="/resources/**" location="/resources/" />
     <mvc:resources mapping="/views/**" location="/views/" />
 </beans>

@@ -169,5 +169,10 @@
 			        
 				</div>				
 			</div>
+			
+			<h3>
+				<a href="views/csf.jsp">Click here to See Welcome Message... </a>(to
+				check Spring MVC Controller... @RequestMapping("/csf"))
+			</h3>
 		</body>
 		</html>
