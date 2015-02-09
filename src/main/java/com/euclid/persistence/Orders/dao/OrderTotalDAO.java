@@ -12,4 +12,6 @@ public interface OrderTotalDAO {
 		  
 		  void deleteOrderTotal(OrderTotal orderTotal);
 		  
+		  void deleteAll();
+		  
 }

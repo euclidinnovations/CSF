@@ -59,3 +59,5 @@ INPUT[type='text']{height:auto;}
 .dashboard .col-md-3 {width: 25%; float: left; padding: 5px 0px 5px 5px;}
 .dashboard .col-md-12{width: 100%; padding: 5px 0px 5px 5px;}
 .dashbaord .col-md-6, .dashboard .OSO .col-md-6{width: 50%; padding: 5px 0px 5px 5px;}
+
+#enterorderid input.pad15{padding: 7px; margin: 0px;}

@@ -45,6 +45,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.euclid.persistence.Orders.model.Customer;
+import com.euclid.persistence.Orders.model.Order;
+import com.euclid.persistence.Orders.model.OrderInstruction;
+import com.euclid.persistence.Orders.model.OrderTotal;
+import com.euclid.persistence.Orders.service.CustomerService;
+import com.euclid.persistence.Orders.service.OrderInstructionService;
+import com.euclid.persistence.Orders.service.OrderService;
+import com.euclid.persistence.Orders.service.OrderTotalService;
 
 public class LocalClientExample extends WriteExcel {
  
@@ -52,7 +63,7 @@ public class LocalClientExample extends WriteExcel {
   private HttpClient client = HttpClientBuilder.create().build();
   private final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36";
  
-  public static void main(String[] args) throws Exception {
+  public LocalClientExample() throws Exception {
  
 	String url = "https://wb2.harristeeter.com/Login.aspx";
 	String wg = "https://wb2.harristeeter.com/StoreMenu.aspx?dayspassexp=61";
@@ -62,7 +73,7 @@ public class LocalClientExample extends WriteExcel {
 	// make sure cookies is turn on
 	//CookieHandler.setDefault(new CookieManager());
  
-	LocalClientExample http = new LocalClientExample();
+	//LocalClientExample http = new LocalClientExample();
  
 	//String page = http.GetPageContent(url);
  
@@ -96,7 +107,7 @@ public class LocalClientExample extends WriteExcel {
 	//String result2 = "<html><head></head><body><div></div></body></html>";
 	
 	//Find out the orderIDs
-	http.FindOrderIDs("hi");	
+	FindOrderIDs("hi");	
 	
 	//Create .xls file from string we got
 	//http.WriteExcelFile(result1);
@@ -348,16 +359,40 @@ public class LocalClientExample extends WriteExcel {
 		    	customersArr.add(phone);
 		    	customersArr.add(email);
 		    	customersArr.add(address);
-		    	HashMap customersMap  = new HashMap();
-		    	customersMap.put(customerID, customersArr);
+		    	/* ---- Customers Table */
+		    	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
+		    	CustomerService cusService = (CustomerService) context.getBean("customerService");
+		    	//cusService.deleteCustomer(cusService.findCustomerById(customerID));
+		    	//cusService.deleteAll();
+				    	Customer cus = new Customer();
+						cus.setCustomerId(customerID);
+						cus.setFirstName(fName);
+						cus.setLastName(lName);
+						cus.setPhone(phone);
+						cus.setAddress(address);
+						cus.setEmail(email);						
+						cusService.persistCustomer(cus);
+		    	
+		    	/* -- Customers Table End*/
+		    	/*HashMap customersMap  = new HashMap();
+		    	customersMap.put(customerID, customersArr);*/
+		    	
 		    	/*---------------------------------------*/
 		    	
 		    	/*Orders Map*/
 		    	List<String> ordersArr  = new ArrayList<String>(); 
 		    	ordersArr.add(customerID);
 		    	ordersArr.add(fullfilment);
-		    	HashMap ordersMap  = new HashMap();
-		    	ordersMap.put(orderID, ordersArr);
+		    	
+		    	OrderService ordService = (OrderService) context.getBean("orderService");
+		    	//ordService.deleteAll();
+		    	Order ord = new Order();
+		    	ord.setCustomerId(customerID);
+		    	ord.setOrderId(orderID);
+		    	ord.setPickup(fullfilment);
+		    	ordService.persistOrder(ord);
+		    	/*HashMap ordersMap  = new HashMap();
+		    	ordersMap.put(orderID, ordersArr);*/
 		    	/*---------------------------------------*/
 		    	
 		    	
@@ -368,8 +403,20 @@ public class LocalClientExample extends WriteExcel {
 		    	orderInstructionsArr.add(paymethod);
 		    	orderInstructionsArr.add(totesused);
 		    	orderInstructionsArr.add(promotioncode);		    	
-		    	HashMap orderInstructionsMap  = new HashMap();
-		    	orderInstructionsMap.put(orderID, orderInstructionsArr);
+		    	
+		    	OrderInstructionService ordInstService = (OrderInstructionService) context.getBean("orderInstructionService") ;
+		    	OrderInstruction ordInst = new OrderInstruction();
+		    //	ordInstService.deleteAll();
+		    	ordInst.setOrderId(orderID);
+		    	ordInst.setPaymentMethod(paymethod);
+		    	ordInst.setPromotionCode(promotioncode);
+		    	ordInst.setSpecialInstructions(specialinst);
+		    	ordInst.setSubstitution(substitution);
+		    	ordInst.setTotesUsed(totesused);
+		    	
+		    	ordInstService.persistOrderInstruction(ordInst);
+		    	/*HashMap orderInstructionsMap  = new HashMap();
+		    	orderInstructionsMap.put(orderID, orderInstructionsArr);*/
 		    	/*---------------------------------------*/
 		    	
 		    	/*orderTotals Map*/
@@ -382,8 +429,26 @@ public class LocalClientExample extends WriteExcel {
 		    	orderTotalsArr.add(discountcharge);
 		    	orderTotalsArr.add(specialpromotion);
 		    	orderTotalsArr.add(ordertotal);
-		    	HashMap orderTotalsMap  = new HashMap();
+		    	
+		    	OrderTotalService ordTotService = (OrderTotalService) context.getBean("orderTotalService");
+		    	OrderTotal ordTotal = new OrderTotal();
+		    	//ordTotService.deleteAll();
+		    	
+		    	ordTotal.setOrderId(orderID);
+		    	ordTotal.setAdditionalCharges(addcharges);
+		    	ordTotal.setDeposit(diposit);
+		    	ordTotal.setDiscount(discountcharge);
+		    	ordTotal.setOrderTotal(ordertotal);
+		    	ordTotal.setProductTotal(prdtotal);
+		    	ordTotal.setServiceFee(servicefee);
+		    	ordTotal.setSpecialPromotions(specialpromotion);
+		    	ordTotal.setTaxTotal(taxtotal);
+		    	
+		    	ordTotService.persistOrderTotal(ordTotal);
+		    	/*HashMap orderTotalsMap  = new HashMap();
 		    	orderTotalsMap.put(orderID, orderTotalsArr);
+		    	*/
+		    	
 		    	/*---------------------------------------*/
 		    	List<String> sublist = new ArrayList<String>(); 
 		    	
@@ -397,25 +462,37 @@ public class LocalClientExample extends WriteExcel {
 		    	List<String> originalOrderArray = originalOrder(htmlPage);
 		    	int x = 0;
 		    	for (int start = 0; start < originalOrderArray.size(); start += 8) {
+                    String ProductSKU = null;
 		            int end = Math.min(start + 8, originalOrderArray.size());
-		            sublist = originalOrderArray.subList(start, end);	
-
+		            sublist = originalOrderArray.subList(start, end);        
+		            
 		            if(x < 7){
-		            	sublist.add(allOrdersSKU.get(x));
-		            }		            
-		            sublist.remove(0);
-		            System.out.println(x);
-		            System.out.println(Integer.parseInt(originalOrderGetItemsCount.get(0))+" < "+x);		            
-		            if(x < Integer.parseInt(originalOrderGetItemsCount.get(0))){
-		            	System.out.println("\nOriginal\n");
-		            	originalOrderMap.put(orderID,sublist); // This is the original order
+		                    //sublist.add(allOrdersSKU.get(x));
+		            }                            
+		            //sublist.remove(0);                            
+		            
+		            //System.out.println(x+" < "+Integer.parseInt(originalOrderGetItemsCount.get(0)));
+		            
+		            if(x < Integer.parseInt(originalOrderGetItemsCount.get(0))){                
+		                    ProductSKU        =        allOrdersSKU.get(x);
+		                    //System.out.println("\nOriginal:x-"+x+":SKU-"+ProductSKU+"\n");                                    
+		                    originalOrderMap.put(orderID, allOrdersSKU.get(x));
+		                    originalOrderMap.put(orderID,sublist); // This is the original order
+		                    System.out.println(originalOrderMap);
 		            }
-		            else { 		            	
-		            	System.out.println("\nCurrent\n");
-		            	currentOrderMap.put(orderID,sublist);
+		            else {                            
+		                    ProductSKU        =        allOrdersSKU.get(x);
+		                    //System.out.println("\nCurrent-"+x+":SKU-"+ProductSKU+"\n");                                            
+		                    currentOrderMap.put(orderID, allOrdersSKU.get(x));
+		                    currentOrderMap.put(orderID,sublist);
+		                    System.out.println(currentOrderMap);
 		            }
-		            x++;		            
+		            x++;
+		            
 		        }
+
+
+
 		    	
 		    	//System.out.println(allOrdersMap);
 		    	//originalOrderSKU
@@ -475,6 +552,11 @@ public class LocalClientExample extends WriteExcel {
     }
   }
   
+private void storeToCustomerTable() {
+	// TODO Auto-generated method stub
+	
+}
+
 public List<String> currentOrder(String str){
 	  /*Has all the td of the order details page*/
 		  	//String newstr 	= str.replaceAll("\\s+","");

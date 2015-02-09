@@ -1,5 +1,8 @@
 package com.euclid.persistence.Orders.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.euclid.persistence.Orders.model.ModifiedItem;
 
 public interface ModifiedItemDAO {
@@ -11,5 +14,6 @@ public interface ModifiedItemDAO {
 		  void updateModifiedItem(ModifiedItem modifiedItem);
 		  
 		  void deleteModifiedItem(ModifiedItem modifiedItem);
-		  
+
+		  List<Object[]> getLookupItems(String orderId);
 }

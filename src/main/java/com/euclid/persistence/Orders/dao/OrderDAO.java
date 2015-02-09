@@ -11,5 +11,7 @@ public interface OrderDAO {
 		  void updateOrder(Order order);
 		  
 		  void deleteOrder(Order order);
+
+		  void deleteAll();
 		  
 }

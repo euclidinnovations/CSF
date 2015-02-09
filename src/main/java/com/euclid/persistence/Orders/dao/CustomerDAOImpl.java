@@ -1,9 +1,9 @@
 package com.euclid.persistence.Orders.dao;
 
 import org.hibernate.SessionFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.euclid.persistence.Orders.model.Customer;
 
 @Repository("customerDAO")
@@ -35,5 +35,10 @@ public class CustomerDAOImpl implements CustomerDAO {
 
         sessionFactory.getCurrentSession().delete(customer);
 
+    }
+    
+    @Override
+    public void deleteAll() {
+    	sessionFactory.getCurrentSession().createQuery("delete from customers").executeUpdate();
     }
 }

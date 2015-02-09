@@ -38,7 +38,7 @@ public class HttpCilentExample extends WriteExcel {
   private HttpClient client = HttpClientBuilder.create().build();
   private final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36";
  
-  public static void main(String[] args) throws Exception {
+    public HttpCilentExample() throws Exception {
  
 	String url = "https://wb2.harristeeter.com/Login.aspx";
 	String wg = "https://wb2.harristeeter.com/StoreMenu.aspx?dayspassexp=61";
@@ -50,30 +50,30 @@ public class HttpCilentExample extends WriteExcel {
 	// make sure cookies is turn on
 	CookieHandler.setDefault(new CookieManager());
  
-	HttpCilentExample http = new HttpCilentExample();
+	//HttpCilentExample http = new HttpCilentExample();
  
-	String page = http.GetPageContent(url);
+	String page = GetPageContent(url);
  
 	List<NameValuePair> postParams = 
-               http.getFormParams(page, "hteeter","Shop001");
+               getFormParams(page, "hteeter","Shop001");
  
-	http.sendPost(url, postParams);
+	sendPost(url, postParams);
 	
 	//http.sendPost(wg, postParams);
  
-	String result = http.GetPageContent(wg);
+	String result = GetPageContent(wg);
 	
 	//System.out.println(result);
  
 	//System.out.println("\nAll uncommitted orders");
 		
-	String fetchingUncommittedOrders = http.GetPageContent(uncommited);
+	String fetchingUncommittedOrders = GetPageContent(uncommited);
 	
 	//System.out.println(fetchingUncommittedOrders);
 	
 	//System.out.println("\nCurrent and Pending orders");
 	
-	String result2 = http.GetPageContent(current_pending);
+	String fetchCurrentOrders = GetPageContent(current_pending);
 	
 	//System.out.println(result2);
 	
@@ -84,9 +84,8 @@ public class HttpCilentExample extends WriteExcel {
 	//String result2 = "<html><head></head><body><div></div></body></html>";
 	
 	//Find out the orderIDs
-	http.FindOrderIDs(fetchingUncommittedOrders);	
+	FindOrderIDs(fetchingUncommittedOrders);	
 	
-	System.out.println("Done");
   }
  
   private void sendPost(String url, List<NameValuePair> postParams) 

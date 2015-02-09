@@ -11,4 +11,6 @@ public interface OrderTotalService {
 	void updateOrderTotal(OrderTotal orderTotal);
 
 	void deleteOrderTotal(OrderTotal orderTotal);
+	
+	void deleteAll();
 }

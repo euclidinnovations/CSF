@@ -24,7 +24,7 @@ public class LoginController extends MultiActionController{
 	   public String addLogin(HttpServletRequest request,
 				HttpServletResponse response) throws IOException {
 	      
-		 	
+		 
 		 CSFController csf = new CSFController();
 		 
 		 /*System.out.println("load context");

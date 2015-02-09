@@ -11,4 +11,6 @@ public interface OrderInstructionService {
 	void updateOrderInstruction(OrderInstruction orderInstruction);
 
 	void deleteOrderInstruction(OrderInstruction orderInstruction);
+	
+	void deleteAll();
 }

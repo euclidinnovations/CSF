@@ -1,6 +1,9 @@
 package com.euclid.csf.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class CSF{
@@ -22,9 +25,9 @@ public class CSF{
 	
 	private String paymentType;
 	
-	private List<String> itemOrdered;
+	private Map<String, ArrayList<String>> modifiedItemsMap = new HashMap<String, ArrayList<String>>();
 	
-	private List<String> itemsRecieved;
+	private List<String> lookupItems= new ArrayList<String>();
 	
 	private String orderTotal;
 	
@@ -110,22 +113,6 @@ public class CSF{
 		this.paymentType = paymentType;
 	}
 
-	public List<String> getItemOrdered() {
-		return itemOrdered;
-	}
-
-	public void setItemOrdered(List<String> itemOrdered) {
-		this.itemOrdered = itemOrdered;
-	}
-
-	public List<String> getItemsRecieved() {
-		return itemsRecieved;
-	}
-
-	public void setItemsRecieved(List<String> itemsRecieved) {
-		this.itemsRecieved = itemsRecieved;
-	}
-
 	public void setAddress(String address) {
 		this.address=address;
 	}
@@ -133,6 +120,21 @@ public class CSF{
 	public String getAddress() {
 		return address;
 	}
+
+	public List<String> getLookupItems() {
+		return lookupItems;
+	}
+
+	public void setLookupItems(List<String> lookupItems) {
+		this.lookupItems = lookupItems;
+	}
 	
+	public Map<String, ArrayList<String>> getModifiedItemsMap() {
+		return modifiedItemsMap;
+	}
+
+	public void setModifiedItemsMap(Map<String, ArrayList<String>> modifiedItemsMap) {
+		this.modifiedItemsMap = modifiedItemsMap;
+	}
 	
 }

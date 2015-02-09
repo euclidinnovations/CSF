@@ -39,4 +39,10 @@ public class OrderInstructionServiceImpl implements OrderInstructionService{
 		
 	}
 
+	@Override
+	public void deleteAll() {
+		orderInstructionDAO.deleteAll();
+		
+	}
+
 }

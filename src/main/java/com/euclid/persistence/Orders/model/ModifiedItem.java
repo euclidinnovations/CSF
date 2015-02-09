@@ -17,7 +17,7 @@ public class ModifiedItem {
 
     @Id
     @Column(name = "orderId", nullable = false)
-    private int orderId;
+    private String orderId;
     
     @Column(name = "itemOrderedSKU")
     private String itemOrderedSKU;
@@ -40,14 +40,14 @@ public class ModifiedItem {
     
 
 	    
-    public int getOrderId() {
+    public String getOrderId() {
 		return orderId;
 	}
 
 
 
 
-	public void setOrderId(int orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 

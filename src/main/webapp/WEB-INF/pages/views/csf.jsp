@@ -73,6 +73,20 @@
 		<div class="bs-example table-bordered pad10 box-border-background" data-example-id="striped-table">							
 			<div id="billing_items_div" class="table-bordered borderwhite">
 				<h3>Modified Items</h3>
+		
+				<table>
+		<c:forEach begin="0" end="21" step="3" varStatus="loop">
+   <c:out value="${loop.count}"/>
+</c:forEach>
+        	<c:forEach items="${message.modifiedItemsMap}" var="modifiedItemsMap" varStatus="loop">
+   				<c:out value="${modifiedItemsMap.key}"/>
+</c:forEach>
+   <tr>
+					<td></td>
+					</tr>
+
+					
+				</table>
 				<table class="table table-striped" id='bill_table' rules="all">
 					<thead>
 						<tr class="headings">
@@ -311,11 +325,11 @@
 				</tr>
 				<tr id="HStr9" class="payment HSStr">
 					<td>Payment</td>
-					<td colspan="3"><select name="ci_dd" id="ci_dd"}}>
-						<option  value="Credit">Credit</option>
-						<option if(${message.paymentType} == "Pay With Check") value="Check">Check</option>
-						<option value="Cash">Cash</option>
-					</select>
+					<td colspan="3">
+					<select name="ci_dd" id="ci_dd"}>
+                        <option value="${message.paymentType}" ${message.paymentType == 'Pay With Check' ? 'selected' : ''}>Check</option>
+                        <option value="${message.paymentType}" ${message.paymentType == 'Credit Card' ? 'selected' : ''}>Credit Card</option>
+                    </select>
 				</td>            
 			</tr>
 			<tr id="HStr10" class="HSStr">

@@ -39,4 +39,9 @@ public class OrderServiceImpl implements OrderService{
 		
 	}
 
+	@Override
+	public void deleteAll() {
+		orderDAO.deleteAll();		
+	}
+
 }

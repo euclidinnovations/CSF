@@ -20,28 +20,28 @@ public class OrderTotal {
     private String orderId;
     
     @Column(name = "productTotal")
-    private float productTotal;
+    private String productTotal;
  
     @Column(name = "taxTotal")
-    private float taxTotal;
+    private String taxTotal;
      
     @Column(name = "serviceFee")
-    private float serviceFee;
+    private String serviceFee;
     
     @Column(name = "additionalCharges")
-    private float additionalCharges;
+    private String additionalCharges;
     
     @Column(name = "deposit")
-    private float deposit;
+    private String deposit;
     
     @Column(name = "discount")
-    private float discount;
+    private String discount;
     
     @Column(name = "specialPromotions")
-    private float specialPromotions;
+    private String specialPromotions;
     
     @Column(name = "orderTotal")
-    private float orderTotal;
+    private String orderTotal;
     
     
     
@@ -57,97 +57,97 @@ public class OrderTotal {
 
 
 
-	public Float getProductTotal() {
+	public String getProductTotal() {
 		return productTotal;
 	}
 
 
 
-	public void setProductTotal(Float productTotal) {
+	public void setProductTotal(String productTotal) {
 		this.productTotal = productTotal;
 	}
 
 
 
-	public Float getTaxTotal() {
+	public String getTaxTotal() {
 		return taxTotal;
 	}
 
 
 
-	public void setTaxTotal(Float taxTotal) {
+	public void setTaxTotal(String taxTotal) {
 		this.taxTotal = taxTotal;
 	}
 
 
 
-	public Float getServiceFee() {
+	public String getServiceFee() {
 		return serviceFee;
 	}
 
 
 
-	public void setServiceFee(Float serviceFee) {
+	public void setServiceFee(String serviceFee) {
 		this.serviceFee = serviceFee;
 	}
 
 
 
-	public Float getAdditionalCharges() {
+	public String getAdditionalCharges() {
 		return additionalCharges;
 	}
 
 
 
-	public void setAdditionalCharges(Float additionalCharges) {
-		this.additionalCharges = additionalCharges;
+	public void setAdditionalCharges(String addcharges) {
+		this.additionalCharges = addcharges;
 	}
 
 
 
-	public Float getDeposit() {
+	public String getDeposit() {
 		return deposit;
 	}
 
 
 
-	public void setDeposit(Float deposit) {
+	public void setDeposit(String deposit) {
 		this.deposit = deposit;
 	}
 
 
 
-	public Float getDiscount() {
+	public String getDiscount() {
 		return discount;
 	}
 
 
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(String discount) {
 		this.discount = discount;
 	}
 
 
 
-	public Float getSpecialPromotions() {
+	public String getSpecialPromotions() {
 		return specialPromotions;
 	}
 
 
 
-	public void setSpecialPromotions(Float specialPromotions) {
+	public void setSpecialPromotions(String specialPromotions) {
 		this.specialPromotions = specialPromotions;
 	}
 
 
 
-	public Float getOrderTotal() {
+	public String getOrderTotal() {
 		return orderTotal;
 	}
 
 
 
-	public void setOrderTotal(Float orderTotal) {
+	public void setOrderTotal(String orderTotal) {
 		this.orderTotal = orderTotal;
 	}
 

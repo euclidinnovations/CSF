@@ -1,9 +1,9 @@
 package com.euclid.persistence.Orders.dao;
 
 import org.hibernate.SessionFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.euclid.persistence.Orders.model.OrderTotal;
 
 @Repository("orderTotalDAO")
@@ -35,5 +35,10 @@ public class OrderTotalDAOImpl implements OrderTotalDAO {
 
         sessionFactory.getCurrentSession().delete(orderTotal);
 
+    }
+    
+    @Override
+    public void deleteAll() {
+    	sessionFactory.getCurrentSession().createQuery("delete from orders").executeUpdate();
     }
 }

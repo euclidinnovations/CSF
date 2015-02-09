@@ -39,4 +39,11 @@ public class OrderTotalServiceImpl implements OrderTotalService{
 		
 	}
 
+	@Override
+	public void deleteAll() {
+		
+		orderTotalDAO.deleteAll();
+		
+	}
+
 }

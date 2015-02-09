@@ -137,6 +137,8 @@ span.custname{padding-bottom: 10px;}
 .marbot10{margin-bottom:10px; }
 .col-sm-7{width: 61.33%; float: left; padding-left: 0px;}
 .blank_space{padding: 7px; float: left;}
+.width50{width: 50%}
+.width20{width: 20%}
 /*CSF*/
 	.custtext{padding-top: 0px; display: block; margin-left: 10px; 
 				font-size: 20px; float: left;}	
@@ -247,6 +249,12 @@ span.custname{padding-bottom: 10px;}
 	.csf .sp{font-size: 13px; padding: 0px 14px 0px 14px;}
 /*CSF*/		
  
+/*ORDER ID*/
+#enterorderid{text-align: center; padding: 15px 0px 15px 0px;}
+#enterorderid input.pad15{padding: 6px; height: 30px;}
+.orderid .col-sm-7{float: none; margin: 0 auto;}
+/*ORDER ID*/
+
  	.box-border-background{border: 2px solid #D3D3D3; background-color: #dddddd; border-radius: 4px;}
  	.nomar{margin:0px;}
 /* Circle image*/

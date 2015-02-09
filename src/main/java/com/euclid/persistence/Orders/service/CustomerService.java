@@ -11,4 +11,6 @@ public interface CustomerService {
 	void updateCustomer(Customer customer);
 
 	void deleteCustomer(Customer customer);
+	
+	void deleteAll();
 }

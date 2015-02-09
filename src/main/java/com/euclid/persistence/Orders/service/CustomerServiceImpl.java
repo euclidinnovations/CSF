@@ -39,4 +39,10 @@ public class CustomerServiceImpl implements CustomerService{
 		
 	}
 
+	@Override
+	public void deleteAll() {
+		customerDAO.deleteAll();
+		
+	}
+
 }

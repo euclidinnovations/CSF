@@ -36,4 +36,9 @@ public class OrderDAOImpl implements OrderDAO {
         sessionFactory.getCurrentSession().delete(order);
 
     }
+    
+    @Override
+    public void deleteAll() {
+    	sessionFactory.getCurrentSession().createQuery("delete from orders").executeUpdate();
+    }
 }
