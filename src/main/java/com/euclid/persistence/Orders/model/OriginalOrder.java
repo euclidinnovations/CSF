@@ -17,27 +17,27 @@ public class OriginalOrder {
 
     @Id
     @Column(name = "orderId", nullable = false)
-    private int orderId;
+    private String orderId;
     
     @Column(name = "SKU")
     private String SKU;
  
     @Column(name = "Qty")
-    private int qty;
+    private String qty;
      
     @Column(name = "size")
     private String size;
     
     
 	    
-    public int getOrderId() {
+    public String getOrderId() {
 		return orderId;
 	}
 
 
 
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
+	public void setOrderId(String orderID) {
+		this.orderId = orderID;
 	}
 
 
@@ -54,13 +54,13 @@ public class OriginalOrder {
 
 
 
-	public int getQty() {
+	public String getQty() {
 		return qty;
 	}
 
 
 
-	public void setQty(int qty) {
+	public void setQty(String qty) {
 		this.qty = qty;
 	}
 

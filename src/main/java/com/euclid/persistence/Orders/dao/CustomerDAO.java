@@ -13,5 +13,8 @@ public interface CustomerDAO {
 		  void deleteCustomer(Customer customer);
 
 		  void deleteAll();
+
+
+		  Boolean exists(String id);
 		  
 }

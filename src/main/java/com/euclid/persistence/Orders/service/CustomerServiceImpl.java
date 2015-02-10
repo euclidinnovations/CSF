@@ -40,9 +40,17 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
+	@Transactional
 	public void deleteAll() {
 		customerDAO.deleteAll();
 		
+	}
+
+	@Override
+	@Transactional
+	public Boolean exists(String id) {
+		// TODO Auto-generated method stub
+		return customerDAO.exists(id);
 	}
 
 }

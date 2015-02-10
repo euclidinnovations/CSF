@@ -49,13 +49,19 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.euclid.persistence.Orders.model.Customer;
+import com.euclid.persistence.Orders.model.Item;
+import com.euclid.persistence.Orders.model.ModifiedItem;
 import com.euclid.persistence.Orders.model.Order;
 import com.euclid.persistence.Orders.model.OrderInstruction;
 import com.euclid.persistence.Orders.model.OrderTotal;
+import com.euclid.persistence.Orders.model.OriginalOrder;
 import com.euclid.persistence.Orders.service.CustomerService;
+import com.euclid.persistence.Orders.service.ItemService;
+import com.euclid.persistence.Orders.service.ModifiedItemService;
 import com.euclid.persistence.Orders.service.OrderInstructionService;
 import com.euclid.persistence.Orders.service.OrderService;
 import com.euclid.persistence.Orders.service.OrderTotalService;
+import com.euclid.persistence.Orders.service.OriginalOrderService;
 
 public class LocalClientExample extends WriteExcel {
  
@@ -364,6 +370,11 @@ public class LocalClientExample extends WriteExcel {
 		    	CustomerService cusService = (CustomerService) context.getBean("customerService");
 		    	//cusService.deleteCustomer(cusService.findCustomerById(customerID));
 		    	//cusService.deleteAll();
+		   
+		    	System.out.println("cusID ********* outside"+customerID);
+		    	System.out.println("exits returns ********* "+cusService.exists(customerID));
+		    	if(!cusService.exists(customerID)){
+		    		System.out.println("cusID ********* inside"+customerID);
 				    	Customer cus = new Customer();
 						cus.setCustomerId(customerID);
 						cus.setFirstName(fName);
@@ -372,7 +383,7 @@ public class LocalClientExample extends WriteExcel {
 						cus.setAddress(address);
 						cus.setEmail(email);						
 						cusService.persistCustomer(cus);
-		    	
+		    	}
 		    	/* -- Customers Table End*/
 		    	/*HashMap customersMap  = new HashMap();
 		    	customersMap.put(customerID, customersArr);*/
@@ -384,13 +395,16 @@ public class LocalClientExample extends WriteExcel {
 		    	ordersArr.add(customerID);
 		    	ordersArr.add(fullfilment);
 		    	
+		    	
 		    	OrderService ordService = (OrderService) context.getBean("orderService");
 		    	//ordService.deleteAll();
-		    	Order ord = new Order();
-		    	ord.setCustomerId(customerID);
-		    	ord.setOrderId(orderID);
-		    	ord.setPickup(fullfilment);
-		    	ordService.persistOrder(ord);
+		    	if(!ordService.exists(orderID)){
+				    	Order ord = new Order();
+				    	ord.setCustomerId(customerID);
+				    	ord.setOrderId(orderID);
+				    	ord.setPickup(fullfilment);
+				    	ordService.persistOrder(ord);
+		    	}
 		    	/*HashMap ordersMap  = new HashMap();
 		    	ordersMap.put(orderID, ordersArr);*/
 		    	/*---------------------------------------*/
@@ -405,16 +419,18 @@ public class LocalClientExample extends WriteExcel {
 		    	orderInstructionsArr.add(promotioncode);		    	
 		    	
 		    	OrderInstructionService ordInstService = (OrderInstructionService) context.getBean("orderInstructionService") ;
-		    	OrderInstruction ordInst = new OrderInstruction();
-		    //	ordInstService.deleteAll();
-		    	ordInst.setOrderId(orderID);
-		    	ordInst.setPaymentMethod(paymethod);
-		    	ordInst.setPromotionCode(promotioncode);
-		    	ordInst.setSpecialInstructions(specialinst);
-		    	ordInst.setSubstitution(substitution);
-		    	ordInst.setTotesUsed(totesused);
-		    	
-		    	ordInstService.persistOrderInstruction(ordInst);
+		    	if(!ordInstService.exists(orderID)){
+			    	OrderInstruction ordInst = new OrderInstruction();
+			    //	ordInstService.deleteAll();
+			    	ordInst.setOrderId(orderID);
+			    	ordInst.setPaymentMethod(paymethod);
+			    	ordInst.setPromotionCode(promotioncode);
+			    	ordInst.setSpecialInstructions(specialinst);
+			    	ordInst.setSubstitution(substitution);
+			    	ordInst.setTotesUsed(totesused);
+			    	
+			    	ordInstService.persistOrderInstruction(ordInst);
+		    	}
 		    	/*HashMap orderInstructionsMap  = new HashMap();
 		    	orderInstructionsMap.put(orderID, orderInstructionsArr);*/
 		    	/*---------------------------------------*/
@@ -431,25 +447,39 @@ public class LocalClientExample extends WriteExcel {
 		    	orderTotalsArr.add(ordertotal);
 		    	
 		    	OrderTotalService ordTotService = (OrderTotalService) context.getBean("orderTotalService");
-		    	OrderTotal ordTotal = new OrderTotal();
-		    	//ordTotService.deleteAll();
 		    	
-		    	ordTotal.setOrderId(orderID);
-		    	ordTotal.setAdditionalCharges(addcharges);
-		    	ordTotal.setDeposit(diposit);
-		    	ordTotal.setDiscount(discountcharge);
-		    	ordTotal.setOrderTotal(ordertotal);
-		    	ordTotal.setProductTotal(prdtotal);
-		    	ordTotal.setServiceFee(servicefee);
-		    	ordTotal.setSpecialPromotions(specialpromotion);
-		    	ordTotal.setTaxTotal(taxtotal);
-		    	
-		    	ordTotService.persistOrderTotal(ordTotal);
+		    	if(!ordTotService.exists(orderID)){
+				    	OrderTotal ordTotal = new OrderTotal();
+				    	//ordTotService.deleteAll();
+				    	
+				    	ordTotal.setOrderId(orderID);
+				    	ordTotal.setAdditionalCharges(addcharges);
+				    	ordTotal.setDeposit(diposit);
+				    	ordTotal.setDiscount(discountcharge);
+				    	ordTotal.setOrderTotal(ordertotal);
+				    	ordTotal.setProductTotal(prdtotal);
+				    	ordTotal.setServiceFee(servicefee);
+				    	ordTotal.setSpecialPromotions(specialpromotion);
+				    	ordTotal.setTaxTotal(taxtotal);
+				    	
+				    	ordTotService.persistOrderTotal(ordTotal);
+		    	}
 		    	/*HashMap orderTotalsMap  = new HashMap();
 		    	orderTotalsMap.put(orderID, orderTotalsArr);
 		    	*/
 		    	
 		    	/*---------------------------------------*/
+		    	
+		    	OriginalOrderService origOrderService = (OriginalOrderService) context.getBean("originalOrderService");
+		    	OriginalOrder origOrder = new OriginalOrder();
+		    	
+		    	ItemService itemService = (ItemService) context.getBean("itemService");
+		    	Item itm = new Item();
+		    	
+		    	ModifiedItemService modItemService = (ModifiedItemService) context.getBean("modifiedItemService");
+		    	ModifiedItem modItem = new ModifiedItem();
+		    	
+		    	
 		    	List<String> sublist = new ArrayList<String>(); 
 		    	
 		    	HashMap allOrdersMap  		= new HashMap();
@@ -477,14 +507,134 @@ public class LocalClientExample extends WriteExcel {
 		                    ProductSKU        =        allOrdersSKU.get(x);
 		                    //System.out.println("\nOriginal:x-"+x+":SKU-"+ProductSKU+"\n");                                    
 		                    originalOrderMap.put(orderID, allOrdersSKU.get(x));
+		                    
+		                    String sku =  allOrdersSKU.get(x).replaceAll("\\s","");
+		                    origOrder.setSKU(sku);
+		                    itm.setSKU(sku);
 		                    originalOrderMap.put(orderID,sublist); // This is the original order
+		                    origOrder.setOrderId(orderID);
+		                    int temp=0;
+		                    for(String eachItem:sublist){
+		                    	System.out.println("IN Sublist: "+eachItem);
+		                    	temp++;
+		                    	switch(temp){
+		                    		case 1:
+		                    			itm.setAisle(eachItem);
+		                    			break;
+		                    		case 2:
+		                    			origOrder.setQty(eachItem);
+		                    			break;
+		                    		case 3:
+		                    			itm.setItemName(eachItem);
+		                    			itm.setDescription(eachItem);
+		                    			break;
+		                    		case 4:
+		                    			origOrder.setSize(eachItem);
+		                    			break;
+		                    		case 5:
+		                    			itm.setUnitPrice(eachItem);
+		                    			break;
+		                    		case 6:
+		                    			System.out.println("tax "+eachItem);
+		                    			break;
+		                    		case 7:
+		                    			System.out.println("dep "+eachItem);
+		                    			break;
+		                    		case 8:
+		                    			System.out.println("Item Original/Substituted" + eachItem);
+		                    			break;
+		                    		
+		                    		default:
+		                    			System.out.println("List Messed up");
+		                    			break;
+		                    	}
+		                    	
+		                    }
+		                    
 		                    System.out.println(originalOrderMap);
+		                    if(!origOrderService.exists(orderID,sku)){
+			                    origOrderService.persistOriginalOrder(origOrder);
+		                    }
+		                    
+		                    if(!itemService.exists(sku)){
+			                    itemService.persistItem(itm);
+		                    }
 		            }
 		            else {                            
 		                    ProductSKU        =        allOrdersSKU.get(x);
+		                    
+		                    
 		                    //System.out.println("\nCurrent-"+x+":SKU-"+ProductSKU+"\n");                                            
 		                    currentOrderMap.put(orderID, allOrdersSKU.get(x));
 		                    currentOrderMap.put(orderID,sublist);
+		                    
+		                    int temp=0;
+		                    String Aisle= null,Qty= null,Name= null,Description= null,size= null,unitPrice = null;
+		                    for(String eachItem:sublist){
+		                    	System.out.println("IN Sublist: "+eachItem);
+		                    	temp++;
+		                    	switch(temp){
+		                    		case 1:
+		                    			Aisle = eachItem;
+		                    			break;
+		                    		case 2:
+		                    			Qty = eachItem;
+		                    			break;
+		                    		case 3:
+		                    			Name = eachItem;
+		                    			Description = eachItem;
+		                    			break;
+		                    		case 4:
+		                    			size = eachItem;
+		                    			break;
+		                    		case 5:
+		                    			unitPrice = eachItem;
+		                    			break;
+		                    		case 6:
+		                    			System.out.println("tax "+eachItem);
+		                    			break;
+		                    		case 7:
+		                    			System.out.println("dep "+eachItem);
+		                    			break;
+		                    		case 8:
+		                    			System.out.println("Item Original/Substituted" + eachItem);                  			
+		                    			
+		                    			break;
+		                    		
+		                    		default:
+		                    			break;
+		                    	}
+		                    	if(!eachItem.equalsIgnoreCase("Orig.")){
+                    				if(!itemService.exists(ProductSKU)){
+	                    				itm.setAisle(Aisle);
+	                    				itm.setDescription(Description);
+	                    				itm.setItemName(Name);
+	                    				itm.setsize(size);
+	                    				itm.setSKU(ProductSKU);
+	                    				itm.setUnitPrice(unitPrice);
+	                    				itemService.persistItem(itm);
+                    				}
+		                    	}
+                    				/*if(!modItemService.exists(orderID,ProductSKU)){
+	                    				modItem.setOrderId(orderID);
+	                    				modItem.setItemRecievedSKU(ProductSKU);
+	                    				modItem.setItemRecievedSize(size);
+	                    				modItem.setItemRecievedQty(Qty);
+                    				}*/
+                    				
+                    				if(!origOrderService.exists(orderID,ProductSKU)){
+                    					if(!modItemService.exists(orderID,ProductSKU)){
+                    						modItem.setOrderId(orderID);
+		                    				modItem.setItemRecievedSKU(ProductSKU);
+		                    				modItem.setItemRecievedSize(size);
+		                    				modItem.setItemRecievedQty(Qty);
+                    					}
+                    				}
+                    				
+                    			
+		                    	
+		                    }
+		                    
 		                    System.out.println(currentOrderMap);
 		            }
 		            x++;

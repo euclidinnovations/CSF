@@ -13,4 +13,6 @@ public interface CustomerService {
 	void deleteCustomer(Customer customer);
 	
 	void deleteAll();
+	
+	Boolean exists(String id);
 }

@@ -1,12 +1,18 @@
 package com.euclid.persistence.Orders.dao;
 
+
+
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.euclid.persistence.Orders.model.Customer;
 
+
 @Repository("customerDAO")
+
 
 public class CustomerDAOImpl implements CustomerDAO {
  @Autowired
@@ -39,6 +45,15 @@ public class CustomerDAOImpl implements CustomerDAO {
     
     @Override
     public void deleteAll() {
-    	sessionFactory.getCurrentSession().createQuery("delete from customers").executeUpdate();
+    	sessionFactory.getCurrentSession().createQuery("truncate from Customer").executeUpdate();
     }
+    
+    @Override    
+    public Boolean exists (String id) {
+    	    Query query = sessionFactory.getCurrentSession().             
+    	    createQuery("select 1 from Customer t where t.customerId = :key");
+    	        query.setString("key", id );
+    	    return (query.uniqueResult() != null);
+    	}    	
+    
 }

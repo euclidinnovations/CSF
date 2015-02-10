@@ -40,9 +40,17 @@ public class OrderInstructionServiceImpl implements OrderInstructionService{
 	}
 
 	@Override
+	@Transactional
 	public void deleteAll() {
 		orderInstructionDAO.deleteAll();
 		
+	}
+	
+	@Override
+	@Transactional
+	public Boolean exists(String id) {
+		// TODO Auto-generated method stub
+		return orderInstructionDAO.exists(id);
 	}
 
 }

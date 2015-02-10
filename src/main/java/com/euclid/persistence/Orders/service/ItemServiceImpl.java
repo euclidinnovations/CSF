@@ -1,5 +1,8 @@
 package com.euclid.persistence.Orders.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,20 @@ public class ItemServiceImpl implements ItemService{
 	public void deleteItem(Item item) {
 		itemDAO.deleteItem(item);
 		
+	}
+	
+	@Override
+	@Transactional
+	public Boolean exists(String id) {
+		// TODO Auto-generated method stub
+		return itemDAO.exists(id);
+	}
+
+	@Override
+	@Transactional
+	public List<String[]> getMappedItems(String itemName) {
+		// TODO Auto-generated method stub
+		return itemDAO.getMappedItems(itemName);
 	}
 
 }

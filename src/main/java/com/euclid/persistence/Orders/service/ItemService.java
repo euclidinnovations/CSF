@@ -1,5 +1,8 @@
 package com.euclid.persistence.Orders.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.euclid.persistence.Orders.model.Item;
 
 public interface ItemService {
@@ -11,4 +14,8 @@ public interface ItemService {
 	void updateItem(Item item);
 
 	void deleteItem(Item item);
+
+	Boolean exists(String id);
+
+	List<String[]> getMappedItems(String itemName);
 }

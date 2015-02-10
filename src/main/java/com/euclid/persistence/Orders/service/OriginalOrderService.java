@@ -11,4 +11,6 @@ public interface OriginalOrderService {
 	void updateOriginalOrder(OriginalOrder originalOrder);
 
 	void deleteOriginalOrder(OriginalOrder originalOrder);
+
+	boolean exists(String orderID, String sku);
 }

@@ -1,9 +1,12 @@
 package com.euclid.persistence.Orders.dao;
 
-import org.hibernate.SessionFactory;
+import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.euclid.persistence.Orders.model.Item;
 
 @Repository("itemDAO")
@@ -36,4 +39,23 @@ public class ItemDAOImpl implements ItemDAO {
         sessionFactory.getCurrentSession().delete(item);
 
     }
+    
+    @Override
+	public Boolean exists(String id) {
+		Query query = sessionFactory.getCurrentSession().             
+	    	    createQuery("select 1 from Item t where t.SKU = :key");
+	    	        query.setString("key", id );
+	    	    return (query.uniqueResult() != null);
+	}
+
+
+	@Override
+	public List<String[]> getMappedItems(String itemName) {
+		Query query = sessionFactory.getCurrentSession().             
+	    	    createQuery("select t.itemName from Item t where :key LIKE CONCAT('%', itemName,'%')");
+	    	        query.setString("key", itemName );
+	    	        
+	    	        List<String[]> mappedItems = query.list();
+		return mappedItems;
+	}
 }

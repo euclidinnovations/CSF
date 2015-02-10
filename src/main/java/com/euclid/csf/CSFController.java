@@ -34,7 +34,7 @@ public class CSFController{
 	@RequestMapping("/login")
 	public ModelAndView csfData(Map<String, Object> map) throws Exception {
 		System.out.println("Entered");
-		String orderId = "12113737";
+		String orderId = "12125573";
 		LoadData loadData = new LoadData();
 		CSF csfRecievedData = getDetails(orderId);
 		
@@ -60,6 +60,9 @@ public class CSFController{
 		OrderTotalService ordTotService = (OrderTotalService)context.getBean("orderTotalService");
 		ModifiedItemService modItemService = (ModifiedItemService)context.getBean("modifiedItemService");
 		ItemService itemService = (ItemService)context.getBean("itemService");
+		
+		
+		
 		csfdata.setOrderId(orderId);
 		
 		csfdata.setFirstName(cusService.findCustomerById(ordService.findOrderById(orderId).getCustomerId()).getFirstName());
@@ -82,13 +85,16 @@ public class CSFController{
 		List<Object[]> rows = new ArrayList<Object[]>();
 		rows = modItemService.getLookupItems(orderId);
 		for (Object[] row: rows) {
-		    System.out.println("id: " + row[0]);
-		    System.out.println("setup 1"+ itemService.findItemById((String) row[1]).getItemName());
-		    System.out.println("setup 2"+ itemService.findItemById(row[1].toString()).getItemName());
-			   
-		    modifiedItemsMatch.add(itemService.findItemById((String) row[1]).getItemName());		 		    
-		    modifiedItemsMap.put(itemService.findItemById((String) row[0]).getItemName(), modifiedItemsMatch);
-		    System.out.println("name: " + row[1]);		    
+		    System.out.println("id: " + row[0]);		    
+		    System.out.println("setup 2"+ itemService.findItemById(row[0].toString()).getItemName());
+			String itemName = itemService.findItemById(row[0].toString()).getItemName();
+			List<String[]> mappedItemsList = new ArrayList<String[]>();
+			mappedItemsList = itemService.getMappedItems(itemName);	
+			ArrayList<String> itemsList = new ArrayList<String>();
+			for(String[] itm : mappedItemsList){
+				itemsList.add(itm[0].toString());
+			}
+		    modifiedItemsMap.put(itemService.findItemById((String) row[0]).getItemName(), itemsList);	    	    
 		    
 		}
 		

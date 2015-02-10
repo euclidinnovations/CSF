@@ -49,4 +49,11 @@ public class ModifiedItemServiceImpl implements ModifiedItemService{
 		
 	}
 
+	@Override
+	@Transactional
+	public boolean exists(String orderID, String productSKU) {
+		// TODO Auto-generated method stub
+		return modifiedItemDAO.exists(orderID,productSKU);
+	}
+
 }

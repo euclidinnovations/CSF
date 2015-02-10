@@ -13,4 +13,6 @@ public interface OrderTotalService {
 	void deleteOrderTotal(OrderTotal orderTotal);
 	
 	void deleteAll();
+
+	Boolean exists(String id);
 }

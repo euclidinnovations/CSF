@@ -1,5 +1,6 @@
 package com.euclid.persistence.Orders.dao;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -41,4 +42,13 @@ public class OrderInstructionDAOImpl implements OrderInstructionDAO {
     public void deleteAll() {
     	sessionFactory.getCurrentSession().createQuery("delete from orders").executeUpdate();
     }
+
+
+	@Override
+	public Boolean exists(String id) {
+		Query query = sessionFactory.getCurrentSession().             
+	    	    createQuery("select 1 from OrderInstruction t where t.orderId = :key");
+	    	        query.setString("key", id );
+	    	    return (query.uniqueResult() != null);
+	}
 }

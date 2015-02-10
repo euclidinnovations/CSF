@@ -16,5 +16,7 @@ public interface ModifiedItemService {
 	void deleteModifiedItem(ModifiedItem modifiedItem);
 	
 	List<Object[]> getLookupItems(String orderId);
+
+	boolean exists(String orderID, String productSKU);
 	
 }

@@ -13,4 +13,6 @@ public interface OrderInstructionService {
 	void deleteOrderInstruction(OrderInstruction orderInstruction);
 	
 	void deleteAll();
+
+	Boolean exists(String id);
 }

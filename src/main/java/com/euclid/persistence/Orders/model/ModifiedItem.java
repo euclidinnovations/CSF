@@ -26,10 +26,10 @@ public class ModifiedItem {
     private String itemRecievedSKU;
      
     @Column(name = "itemOrderedQty")
-    private int itemOrderedQty;
+    private String itemOrderedQty;
     
     @Column(name = "itemRecievedQty")
-    private int itemRecievedQty;
+    private String itemRecievedQty;
     
     @Column(name = "itemOrderedSize")
     private String itemOrderedSize;
@@ -82,28 +82,28 @@ public class ModifiedItem {
 
 
 
-	public int getItemOrderedQty() {
+	public String getItemOrderedQty() {
 		return itemOrderedQty;
 	}
 
 
 
 
-	public void setItemOrderedQty(int itemOrderedQty) {
+	public void setItemOrderedQty(String itemOrderedQty) {
 		this.itemOrderedQty = itemOrderedQty;
 	}
 
 
 
 
-	public int getItemRecievedQty() {
+	public String getItemRecievedQty() {
 		return itemRecievedQty;
 	}
 
 
 
 
-	public void setItemRecievedQty(int itemRecievedQty) {
+	public void setItemRecievedQty(String itemRecievedQty) {
 		this.itemRecievedQty = itemRecievedQty;
 	}
 

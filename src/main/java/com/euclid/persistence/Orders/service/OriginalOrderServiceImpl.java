@@ -39,4 +39,11 @@ public class OriginalOrderServiceImpl implements OriginalOrderService{
 		
 	}
 
+	@Override
+	@Transactional
+	public boolean exists(String orderID, String sku) {
+		// TODO Auto-generated method stub
+		return originalOrderDAO.exists(orderID,sku);
+	}
+
 }

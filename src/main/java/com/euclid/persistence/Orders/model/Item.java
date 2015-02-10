@@ -26,13 +26,13 @@ public class Item {
     private String description;
      
     @Column(name = "size")
-    private String phone;
+    private String size;
     
     @Column(name = "aisle")
     private String aisle;
     
     @Column(name = "unitprice")
-    private float unitPrice;
+    private String unitPrice;
  
     
 
@@ -79,15 +79,15 @@ public class Item {
 
 
 
-	public String getPhone() {
-		return phone;
+	public String getsize() {
+		return size;
 	}
 
 
 
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setsize(String size) {
+		this.size = size;
 	}
 
 
@@ -107,14 +107,14 @@ public class Item {
 
 
 
-	public float getUnitPrice() {
+	public String getUnitPrice() {
 		return unitPrice;
 	}
 
 
 
 
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(String unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 

@@ -1,9 +1,10 @@
 package com.euclid.persistence.Orders.dao;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.euclid.persistence.Orders.model.OriginalOrder;
 
 @Repository("originalOrderDAO")
@@ -36,4 +37,14 @@ public class OriginalOrderDAOImpl implements OriginalOrderDAO {
         sessionFactory.getCurrentSession().delete(originalOrder);
 
     }
+
+
+	@Override
+	public boolean exists(String orderID, String sku) {
+		Query query = sessionFactory.getCurrentSession().             
+	    	    createQuery("select 1 from OriginalOrder t where t.orderId = :key and t.SKU = :key2");
+	    	        query.setString("key", orderID );
+	    	        query.setString("key2", sku);
+	    	    return (query.uniqueResult() != null);
+	}
 }

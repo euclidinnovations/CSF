@@ -40,10 +40,18 @@ public class OrderTotalServiceImpl implements OrderTotalService{
 	}
 
 	@Override
+	@Transactional
 	public void deleteAll() {
 		
 		orderTotalDAO.deleteAll();
 		
+	}
+	
+	@Override
+	@Transactional
+	public Boolean exists(String id) {
+		// TODO Auto-generated method stub
+		return orderTotalDAO.exists(id);
 	}
 
 }
