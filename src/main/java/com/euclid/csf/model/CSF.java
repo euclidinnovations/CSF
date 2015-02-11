@@ -33,6 +33,8 @@ public class CSF{
 	
 	private String pickup;
 	
+	private String substitutionPolicy;
+	
 	public String getPickup() {
 		return pickup;
 	}
@@ -135,6 +137,14 @@ public class CSF{
 
 	public void setModifiedItemsMap(Map<String, ArrayList<String>> modifiedItemsMap) {
 		this.modifiedItemsMap = modifiedItemsMap;
+	}
+
+	public String getSubstitutionPolicy() {
+		return substitutionPolicy;
+	}
+
+	public void setSubstitutionPolicy(String substitutionPolicy) {
+		this.substitutionPolicy = substitutionPolicy;
 	}
 	
 }

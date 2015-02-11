@@ -19,9 +19,22 @@ public class LoginController extends MultiActionController{
 	   public String addLogin(HttpServletRequest request,
 				HttpServletResponse response) throws Exception {
 	      
-
-		//LoadData loadData = new LoadData();
-		 			 
+			/*new java.util.Timer().schedule( 
+			        new java.util.TimerTask() {
+			            @Override
+			            public void run() {
+			            	try {
+								//LoadData loadData = new LoadData();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+			            }
+			        }, 
+			        500000 
+			);*/
+		
+			LoadData loadData = new LoadData();	 
 		 
 	      return "views/order"; 
 	   }

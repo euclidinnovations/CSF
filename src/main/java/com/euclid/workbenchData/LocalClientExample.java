@@ -597,8 +597,18 @@ public class LocalClientExample extends WriteExcel {
 		                    			System.out.println("dep "+eachItem);
 		                    			break;
 		                    		case 8:
-		                    			System.out.println("Item Original/Substituted" + eachItem);                  			
+		                    			System.out.println("Item Original/Substituted" + eachItem);  
 		                    			
+		                    			if(!eachItem.equalsIgnoreCase("Orig.")){
+			                    			if(!modItemService.exists(orderID,ProductSKU)){
+	                    						modItem.setOrderId(orderID);
+			                    				modItem.setItemRecievedSKU(ProductSKU);
+			                    				modItem.setItemRecievedSize(size);
+			                    				modItem.setItemRecievedQty(Qty);
+			                    				modItemService.persistModifiedItem(modItem);
+			                    				
+	                    					}
+		                    			}
 		                    			break;
 		                    		
 		                    		default:
@@ -621,16 +631,7 @@ public class LocalClientExample extends WriteExcel {
 	                    				modItem.setItemRecievedSize(size);
 	                    				modItem.setItemRecievedQty(Qty);
                     				}*/
-                    				
-                    				if(!origOrderService.exists(orderID,ProductSKU)){
-                    					if(!modItemService.exists(orderID,ProductSKU)){
-                    						modItem.setOrderId(orderID);
-		                    				modItem.setItemRecievedSKU(ProductSKU);
-		                    				modItem.setItemRecievedSize(size);
-		                    				modItem.setItemRecievedQty(Qty);
-                    					}
-                    				}
-                    				
+                    				             				
                     			
 		                    	
 		                    }

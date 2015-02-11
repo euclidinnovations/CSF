@@ -26,6 +26,7 @@
 	<script src="resources/js/jquery.placeholder.js"></script>
 	<script src="resources/js/jquery.corner.js"></script>	
 	<script src="resources/js/siteJquery.js"></script>
+	
 </head>
 <body>     
 	<div class="container csf gtie8">
@@ -55,7 +56,7 @@
 		</div>
 		<div class="col-sm-4 right">
 			<h4>
-				<span class="custname custtext">$ ${message.orderTotal} </span><span class="label label-default left w100">Order total :</span>
+				<span class="custname custtext"> ${message.orderTotal} </span><span class="label label-default left w100">Order total :</span>
 			</h4>
 			<h4 class="orderH4">
 				<span class="custtext">${message.orderId}</span><span class="label label-default left w100 marright">Order # :</span>
@@ -239,7 +240,7 @@
 <div class="row dlvrdetails box-border-background pad10">
 	<div class="col-sm-12 nopad">
 		<!-- <h6>**Harris Teeter Policy Wrt Substitutions</h6> -->
-		<h4>**Subsitution policy goes here. </h4>
+		<h4>Our goal is to never be out of stock on any item. However, if an item is out of stock our substitution policy is to give you that same item in the closest size at the cost of the item you actually receive. Or, if a sale item is substituted, you will only be charged the sale price. In most cases, we will substitute a national brand product for national brand and generic for generic. On certain items, we have a policy of not substituting unless you specifically tell us to do so. These items include baby products, soft drinks and hygiene products to name a few. </h4>
 		<div class="shopper_delivered">
 			<h5><div>Your Personal Shopper today was</div><textarea class="input-xxlarge" name="personal_shopper" rows="5">[Written note]</textarea> <!-- <input type="text" class="input-large right" name="personal_shopper" value="James"> --></h5>
 			<h5><div>Your Order was delivered by</div><textarea class="input-xxlarge delivered_by" name="delivered_by" rows="5">[Written note]</textarea> <!-- <input type="text" class="input-large delivered_by right" name="delivered_by" value="Stuart Lee"> --></h5>
@@ -357,14 +358,15 @@
 				</textarea></td>                  
 			</tr>         
 		</tbody>
+		
 
 	</table>
 
 	<table class="table table-bordered"> <tr id="HStr12" class="HSStr"><td colspan="4"><div class="row">	
 		<div class="col-sm-12 textcenter">
-			<button type="submit" class="btn btn-success martop15" value = "save">Save</button>
 			<button type="submit" class="btn btn-primary martop15" value = "print">Print</button>
 			<button type="submit" class="btn btn-warning martop15" value ="email">Email</button>
+			<input type="hidden" name = "orderID" value = "${message.orderId}">
 		</div>
 	</div> </td></tr></table>		
 </div><!-- /.table-responsive -->

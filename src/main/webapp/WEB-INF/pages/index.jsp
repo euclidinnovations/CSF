@@ -36,7 +36,6 @@
 			<div class="col-sm-6 col-md-4 col-md-offset-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<strong> Welcome to CSF Application</strong>
 					</div>
 					<div class="panel-body">
 						<form method="POST" action="${pageContext.request.contextPath}/login">
@@ -44,7 +43,7 @@
 								<div class="row">
 									<div class="col-sm-12 col-md-10  col-md-offset-1 ">										
 										<div class="form-group">
-											<input type="submit" class="btn btn-lg btn-primary btn-block" value="Load Data from Workbench">
+											<input type="submit" class="btn btn-lg btn-primary btn-block" value="Welcome to the CSF Application">
 										</div>
 									</div>
 								</div>

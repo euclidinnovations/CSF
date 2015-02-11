@@ -3,4 +3,4 @@
     alert('Email Sent Successfully');
   });
 </script>
-response.sendRedirect("csf");
+response.sendRedirect("/csf/csf.jsp");

@@ -37,6 +37,7 @@ public class CSFController{
 		System.out.println("Entered" + orderId);	
 		
 		//LoadData loadData = new LoadData();
+		
 		CSF csfRecievedData = getDetails(orderId);
 		
 	    System.out.println(csfRecievedData.getEmail());
@@ -79,6 +80,9 @@ public class CSFController{
 		csfdata.setSpecialInstructions(ordInstService.findOrderInstructionById(orderId).getSpecialInstructions());
 		
 		csfdata.setPaymentType(ordInstService.findOrderInstructionById(orderId).getPaymentMethod());
+		
+		
+		csfdata.setSubstitutionPolicy(ordInstService.findOrderInstructionById(orderId).getSubstitution());
 		System.out.println(ordInstService.findOrderInstructionById(orderId).getPaymentMethod());
 		
 		HashMap<String, ArrayList<String>> modifiedItemsMap = new HashMap<String, ArrayList<String>>();
