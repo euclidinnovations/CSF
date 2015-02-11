@@ -1,3 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.Hashtable"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
 <!DOCTYPE html>
 <head>
 	<meta charset="utf-8">	
@@ -73,20 +78,6 @@
 		<div class="bs-example table-bordered pad10 box-border-background" data-example-id="striped-table">							
 			<div id="billing_items_div" class="table-bordered borderwhite">
 				<h3>Modified Items</h3>
-		
-				<table>
-		<c:forEach begin="0" end="21" step="3" varStatus="loop">
-   <c:out value="${loop.count}"/>
-</c:forEach>
-        	<c:forEach items="${message.modifiedItemsMap}" var="modifiedItemsMap" varStatus="loop">
-   				<c:out value="${modifiedItemsMap.key}"/>
-</c:forEach>
-   <tr>
-					<td></td>
-					</tr>
-
-					
-				</table>
 				<table class="table table-striped" id='bill_table' rules="all">
 					<thead>
 						<tr class="headings">
@@ -97,7 +88,30 @@
 							<th>Delete ?</th>
 						</tr>
 					</thead>
-					<tbody>				      
+					<tbody>			
+				<!--  	<%	      
+					ArrayList<String> originalOrders = new ArrayList<String>();
+    HashMap ModifiedOrdersMap  = new HashMap();
+    originalOrders.add("No Aisle Assigned");
+    originalOrders.add("1");
+    originalOrders.add("Gerber 1st Foods - Applesauce Snap on lid 2.5 oz - 2 pack ");
+    originalOrders.add("5.00 oz");
+    originalOrders.add("$1.19$1.19");
+    originalOrders.add("$0.03");
+    originalOrders.add("$0.00");
+    originalOrders.add("Orig.");
+    originalOrders.add("12124195");
+    ModifiedOrdersMap.put("12124195",originalOrders);
+    request.setAttribute("ModifiedOrdersMap", ModifiedOrdersMap);    
+    %>
+     <c:forEach items="${ModifiedOrdersMap}" var="list">
+        <c:forEach items="${list.value}" var="listItem">
+       <%-- ${list.key}-${listItem} --%> <br/>
+       <tr id="tr1" class="outofstockrow">
+       	<td class="title">${listItem}</td>      
+       </tr>
+    </c:forEach>    
+    </c:forEach>
 						<tr id="tr1" class="outofstockrow">
 							<!-- <th scope="row">1</th> -->
 							<td class="title">Oranges</td>

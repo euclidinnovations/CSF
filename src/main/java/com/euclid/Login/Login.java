@@ -1,23 +1,15 @@
 package com.euclid.Login;
 
 public class Login{
-	private String userid;
-	private String password;
+	private String orderId;
 	
 	
-	public void setUserId(String userid){
-		this.userid=userid;
+	public void setOrderId(String userid){
+		this.orderId=userid;
 	}
 	
-	public String getUserId(){
-		return userid;
+	public String getOrderId(){
+		return orderId;
 	}
 	
-	public void setPassword(String password){
-		this.password=password;
-	}
-	
-	public String getPassword(){
-		return password;
-	}
 }

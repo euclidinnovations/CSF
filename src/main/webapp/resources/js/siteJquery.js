@@ -11,7 +11,8 @@ var itemCount = 2;
 			} else {
 				$(this).attr("contentEditable","true");
 			}
-		})
+		})	
+
 		$(".delete").bind("click", Delete);			
 
 		$("#ci_dd").change(function() {
@@ -214,4 +215,12 @@ var itemCount = 2;
    	 	});
     /*DASHBOARD*/
 
+
+    /*Start Click on print button*/
+    	$(".btn-primary").click(function(){
+    		$(".printnone, .delete, #addNewRow, .hide-oosi, .show-oosi, .btn-success, .btn-primary, .btn-warning, #bill_table tr th:nth-child(3), .dropdown-toggle").remove();	    		
+            window.print();    
+            location.reload();       
+		});			
+    /*End Click on print button*/
 	});

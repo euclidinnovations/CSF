@@ -204,7 +204,7 @@ span.custname{padding-bottom: 10px;}
 	.csf .table>thead>tr>th, .csf .table>tbody>tr>th, .csf .table>tbody>tr>td{border-right:0px; vertical-align:top; border-left:0px;}
 	.csf .table-bordered tbody:last-child tr:last-child > th:first-child, .table-bordered tbody:last-child tr:last-child > td:last-child{
 		border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;}
-	.csf .trash{text-align:center; width:7%;}
+	.csf .trash{text-align:center; width:8%;}
 	.csf .table td select.form-control{margin-bottom:4px;}
 	.csf .show-oosi, .csf .hide-oosi{float: right; padding-top: 0px; padding-right: 15px; 
 		cursor:pointer; /*color:#da4f49;*/ color:#5bb75b;}
@@ -222,14 +222,16 @@ span.custname{padding-bottom: 10px;}
 	.csf .shopper_delivered{}
 	.csf .shopper_delivered h5{float:left; width:50%; clear:none;}		
 	.csf #HSS select{width:100px;padding-bottom: 0px; margin:0px;}
+	.csf .topinfo .col-sm-4{padding-right: 0px;}
 	.csf .right h4{float:right;}
-	.csf .right span{float:right;}
+	.csf .right span{float:left;}
+	.csf .right span.custtext{float: right;}
 	.csf .col-sm-6.right{padding-right:0px;}
 	.csf .shopper_delivered .right{float:right; margin-right:14px;}
 	.csf .w202{width:57.6%;}
 	.csf .dob .col-xs-3{padding-left:0px; margin-right:3px; margin-right: 15px;}	
-	.csf .orderH4 .marright{margin-right:85px;}
-	.csf .vicsavingsH4 .marright{margin-right:102px;}
+	.csf .orderH4 .marright{}
+	.csf .vicsavingsH4 .marright{}
 	.csf #billing_items_div #bill_table .width{width:90%;}
 	.csf .HSStr .height{height:30px; margin:0px;}
 	.csf .shopper_delivered h5 div{text-align:center; padding-bottom: 5px;}
@@ -247,6 +249,7 @@ span.custname{padding-bottom: 10px;}
 	.csf .marbot10{margin-bottom:10px; }
 	.csf .floatnone{float: none;}	
 	.csf .sp{font-size: 13px; padding: 0px 14px 0px 14px;}
+	.shopper_delivered textarea.input-xxlarge{width:95%;}
 /*CSF*/		
  
 /*ORDER ID*/
@@ -284,3 +287,23 @@ span.custname{padding-bottom: 10px;}
 *::-ms-backdrop, .csf .homeshopper .input-lg{padding-right:0px; border-radius:4px;}
 *::-ms-backdrop, #bill_table .pad15, .csf .homeshopper .input-medium, .csf .homeshopper .input-xxlarge, .csf .homeshopper .input-xlarge, .csf .homeshopper textarea, .csf .dlvrdetails .input-large{padding-top:5px;}
 /* For the Greater then IE 8 */
+
+@media print{
+
+	.printnone, .delete, #addNewRow, .hide-oosi, .show-oosi, .btn-success, .btn-primary, 
+		.btn-warning, #bill_table tr th:nth-child(3){display: none;}
+	.custname, span.custname{font-size: 20px;}
+	#bill_table tr th:nth-child(width: 100%;)
+	.topinfo .col-sm-7{width: 40%; float: left;}
+	.topinfo .col-sm-4{width: 38%; }
+	.topinfo .custtext{font-size: 15px;}
+	.col-sm-12{padding-right: 0px;}
+	.shopper_delivered h5 div{font-size: 15px;}
+	.csf .col-sm-12{margin-bottom: 0px;}
+	.csf hr{margin: 0px;}
+	#bill_table td, #bill_table th{border: none; background-image: none; background-color: none;}
+}
+
+@media \0screen\,screen\9 {
+    body { background: green; }
+}

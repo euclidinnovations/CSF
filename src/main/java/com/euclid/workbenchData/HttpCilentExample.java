@@ -84,7 +84,7 @@ public class HttpCilentExample extends WriteExcel {
 	//String result2 = "<html><head></head><body><div></div></body></html>";
 	
 	//Find out the orderIDs
-	FindOrderIDs(fetchingUncommittedOrders);	
+	FindOrderIDs(fetchCurrentOrders);	
 	
   }
  

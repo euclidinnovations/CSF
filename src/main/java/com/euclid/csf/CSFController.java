@@ -11,6 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.euclid.csf.*;
@@ -31,11 +32,11 @@ public class CSFController{
 	@Autowired
     private SessionFactory sessionFactory;
 	
-	@RequestMapping("/login")
-	public ModelAndView csfData(Map<String, Object> map) throws Exception {
-		System.out.println("Entered");
-		String orderId = "12125573";
-		LoadData loadData = new LoadData();
+	@RequestMapping("/csf")
+	public ModelAndView csfData(Map<String, Object> map, @RequestParam("orderid") String orderId) throws Exception {
+		System.out.println("Entered" + orderId);	
+		
+		//LoadData loadData = new LoadData();
 		CSF csfRecievedData = getDetails(orderId);
 		
 	    System.out.println(csfRecievedData.getEmail());
@@ -101,6 +102,7 @@ public class CSFController{
 		System.out.println(modifiedItemsMap);
 		
 		csfdata.setModifiedItemsMap(modifiedItemsMap);
+		System.out.println(modifiedItemsMap);
 		//lookupItems= modItemService.getLookupItems(orderId);
 		
 	//	System.out.println("LookupItems: "+lookupItems+ "CHekc is empty: "+lookupItems.isEmpty());
