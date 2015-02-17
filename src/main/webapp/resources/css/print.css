@@ -1,0 +1,12 @@
+  .printnone, .delete, #addNewRow, .hide-oosi, .show-oosi, .btn-success, .btn-primary, 
+    .btn-warning, #bill_table tr th:nth-child(3){display: none;}
+  .custname, span.custname{font-size: 20px;}
+  #bill_table tr th:nth-child(width: 100%;)
+  .topinfo .col-sm-7{width: 40%; float: left;}
+  .topinfo .col-sm-4{width: 38%; }
+  .topinfo .custtext{font-size: 15px;}
+  .col-sm-12{padding-right: 0px;}
+  .shopper_delivered h5 div{font-size: 15px;}
+  .csf .col-sm-12{margin-bottom: 0px;}
+  .csf hr{margin: 0px;}
+  #bill_table td, #bill_table th{border: none; background-image: none; background-color: none; border:1px solid red;}
