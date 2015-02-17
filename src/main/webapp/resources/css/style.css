@@ -134,8 +134,9 @@ span.custname{padding-bottom: 10px;}
 .font25, span.font25{font-size:25px;}
 .padbot5{padding-bottom:5px;}
 .font15{font-size:15px;}
+.font10{font-size:10px !important;}
 .marbot10{margin-bottom:10px; }
-.col-sm-7{width: 61.33%; float: left; padding-left: 0px;}
+.col-sm-7{width: 62%; float: left; padding-left: 0px;}
 .blank_space{padding: 7px; float: left;}
 .width50{width: 50%}
 .width20{width: 20%}
@@ -253,7 +254,7 @@ span.custname{padding-bottom: 10px;}
 	.csf .shopper_delivered textarea.input-xxlarge{width:95%;}
 	.csf .topinfo .col-sm-7 .label, .csf .topinfo .col-sm-4 .label{width: 100px; text-align: left; padding: 5px 5px 5px 5px;}
 	.csf #HStr7 #cc_dd{margin-right: 10px;}	
-	.csf .headings th{height: 30px;}
+	.csf .headings th{height: 30px;}		
 /*CSF*/		
  
 /*ORDER ID*/
@@ -362,4 +363,12 @@ transition: inherit !important;
 .csf .headings th{line-height: 1.5 !important;}
 .csf #HSS select{padding-left: 0px !important; }
 .custtext{font-size: 15px !important;}
+#bill_table tr td:first-child + td + td{border: 0px solid white;}
+.csf .HSStr select{
+   background-image: url('../images/blank.png');
+   background-repeat: no-repeat;
+   background-position: right center;
+   padding-right: 20px;
+  }
+  .pickup{font-size: 15px !important;}
 } /* Print ends */

@@ -13,7 +13,8 @@
 	<link href="resources/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="resources/css/style.css" rel="stylesheet">	
 	<!--[if gte IE 8]>
-	<link href="resources/css/ie8-and-up.css" rel="stylesheet"  /></link>
+		<link href="resources/css/ie8-and-up.css" rel="stylesheet"  /></link>
+		<link rel="stylesheet" media="print" href="../resources/css/print.css" type="text/css" />
 	<![endif]-->
 
 	<link href="resources/css/jquery-ui.css" rel="stylesheet">	
@@ -47,7 +48,7 @@
 				<span class="label label-default left w100">Shopping for :</span><span class="custname custtext underline">${message.firstName} ${message.lastName}</span>
 			</h4>
 			<h4>
-				<span class="label label-default left w100">Picking UP on :</span><span class="custtext">${message.pickup} </span>
+				<span class="label label-default left w100">Picking UP on :</span><span class="custtext pickup">${message.pickup}</span>
 			</h4>
 			<h4>
 				<span class="label label-default left w100">VIC Card :</span><span class="custtext"></span>
@@ -101,8 +102,8 @@
 							<td class="title">${list.key}</td>
 							<td>
 								<div id="sidd${i.count}">
-									<input type="text" class="form-contorl input-xlarge pad15 width" id="sidd${i.count}_input" value="No item substituted"/>
-									<span class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" title="tr${i.count}" ><img src="resources/images/dropdown-arrow.png" /></span>									
+									<textarea class="form-contorl input-xlarge pad15 width" id="sidd${i.count}_input"> No item substituted </textarea>
+									<span class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" title="tr${i.count}" onmouseover="this.title='';"><img src="resources/images/dropdown-arrow.png" /></span>									
 									<ul class="dropdown-menu" role="menu">
 									<c:forEach items="${list.value}" var="listItem"  varStatus="inLoop"> 
 										<li role="presentation"><a title="sidd${i.count}" href="javascript:void(0)" class="si">${listItem}</a></li>
@@ -197,7 +198,7 @@
 						</tr>
 						<tr id="HStr7" class="section2 HSStr">
 							<td>Customer Called?</td>
-							<td colspan="4"><select name="cc_dd" id="cc_dd">
+							<td colspan="2"><select name="cc_dd" id="cc_dd">
 								<option value="Yes">Yes</option>
 								<option value="No" selected="selected">No</option>
 							</select>Notes about call : <input type="text" class="form-contorl input-medium w202 martop10 height" name="custcalled_message" maxlength="25" value=" " /></td>							
@@ -243,8 +244,7 @@
 			</tr>
 			<tr id="HStr11" class="HSStr">
 				<td class="valignmiddle toppad10">Bulk Items</td>
-				<td colspan="3"><textarea class="input-xxlarge" name="notesspace">
-				</textarea></td>                  
+				<td colspan="3"><textarea class="input-xxlarge" name="notesspace"></textarea></td>                  
 			</tr>         
 		</tbody>
 		
@@ -255,7 +255,7 @@
 		<div class="col-sm-12 textcenter">
 			<button type="submit" class="btn btn-primary martop15" value = "print">Print</button>
 			<button type="submit" class="btn btn-warning martop15" value ="email" onclick="myFunction()">Email</button>
-			<button type="submit" class="btn btn-warning martop15" value ="Back" onclick="goBack()">Back</button>
+			<button type="submit" class="btn btn-success martop15" value ="Back" onclick="goBack()">Back</button>
 			<input type="hidden" name = "orderID" value = "${message.orderId}">
 		</div>
 	</div> </td></tr></table>		

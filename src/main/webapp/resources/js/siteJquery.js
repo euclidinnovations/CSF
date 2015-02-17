@@ -50,9 +50,17 @@ var itemCount = 2;
 		$(".si").click(function() {
 			var ddValue = $(this).text();
 			var ddTitle = $(this).attr("title");
-			//alert("#"+ddTitle+" #"+ddTitle+"_input");
+			var selectedID = "#"+ddTitle+" #"+ddTitle+"_input";
 			$("#"+ddTitle+" #"+ddTitle+"_input").val(ddValue);
-			//$("#"+ddTitle+" #"+ddTitle+"_input").css("font-weight","bold");
+			
+			var countChar		=	ddValue.length;
+			//alert("No if chars : "+countChar)	
+			var lineBreak		=	45; //width of the textarea - here I manually added
+			var numberOfLines	=	Math.round(countChar/lineBreak); // It will gives you the lines		
+			//alert("No if lines : "+numberOfLines)	
+			var dynamicHeight	=	25*numberOfLines;	// so you can multiply with your height of textarea
+			if(numberOfLines > 0)
+				$(selectedID).css('height',dynamicHeight);			
 		});   
 		
 		/*$(".dropdown-toggle").click(function() {
@@ -170,8 +178,7 @@ var itemCount = 2;
         	var ddValue = $(this).text();
 			var ddTitle = $(this).attr("title");
 			//alert("#"+ddTitle+" #"+ddTitle+"_input");
-			$("#"+ddTitle+" #"+ddTitle+"_input").val(ddValue);
-			$("#"+ddTitle+" #"+ddTitle+"_input").css("font-weight","bold");
+			$("#"+ddTitle+" #"+ddTitle+"_input").val(ddValue);			
         }
         
 
@@ -214,17 +221,19 @@ var itemCount = 2;
     /*DASHBOARD*/
 
     /*Start Click on print button*/
-    	$(".btn-primary").click(function(){
-    		$(".csf .homeshopper").css('width','100%');
-    		$(".dropdown-toggle, .printnone, .delete, #addNewRow, .hide-oosi, .show-oosi, .btn-success, .btn-primary, .btn-warning, #bill_table tr th:nth-child(3)").remove();	    		
-            $(".homeshopper input, .homeshopper textarea, .homeshopper select, .homeshopper div, .homeshopper table, .homeshopper tr, .homeshopper td, .homeshopper tbody, .homeshopper thead").css('border','1px solid #FFF !important');
-            window.print();    
-            location.reload();
+    	$(".btn-primary").click(function(){    		
+    		$(".container").css('width','100%'); 		
+    		$(".csf .homeshopper").css('width','100%');    		
+    		$(".dropdown-toggle, .printnone, .delete, #addNewRow, .hide-oosi, .show-oosi, .btn-success, .btn-primary, .btn-warning, #bill_table tr th:nth-child(3)").hide();	    		                                              
+            window.print();  
+            $(".container").css('width','86%');
+            $(".dropdown-toggle, .printnone, .delete, #addNewRow, .hide-oosi, .btn-success, .btn-primary, .btn-warning, #bill_table tr th:nth-child(3)").show();
 		});			
     /*End Click on print button*/
 
 	    $("#bill_table tr.outofstockrow:odd").css('background-color','#F6F6F6');
-		$("#bill_table tr.outofstockrow:even").css('background-color','#FFF');
+		$("#bill_table tr.outofstockrow:even").css('background-color','#FFF');	
+		
 	});
 	
 	/*function showhideDOB(){
@@ -239,3 +248,4 @@ var itemCount = 2;
 		else
 			document.getElementById('HStr8').style.display = 'none';		
 	}*/
+

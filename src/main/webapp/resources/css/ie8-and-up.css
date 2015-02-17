@@ -78,4 +78,10 @@ INPUT[type='text']{height:auto;}
   .csf .col-sm-12{margin-bottom: 0px;}
   .csf hr{margin: 0px;}
   #bill_table td, #bill_table th{border: none; background-image: none; background-color: none;}
+  
+  #bill_table tr td:first-child + td + td { background-color: #fff !important; background-image: none !important; 
+    border-color: transparent !important; border: none !important; border-radius: 0px !important; -webkit-box-shadow: none !important; 
+    box-shadow: none !important; -webkit-transition: inherit !important; -o-transition: inherit !important; transition: inherit !important;
+  }
+  .pickup{font-size: 15px !important;}
 }
