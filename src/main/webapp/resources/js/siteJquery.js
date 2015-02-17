@@ -52,7 +52,7 @@ var itemCount = 2;
 			var ddTitle = $(this).attr("title");
 			//alert("#"+ddTitle+" #"+ddTitle+"_input");
 			$("#"+ddTitle+" #"+ddTitle+"_input").val(ddValue);
-			$("#"+ddTitle+" #"+ddTitle+"_input").css("font-weight","bold");
+			//$("#"+ddTitle+" #"+ddTitle+"_input").css("font-weight","bold");
 		});   
 		
 		/*$(".dropdown-toggle").click(function() {
@@ -90,26 +90,22 @@ var itemCount = 2;
         $('#addNewRow').click(function () {        	
         	var trID	=	$('#bill_table tr:last').attr('id');
         	trID 		= 	trID.replace('tr', '');
-        	var numRow 	= 	parseInt(trID) + 1;        	
+        	var numRow 	= 	parseInt(trID) + 1;      
+        	var cssclass; 
 
-		    var tr 		=   '<tr id="tr'+numRow+'" class="outofstockrow">';
+        	if (numRow % 2 == 0) { cssclass = "f6"; }
+   			else { cssclass = "ff"; }
+
+		    var tr 		=   '<tr id="tr'+numRow+'" class="outofstockrow '+cssclass+'">';
 				tr		+=			'<td class="title addedtd"><input type="text" class="input-medium addedinput" /></td>';
 				tr		+=			'<td>';
 				tr		+=			'	<div id="sidd'+numRow+'">';
 				tr		+=			'		<input type="text" class="form-contorl input-xlarge pad15 width" id="sidd'+numRow+'_input" value="No item substituted"/>';
-				tr		+=			'		<span class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" title="tr'+numRow+'"><img src="resources/images/dropdown-arrow.png" /></span>';
-				tr		+=			'		<ul class="dropdown-menu" role="menu">';
-				tr		+=			'			<li role="presentation"><a title="sidd'+numRow+'" href="javascript:void(0)" class="si">Florida Organges</a></li>';
-				tr		+=			'			<li role="presentation"><a title="sidd'+numRow+'" href="javascript:void(0)" class="si">Kesar Mengo</a></li>'; 
-				tr		+=			'			<li role="presentation"><a title="sidd'+numRow+'" href="javascript:void(0)" class="si">China Guava</a></li>'; 
-				tr		+=			'			<li role="presentation"><a title="sidd'+numRow+'" href="javascript:void(0)" class="si">Hawaien Apple</a></li>'; 
-				tr		+=			'			<li role="presentation"><a title="sidd'+numRow+'" href="javascript:void(0)" class="si">Indonesian Pineapple</a></li>';                                            
-				tr		+=			'		</ul>';
 				tr		+=			'	</div>';
 				tr		+=			'</td>';
 				tr		+=			'<td class="trash">';
 				tr		+=			' <button id="'+numRow+'" type="button" class="btn delete" aria-label="Left Align">';
-				tr		+=			'  <span class="delete"><img src="resources/images/trash.png" class="delete"/></span>';
+				tr		+=			'  <span><img src="resources/images/trash.png"/></span>';
 				tr		+=			' </button>';
 				tr		+=			'</td>';
 				tr		+=	'</tr>';
@@ -123,10 +119,12 @@ var itemCount = 2;
 
         //START DELETE 
         function Delete(){
+
         	var buttonId  = $(this).attr("id");			
-			var buttonCls = $("#tr"+ buttonId).attr("class");					
+			var buttonCls = $("#tr"+ buttonId).attr("class");		
+			
 			//Start this is for the outofstock item row			
-			if(buttonCls == 'outofstockrow'){			
+			if(buttonCls == 'outofstockrow' || buttonCls == 'outofstockrow ff' || buttonCls == 'outofstockrow f6'){			
 				$( "#dialog-confirm" ).dialog({
 			      resizable: false,
 			      height:200,
@@ -215,12 +213,29 @@ var itemCount = 2;
    	 	});
     /*DASHBOARD*/
 
-
     /*Start Click on print button*/
     	$(".btn-primary").click(function(){
-    		$(".printnone, .delete, #addNewRow, .hide-oosi, .show-oosi, .btn-success, .btn-primary, .btn-warning, #bill_table tr th:nth-child(3), .dropdown-toggle").remove();	    		
+    		$(".csf .homeshopper").css('width','100%');
+    		$(".dropdown-toggle, .printnone, .delete, #addNewRow, .hide-oosi, .show-oosi, .btn-success, .btn-primary, .btn-warning, #bill_table tr th:nth-child(3)").remove();	    		
+            $(".homeshopper input, .homeshopper textarea, .homeshopper select, .homeshopper div, .homeshopper table, .homeshopper tr, .homeshopper td, .homeshopper tbody, .homeshopper thead").css('border','1px solid #FFF !important');
             window.print();    
-            location.reload();       
+            location.reload();
 		});			
     /*End Click on print button*/
+
+	    $("#bill_table tr.outofstockrow:odd").css('background-color','#F6F6F6');
+		$("#bill_table tr.outofstockrow:even").css('background-color','#FFF');
 	});
+	
+	/*function showhideDOB(){
+		var x = document.getElementById("ci_dd").value;
+	   
+		if(x == 'Yes')
+			document.getElementById('HStr8').style.display = 'block';
+
+		else if(x == 'No')	
+			document.getElementById('HStr8').style.display = 'none';
+
+		else
+			document.getElementById('HStr8').style.display = 'none';		
+	}*/

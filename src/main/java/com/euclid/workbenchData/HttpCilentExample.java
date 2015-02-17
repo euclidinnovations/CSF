@@ -75,6 +75,8 @@ public class HttpCilentExample extends WriteExcel {
 	
 	String fetchCurrentOrders = GetPageContent(current_pending);
 	
+	System.out.println("fetching committed orders");
+	
 	//System.out.println(result2);
 	
 	//StringBuffer html = http.GetHtml();
@@ -88,7 +90,7 @@ public class HttpCilentExample extends WriteExcel {
 	
   }
  
-  private void sendPost(String url, List<NameValuePair> postParams) 
+  void sendPost(String url, List<NameValuePair> postParams) 
         throws Exception {
  
 	HttpPost post = new HttpPost(url);
@@ -127,7 +129,7 @@ public class HttpCilentExample extends WriteExcel {
  
   }
  
-  private String GetPageContent(String url) throws Exception {
+  String GetPageContent(String url) throws Exception {
  
 	HttpGet request = new HttpGet(url);
  

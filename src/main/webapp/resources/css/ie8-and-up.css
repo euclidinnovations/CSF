@@ -36,8 +36,9 @@ INPUT[type='text']{height:auto;}
 .row.homeshopper{clear:both;}
 .csf .homeshopper .spanRadio{margin-top:12px;}
 #bill_table .pad15{margin:3px 0px 3px 0px;padding:2px 4px 6px 8px;}
-.csf .homeshopper .input-xlarge, .csf .homeshopper .input-large, .csf .homeshopper .input-medium, .csf .shopper_delivered .right{padding:7px 5px 9px 5px;}
-.csf .HSStr .height{height:34px;}
+.csf .homeshopper .input-xlarge, .csf .homeshopper .input-large, 
+  .csf .homeshopper .input-medium, .csf .shopper_delivered .right{/*padding:7px 5px 9px 5px;*/ padding: 4px 0px 0px 4px;}
+.csf .HSStr .height{height:30px;}
 .csf .table > TBODY > TR > TD{padding-top:0px;}
 .open > .dropdown-menu{left:65.2%;}
 .csf #HSS SELECT{margin:0px; height:23px; padding:0px 0px 0px 4px;}
@@ -49,6 +50,7 @@ INPUT[type='text']{height:auto;}
 .csf .addedinput{margin-top: 4px; background-color: transparent; padding-top: 0px;}
 .csf .addedtd{width: 34%; height: 17px;}
 .csf .marbot29{margin-bottom:29px; }
+.csf .homeshopper #HStr7 input { width: 30.5%; }
 
 .dashboard #recentRequests{margin-right: 15px;}
 .dashmenuCol, .dashmenu, .dashmenu .navbar-collapse, 
@@ -59,7 +61,7 @@ INPUT[type='text']{height:auto;}
 .dashboard .col-md-3 {width: 25%; float: left; padding: 5px 0px 5px 5px;}
 .dashboard .col-md-12{width: 100%; padding: 5px 0px 5px 5px;}
 .dashbaord .col-md-6, .dashboard .OSO .col-md-6{width: 50%; padding: 5px 0px 5px 5px;}
-
+.csf .homeshopper #HStr7 INPUT{margin-top: 20px; margin-left: -113px; }
 #enterorderid input.pad15{padding: 7px; margin: 0px;}
 
 @media print{

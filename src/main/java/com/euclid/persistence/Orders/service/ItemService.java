@@ -17,5 +17,5 @@ public interface ItemService {
 
 	Boolean exists(String id);
 
-	List<String[]> getMappedItems(String itemName);
+	List<String[]> getMappedItems(String itemName, String orderId);
 }

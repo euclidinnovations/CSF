@@ -47,7 +47,8 @@ public class ModifiedItemDAOImpl implements ModifiedItemDAO {
     public List<Object[]> getLookupItems(String orderId){
     			
 		Query query = sessionFactory.getCurrentSession().
-				createQuery("select c.itemRecievedSKU from ModifiedItem c");
+				createQuery("select c.itemOrderedName,c.itemRecievedName from ModifiedItem c WHERE c.orderId=:key");
+				query.setString("key", orderId);
 		List<Object[]> rows = query.list();
 		return rows;
     }
@@ -56,7 +57,7 @@ public class ModifiedItemDAOImpl implements ModifiedItemDAO {
 	@Override
 	public boolean exists(String orderID, String productSKU) {
 		Query query = sessionFactory.getCurrentSession().             
-	    	    createQuery("select 1 from ModifiedItem t where t.orderId = :key and t.itemRecievedSKU = :key2");
+	    	    createQuery("select 1 from ModifiedItem t where t.orderId = :key and t.itemOrderedSKU = :key2");
 	    	        query.setString("key", orderID );
 	    	        query.setString("key2", productSKU );
 	    	    return (query.uniqueResult() != null);

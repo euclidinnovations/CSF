@@ -121,8 +121,8 @@ body::after {
 .f6{background-color: #F6F6F6;}
 .ff{background-color: #FFF;}
 .dropdown-toggle { top: 0px; cursor: pointer; }
-.open > .dropdown-menu { left: 63.6%; width: 23.7%; top: inherit;}
-#bill_table .dropdown-menu > li > a{}
+.open > .dropdown-menu { left: 63.6%; width: 33.7%; top: inherit;}
+#bill_table .dropdown-menu > li > a{white-space: normal;}
 hr, .hr { display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset;
     border-width: 1px; }
 .top-border{display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset;
@@ -167,16 +167,17 @@ span.custname{padding-bottom: 10px;}
 	 .csf .homeshopper .table-bordered thead, 
 	  .csf .homeshopper .table-bordered>tbody>tr>td,
 	   .csf .homeshopper .table-bordered>tbody>tr>th, 
-	   .csf .homeshopper .table-bordered thead th {border:none; padding-top:5px;}
+	   .csf .homeshopper .table-bordered thead th {border:none; padding-top:0px; padding-bottom: 5px; line-height: 1;}
 	.csf .homeshopper h4{padding-left: 10px; color: #404040;} 
 	.csf .headings th, #bill_table .headings{color:#707070;}/*707070*/
-	.csf .title{color:#708090;}
+	.csf .title{color:#708090; width: 45%;}
 	.csf .homeshopper{clear:both;page-break-before: always;margin-left:auto; margin-right:auto;}
-	.csf .homeshopper .input-medium, .csf .homeshopper .input-xxlarge, .csf .homeshopper .input-xlarge, .csf .homeshopper textarea{color: #707070;margin:0px; height:30px;}	
+	.csf .homeshopper .input-medium, .csf .homeshopper .input-xxlarge, 
+		.csf .homeshopper .input-xlarge, .csf .homeshopper textarea{color: #707070; margin:0px; height:30px;}	
 	.csf .homeshopper .input-medium{width:44%;}
-	.csf .homeshopper .input-xxlarge{width:92%;}
+	.csf .homeshopper .input-xxlarge{width:95%;}
 	.csf .homeshopper textarea{min-height: 90px;}	
-	.csf .homeshopper .input-medium:hover{cursor: pointer;}	
+	.csf .homeshopper .input-medium:hover{}	
 	.csf .homeshopper .spanInput{display: block; margin-left: 0px;}
 	.csf .homeshopper .spanRadio{display: block; margin-left: 5px; 
 			margin-top: 3px; color: #707070; font-weight: normal;}	
@@ -221,7 +222,7 @@ span.custname{padding-bottom: 10px;}
 	.csf button.delete span img{/*opacity:0.7;*/ vertical-align:top;}
 	.csf .shopper_delivered{}
 	.csf .shopper_delivered h5{float:left; width:50%; clear:none;}		
-	.csf #HSS select{width:100px;padding-bottom: 0px; margin:0px;}
+	.csf #HSS select{width:97px;padding-bottom: 0px; margin:0px; padding-top: 0px; padding-right: 0px;}
 	.csf .topinfo .col-sm-4{padding-right: 0px;}
 	.csf .right h4{float:right;}
 	.csf .right span{float:left;}
@@ -235,7 +236,7 @@ span.custname{padding-bottom: 10px;}
 	.csf #billing_items_div #bill_table .width{width:90%;}
 	.csf .HSStr .height{height:30px; margin:0px;}
 	.csf .shopper_delivered h5 div{text-align:center; padding-bottom: 5px;}
-	.csf .homeshopper #HStr7 input{width:100%;}
+	.csf .homeshopper #HStr7 input{width:29%; position: absolute; margin-top: 15px; margin-left: -111px; font-size: 13px;}
 	.csf .homeshopper{margin}
 	.csf .shopper_delivered .delivered_by{float: right;}	
 	.csf #addNewRow{padding: 5px; cursor: pointer;}
@@ -249,7 +250,10 @@ span.custname{padding-bottom: 10px;}
 	.csf .marbot10{margin-bottom:10px; }
 	.csf .floatnone{float: none;}	
 	.csf .sp{font-size: 13px; padding: 0px 14px 0px 14px;}
-	.shopper_delivered textarea.input-xxlarge{width:95%;}
+	.csf .shopper_delivered textarea.input-xxlarge{width:95%;}
+	.csf .topinfo .col-sm-7 .label, .csf .topinfo .col-sm-4 .label{width: 100px; text-align: left; padding: 5px 5px 5px 5px;}
+	.csf #HStr7 #cc_dd{margin-right: 10px;}	
+	.csf .headings th{height: 30px;}
 /*CSF*/		
  
 /*ORDER ID*/
@@ -285,13 +289,13 @@ span.custname{padding-bottom: 10px;}
 *::-ms-backdrop, .csf input, .csf select{height:30px;}
 *::-ms-backdrop, .csf .homeshopper .spanRadio{margin-top:10px;}
 *::-ms-backdrop, .csf .homeshopper .input-lg{padding-right:0px; border-radius:4px;}
-*::-ms-backdrop, #bill_table .pad15, .csf .homeshopper .input-medium, .csf .homeshopper .input-xxlarge, .csf .homeshopper .input-xlarge, .csf .homeshopper textarea, .csf .dlvrdetails .input-large{padding-top:5px;}
+*::-ms-backdrop, #bill_table .pad15, .csf .homeshopper .input-medium, .csf .homeshopper .input-xxlarge, .csf .homeshopper .input-xlarge, .csf .homeshopper textarea, .csf .dlvrdetails .input-large{padding-top:0px; padding-bottom: 0px;}
 /* For the Greater then IE 8 */
 
 @media print{
-
+	body, body div{border-radius: 0px !important; border: none 0px !important; background: transparent 0px !important; zoom:1;}
 	.printnone, .delete, #addNewRow, .hide-oosi, .show-oosi, .btn-success, .btn-primary, 
-		.btn-warning, #bill_table tr th:nth-child(3){display: none;}
+		.btn-warning, #bill_table tr th:nth-child(3), #bill_table tr td:nth-child(3){display: none;}
 	.custname, span.custname{font-size: 20px;}
 	#bill_table tr th:nth-child(width: 100%;)
 	.topinfo .col-sm-7{width: 40%; float: left;}
@@ -302,8 +306,60 @@ span.custname{padding-bottom: 10px;}
 	.csf .col-sm-12{margin-bottom: 0px;}
 	.csf hr{margin: 0px;}
 	#bill_table td, #bill_table th{border: none; background-image: none; background-color: none;}
+	.left.nomar h6{line-height: 0;}	
+	body .csf .homeshopper .input-medium{border-radius: 0px !important; border: none 0px !important; background: transparent 0px !important;}
+	body .csf .dlvrdetails{margin-bottom: 0px !important;}
+	.csf .homeshopper .input-medium, .csf .homeshopper .input-xxlarge, 
+		.csf .homeshopper .input-xlarge, .csf .homeshopper textarea{border: 1px solid #FFF !important;}
+	body .homeshopper li, body .homeshopper ul, body .homeshopper input, body .homeshopper textarea, body .homeshopper select, 
+		body .homeshopper div{	border: 1px solid #FFF !important; background-color: transparent !important; 
+								box-shadow: none !important; border-radius: 0px !important; background-image: none !important;}	
+	.dropdown-menu{display: none;}
+	.csf .sp{font-size: 11px;}
+	textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], 
+		input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], 
+		input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{background-color: transparent !important;
+border: none !important;
+-webkit-box-shadow: none !important;
+-moz-box-shadow: none !important;
+box-shadow: none !important;
+-webkit-transition: inherit !important;
+-moz-transition: inherit !important;
+-o-transition: inherit !important;
+transition: inherit !important;}
+.csf .table>tbody>tr>td{line-height: 1.5 !important; }
+input[type="text"],select{padding-left: 0px !important;}
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 2px 30px 2px 2px;
+    border: none;
+}
+.csf .homeshopper #HStr7 input {
+width: 27.5% !important;
+position: absolute !important;
+margin-top: 10px !important;
+margin-left: -111px !important;
+font-size: 12px;
 }
 
-@media \0screen\,screen\9 {
-    body { background: green; }
+.csf #HSS select{height: 23px !important; padding-top: 0px !important; margin-top: 0px !important; padding-bottom: 0px !important;}
+
+.form-control {
+background-color: #fff !important;
+background-image: none !important;
+border-color: transparent !important;
+border: none !important;
+border-radius: 0px !important;
+-webkit-box-shadow: none !important;
+box-shadow: none !important;
+-webkit-transition: inherit !important;
+-o-transition: inherit !important;
+transition: inherit !important;
 }
+
+.csf .headings th{line-height: 1.5 !important;}
+.csf #HSS select{padding-left: 0px !important; }
+.custtext{font-size: 15px !important;}
+} /* Print ends */

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -37,18 +39,41 @@ public class CSFController{
 		System.out.println("Entered" + orderId);	
 		
 		//LoadData loadData = new LoadData();
+		new java.util.Timer().schedule( 
+		        new java.util.TimerTask() {
+		            @Override
+		            public void run() {
+		            	try {
+							LoadData loadData = new LoadData();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		            }
+		        }, 
+		        100000
+		);
 		
-		CSF csfRecievedData = getDetails(orderId);
+		CSF csfRecievedData = new CSF();
 		
-	    System.out.println(csfRecievedData.getEmail());
+		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
+		OrderService ordService = (OrderService) context.getBean("orderService");
 		
-		return new ModelAndView("views/csf", "message", csfRecievedData);
+		if(ordService.exists(orderId)){
+			csfRecievedData =  getDetails(orderId);
+			// System.out.println(csfRecievedData);
+			 
+			return new ModelAndView("views/csf", "message", csfRecievedData);
+		}
+		
+	   
+		return new ModelAndView("views/Result", "message", csfRecievedData);
 	}
 	
 	public CSF getDetails(String orderId){
 		System.out.println("load context");
-	 	
 		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
+		
 		System.out.println(context);
 		
 		CustomerService cusService = (CustomerService) context.getBean("customerService");
@@ -86,27 +111,42 @@ public class CSFController{
 		System.out.println(ordInstService.findOrderInstructionById(orderId).getPaymentMethod());
 		
 		HashMap<String, ArrayList<String>> modifiedItemsMap = new HashMap<String, ArrayList<String>>();
-		ArrayList<String> modifiedItemsMatch = new ArrayList<String>();
+		ArrayList<String> modifiedItemsMatch ;
 		List<Object[]> rows = new ArrayList<Object[]>();
 		rows = modItemService.getLookupItems(orderId);
 		for (Object[] row: rows) {
-		    System.out.println("id: " + row[0]);		    
-		    System.out.println("setup 2"+ itemService.findItemById(row[0].toString()).getItemName());
-			String itemName = itemService.findItemById(row[0].toString()).getItemName();
-			List<String[]> mappedItemsList = new ArrayList<String[]>();
-			mappedItemsList = itemService.getMappedItems(itemName);	
-			ArrayList<String> itemsList = new ArrayList<String>();
-			for(String[] itm : mappedItemsList){
-				itemsList.add(itm[0].toString());
-			}
-		    modifiedItemsMap.put(itemService.findItemById((String) row[0]).getItemName(), itemsList);	    	    
+			
+			
+			System.out.println("id: " + row[0]);
+			
+			String itemOrdered = (String) row[0];
+			
+			String itemRecieved = (String) row[1];
+			/*System.out.println("setup 1"+ itemService.findItemById((String) row[1]).getItemName());
+			System.out.println("setup 2"+ itemService.findItemById(row[1].toString()).getItemName());*/
+			modifiedItemsMatch = new ArrayList<String>();
+			modifiedItemsMatch.add(itemRecieved);
+			
+		List<String[]> mappedItemsList = new ArrayList<String[]>();
+		
+		/*mappedItemsList = itemService.getMappedItems(itemOrdered, orderId);
+		System.out.println("mapped item list "+mappedItemsList.get(0));
+		for (String[] mapItem:mappedItemsList) {
+			String item =(String) mapItem[0];
+			System.out.println("ITEMMMMM "+item);
+		}*/
+		//modifiedItemsMatch.add(mappedItemsList.get(0).toString());
+			
+		//	modifiedItemsMatch.add(itemService.findItemById((String) row[1]).getItemName());
+			modifiedItemsMap.put(itemOrdered, modifiedItemsMatch);
+			//System.out.println("name: " + row[1]);	    
 		    
 		}
-		
 		System.out.println(modifiedItemsMap);
+		//System.out.println(modifiedItemsMap);
 		
-		csfdata.setModifiedItemsMap(modifiedItemsMap);
-		System.out.println(modifiedItemsMap);
+		//csfdata.setModifiedItemsMap(modifiedItemsMap);
+		//System.out.println(modifiedItemsMap);
 		//lookupItems= modItemService.getLookupItems(orderId);
 		
 	//	System.out.println("LookupItems: "+lookupItems+ "CHekc is empty: "+lookupItems.isEmpty());
@@ -114,7 +154,7 @@ public class CSFController{
 		//System.out.println("get item: "+lookupItems.size()+ "item:"+ lookupItems.get(0).toString());
 	//	System.out.println("LookupItems:  "+ lookupItems.get(0) +"size: "+lookupItems.size());
 		//modItemService.findModifiedItemById(orderId).
-			
+		csfdata.setModifiedItemsMap(modifiedItemsMap);
 		csfdata.setOrderTotal(ordTotService.findOrderTotalById(orderId).getOrderTotal().toString());
 	
 		csfdata.setPickup(ordService.findOrderById(orderId).getPickup());

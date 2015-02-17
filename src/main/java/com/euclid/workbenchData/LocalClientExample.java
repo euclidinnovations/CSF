@@ -69,7 +69,7 @@ public class LocalClientExample extends WriteExcel {
   private HttpClient client = HttpClientBuilder.create().build();
   private final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36";
  
-  public LocalClientExample() throws Exception {
+  public void getLocalClientExample() throws Exception {
  
 	String url = "https://wb2.harristeeter.com/Login.aspx";
 	String wg = "https://wb2.harristeeter.com/StoreMenu.aspx?dayspassexp=61";
@@ -79,46 +79,14 @@ public class LocalClientExample extends WriteExcel {
 	// make sure cookies is turn on
 	//CookieHandler.setDefault(new CookieManager());
  
-	//LocalClientExample http = new LocalClientExample();
+	LocalClientExample http = new LocalClientExample();
  
-	//String page = http.GetPageContent(url);
- 
-	//List<NameValuePair> postParams = 
-               //http.getFormParams(page, "hteeter","Shop001");
- 
-	//http.sendPost(url, postParams);
 	
-	//http.sendPost(wg, postParams);
- 
-	//String result = http.GetPageContent(wg);
-	
-	//System.out.println(result);
- 
-	//System.out.println("\nAll uncommitted orders");
-		
-	//String result1 = http.GetPageContent(uncommited);
-	
-	//System.out.println(result1);
-	
-	//System.out.println("\nCurrent and Pending orders");
-	
-	//String result2 = http.GetPageContent(current_pending);
-	
-	//System.out.println(result2);
-	
-	//StringBuffer html = http.GetHtml();
-	
-	//System.out.println(html);
-	
-	//String result2 = "<html><head></head><body><div></div></body></html>";
 	
 	//Find out the orderIDs
-	FindOrderIDs("hi");	
+	http.FindOrderIDs("hi");	
 	
-	//Create .xls file from string we got
-	//http.WriteExcelFile(result1);
 	
-	//System.out.println("Done");
   }
  
   private void sendPost(String url, List<NameValuePair> postParams) 
@@ -297,7 +265,7 @@ public class LocalClientExample extends WriteExcel {
         	Fname = Fname.substring(0, Fname.lastIndexOf("."));
         
 	        //System.out.println("File " + Fname);
-	        if(!Fname.toLowerCase().contains("_customer") && !Fname.toLowerCase().contains("_exceptionreport")){	//If is contains "customer" it will not in 
+	        if(Fname.toLowerCase().contains("_order")){	//If is contains "customer" it will not in 
 		        // It will get order details HTML from the local system
 		        ReadExcel read = new ReadExcel();
 		        read.setInputFile("c:/temp/"+Fname+".xls");
@@ -356,23 +324,9 @@ public class LocalClientExample extends WriteExcel {
 		    	
 		    	String addcharges		=	orderAdditionalCharges(htmlPage);
 		    	String ordertotal		=	orderTotal(htmlPage);
-		    	
-		    	/*Customers Map*/
-		    	List<String> customersArr  = new ArrayList<String>(); 
-		    	customersArr.add(customerID);
-		    	customersArr.add(fName);
-		    	customersArr.add(lName);
-		    	customersArr.add(phone);
-		    	customersArr.add(email);
-		    	customersArr.add(address);
-		    	/* ---- Customers Table */
 		    	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
 		    	CustomerService cusService = (CustomerService) context.getBean("customerService");
-		    	//cusService.deleteCustomer(cusService.findCustomerById(customerID));
-		    	//cusService.deleteAll();
-		   
-		    	System.out.println("cusID ********* outside"+customerID);
-		    	System.out.println("exits returns ********* "+cusService.exists(customerID));
+		    	
 		    	if(!cusService.exists(customerID)){
 		    		System.out.println("cusID ********* inside"+customerID);
 				    	Customer cus = new Customer();
@@ -385,16 +339,14 @@ public class LocalClientExample extends WriteExcel {
 						cusService.persistCustomer(cus);
 		    	}
 		    	/* -- Customers Table End*/
-		    	/*HashMap customersMap  = new HashMap();
-		    	customersMap.put(customerID, customersArr);*/
-		    	
 		    	/*---------------------------------------*/
 		    	
 		    	/*Orders Map*/
-		    	List<String> ordersArr  = new ArrayList<String>(); 
+		    	/*List<String> ordersArr  = new ArrayList<String>(); 
 		    	ordersArr.add(customerID);
-		    	ordersArr.add(fullfilment);
-		    	
+		    	ordersArr.add(fullfilment);*/
+		    	/*HashMap ordersMap  = new HashMap();
+		    	ordersMap.put(orderID, ordersArr);*/
 		    	
 		    	OrderService ordService = (OrderService) context.getBean("orderService");
 		    	//ordService.deleteAll();
@@ -405,18 +357,17 @@ public class LocalClientExample extends WriteExcel {
 				    	ord.setPickup(fullfilment);
 				    	ordService.persistOrder(ord);
 		    	}
-		    	/*HashMap ordersMap  = new HashMap();
-		    	ordersMap.put(orderID, ordersArr);*/
 		    	/*---------------------------------------*/
-		    	
-		    	
+		    			    	
 		    	/*OrderInstructions Map*/
-		    	List<String> orderInstructionsArr   = new ArrayList<String>(); 
+		    	/*List<String> orderInstructionsArr   = new ArrayList<String>(); 
 		    	orderInstructionsArr.add(substitution);
 		    	orderInstructionsArr.add(specialinst);
 		    	orderInstructionsArr.add(paymethod);
 		    	orderInstructionsArr.add(totesused);
-		    	orderInstructionsArr.add(promotioncode);		    	
+		    	orderInstructionsArr.add(promotioncode);*/		    	
+		    	/*HashMap orderInstructionsMap  = new HashMap();
+		    	orderInstructionsMap.put(orderID, orderInstructionsArr);*/
 		    	
 		    	OrderInstructionService ordInstService = (OrderInstructionService) context.getBean("orderInstructionService") ;
 		    	if(!ordInstService.exists(orderID)){
@@ -431,12 +382,10 @@ public class LocalClientExample extends WriteExcel {
 			    	
 			    	ordInstService.persistOrderInstruction(ordInst);
 		    	}
-		    	/*HashMap orderInstructionsMap  = new HashMap();
-		    	orderInstructionsMap.put(orderID, orderInstructionsArr);*/
 		    	/*---------------------------------------*/
 		    	
 		    	/*orderTotals Map*/
-		    	List<String> orderTotalsArr   = new ArrayList<String>(); 
+		   /* 	List<String> orderTotalsArr   = new ArrayList<String>(); 
 		    	orderTotalsArr.add(prdtotal);
 		    	orderTotalsArr.add(taxtotal);
 		    	orderTotalsArr.add(servicefee);
@@ -445,7 +394,7 @@ public class LocalClientExample extends WriteExcel {
 		    	orderTotalsArr.add(discountcharge);
 		    	orderTotalsArr.add(specialpromotion);
 		    	orderTotalsArr.add(ordertotal);
-		    	
+		    	*/
 		    	OrderTotalService ordTotService = (OrderTotalService) context.getBean("orderTotalService");
 		    	
 		    	if(!ordTotService.exists(orderID)){
@@ -464,11 +413,17 @@ public class LocalClientExample extends WriteExcel {
 				    	
 				    	ordTotService.persistOrderTotal(ordTotal);
 		    	}
-		    	/*HashMap orderTotalsMap  = new HashMap();
+		    	/*
+		    	HashMap orderTotalsMap  = new HashMap();
 		    	orderTotalsMap.put(orderID, orderTotalsArr);
-		    	*/
-		    	
 		    	/*---------------------------------------*/
+		    	
+		    	
+		    	/*Get data from the exceptiona report*/
+		    	//exceptionReportHTML
+		    	
+/*Get data from the exceptiona report*/
+		    	getModifiedItems(exceptionReportHTML,orderID);
 		    	
 		    	OriginalOrderService origOrderService = (OriginalOrderService) context.getBean("originalOrderService");
 		    	OriginalOrder origOrder = new OriginalOrder();
@@ -489,19 +444,19 @@ public class LocalClientExample extends WriteExcel {
 		    	List<String> originalOrderGetItemsCount = originalOrderGetItemsCount(htmlPage); 		    	
 		    	List<String> allOrdersSKU = originalOrderSKU(htmlPage); 		    		    	
 		    	
+		    	
+		    	//System.out.println("\nHTML PAGE:\n"+htmlPage);		 
 		    	List<String> originalOrderArray = originalOrder(htmlPage);
+		    //	System.out.println("\nOder Array:\n"+originalOrderArray);
+		    	
+		    	//System.exit(1);
 		    	int x = 0;
 		    	for (int start = 0; start < originalOrderArray.size(); start += 8) {
                     String ProductSKU = null;
 		            int end = Math.min(start + 8, originalOrderArray.size());
 		            sublist = originalOrderArray.subList(start, end);        
 		            
-		            if(x < 7){
-		                    //sublist.add(allOrdersSKU.get(x));
-		            }                            
-		            //sublist.remove(0);                            
-		            
-		            //System.out.println(x+" < "+Integer.parseInt(originalOrderGetItemsCount.get(0)));
+		          //  System.out.println("\nIN Sublist:\n"+sublist+"\nORDER NO:"+orderID);		            
 		            
 		            if(x < Integer.parseInt(originalOrderGetItemsCount.get(0))){                
 		                    ProductSKU        =        allOrdersSKU.get(x);
@@ -535,23 +490,23 @@ public class LocalClientExample extends WriteExcel {
 		                    			itm.setUnitPrice(eachItem);
 		                    			break;
 		                    		case 6:
-		                    			System.out.println("tax "+eachItem);
+		                    		//	System.out.println("tax "+eachItem);
 		                    			break;
 		                    		case 7:
-		                    			System.out.println("dep "+eachItem);
+		                    		//	System.out.println("dep "+eachItem);
 		                    			break;
 		                    		case 8:
-		                    			System.out.println("Item Original/Substituted" + eachItem);
+		                    		//	System.out.println("Item Original/Substituted" + eachItem);
 		                    			break;
 		                    		
 		                    		default:
-		                    			System.out.println("List Messed up");
+		                    			//System.out.println("List Messed up");
 		                    			break;
 		                    	}
 		                    	
 		                    }
 		                    
-		                    System.out.println(originalOrderMap);
+		                  //  System.out.println(originalOrderMap);
 		                    if(!origOrderService.exists(orderID,sku)){
 			                    origOrderService.persistOriginalOrder(origOrder);
 		                    }
@@ -591,24 +546,14 @@ public class LocalClientExample extends WriteExcel {
 		                    			unitPrice = eachItem;
 		                    			break;
 		                    		case 6:
-		                    			System.out.println("tax "+eachItem);
+		                    		//	System.out.println("tax "+eachItem);
 		                    			break;
 		                    		case 7:
-		                    			System.out.println("dep "+eachItem);
+		                    		//	System.out.println("dep "+eachItem);
 		                    			break;
 		                    		case 8:
-		                    			System.out.println("Item Original/Substituted" + eachItem);  
+		                    		//	System.out.println("Item Original/Substituted" + eachItem);                  			
 		                    			
-		                    			if(!eachItem.equalsIgnoreCase("Orig.")){
-			                    			if(!modItemService.exists(orderID,ProductSKU)){
-	                    						modItem.setOrderId(orderID);
-			                    				modItem.setItemRecievedSKU(ProductSKU);
-			                    				modItem.setItemRecievedSize(size);
-			                    				modItem.setItemRecievedQty(Qty);
-			                    				modItemService.persistModifiedItem(modItem);
-			                    				
-	                    					}
-		                    			}
 		                    			break;
 		                    		
 		                    		default:
@@ -624,76 +569,15 @@ public class LocalClientExample extends WriteExcel {
 	                    				itm.setUnitPrice(unitPrice);
 	                    				itemService.persistItem(itm);
                     				}
-		                    	}
-                    				/*if(!modItemService.exists(orderID,ProductSKU)){
-	                    				modItem.setOrderId(orderID);
-	                    				modItem.setItemRecievedSKU(ProductSKU);
-	                    				modItem.setItemRecievedSize(size);
-	                    				modItem.setItemRecievedQty(Qty);
-                    				}*/
-                    				             				
-                    			
-		                    	
+		                    	} 
 		                    }
 		                    
-		                    System.out.println(currentOrderMap);
+		                 //   System.out.println(currentOrderMap);
 		            }
 		            x++;
 		            
 		        }
 
-
-
-		    	
-		    	//System.out.println(allOrdersMap);
-		    	//originalOrderSKU
-		    	//System.out.println(originalOrderGetItemsCount(htmlPage));
-		    	//System.out.println("\nMap : "+orderTotalsMap);
-		    	
-		    	//System.out.println(currentOrder(htmlPage));
-		    	//System.out.println(currentOrder(htmlPage)); 
-		    	//System.out.println(originalOrder(htmlPage)); // all 8 values - chunk it to 8 each		    	
-		    	
-		    	//System.out.println(originalOrderSKU(htmlPage));
-				//System.out.println(orderTotesUsed(htmlPage));
-				//System.out.println(orderPromotionCode(htmlPage));
-				//System.out.println(orderProductTotal(htmlPage));
-				//System.out.println(orderDiposit(htmlPage));
-				//System.out.println(orderTaxTotal(htmlPage));
-				//System.out.println(orderDiscountCharge(htmlPage));	    
-				//System.out.println(orderServiceFee(htmlPage));	   
-				//System.out.println(orderSpecialPromotions(htmlPage));
-				//System.out.println(orderAdditionalCharges(htmlPage));	    		    	
-				//System.out.println(orderTotal(htmlPage));	   
-				//System.out.println(orderCustomerID(htmlPage));	
-				//System.out.println(orderEmail(htmlPage));
-				//System.out.println(orderSubstitution(htmlPage));
-				//System.out.println(orderFulfillment(htmlPage));
-				//System.out.println(orderSpecialInstructions(htmlPage));
-				//System.out.println(orderPaymentMethod(htmlPage));
-		    	//System.out.println(custFirstname(custDetailsHTML));
-		    	//System.out.println(custAddress1(custDetailsHTML));
-		    	//System.out.println(custAddress2(custDetailsHTML));
-		    	//System.out.println(custCity(custDetailsHTML));
-		    	//System.out.println(custState(custDetailsHTML));
-		    	//System.out.println(custZip(custDetailsHTML));
-		    	//System.out.println(custPhone(custDetailsHTML));		    	
-				//System.out.println(orderDateTime(htmlPage));
-				//System.out.println(orderBillAddress(htmlPage));
-				/*System.out.println("\n"+orderID);	
-				System.out.println(FindDateTime(str,k-1));
-				System.out.println(FindCustomer(str,k-1));
-				System.out.println(FindPhone(str,k-1));
-				System.out.println(FindZip(str,k-1));
-				System.out.println(FindTotal(str,k-1));
-				System.out.println(FindStatus(str,k-1));*/
-				
-				/*FindDateTime(str);
-				FindCustomer(str);
-				FindPhone(str);
-				FindZip(str);
-				FindTotal(str);
-				FindStatus(str);*/
 	        }
         
       } else if (listOfFiles[i].isDirectory()) {
@@ -702,12 +586,115 @@ public class LocalClientExample extends WriteExcel {
       //if else ends /* (listOfFiles[i].isFile()) {
     }
   }
-  
-private void storeToCustomerTable() {
-	// TODO Auto-generated method stub
-	
-}
 
+  public void getModifiedItems(String str, String orderID){
+		//str 	= str.replaceAll("\\s+","");
+	  	//System.out.println(newstr);
+		System.out.println("in Modified");
+		
+		List<String> OrderedArray = new ArrayList<String>();  
+		List<String> ReceivedArray = new ArrayList<String>();  
+		//Pattern pattern = Pattern.compile("javascript:ShowDetail(.*?);'><spanstyle"); //SKU
+		Pattern pattern = Pattern.compile("<td>Ordered:</td>(.*?)</tr>"); //SKU
+		Matcher matcher = pattern.matcher(str);
+		while (matcher.find()) {    
+			String value	= matcher.group(1);		
+			Pattern modifiedPattern = Pattern.compile("<td>(.*?)</td>"); //SKU
+			Matcher modifiedMatcher = modifiedPattern.matcher(value);
+			while (modifiedMatcher.find()) {
+				String ModifiedData	= modifiedMatcher.group(1);
+				//System.out.println(ModifiedData+"__");
+				OrderedArray.add(html2text(ModifiedData));
+			}		
+		}	
+		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
+		ModifiedItemService modItemService = (ModifiedItemService) context.getBean("modifiedItemService");
+		ModifiedItem modItem = new ModifiedItem();
+		HashMap OrderedItemsMap  	= new HashMap();
+		Pattern ReceivedPattern = Pattern.compile("<td>Received:</td>(.*?)</tr>"); //SKU
+		Matcher Receivedmatcher = ReceivedPattern.matcher(str);
+		while (Receivedmatcher.find()) {    			
+			String ReceivedValue	= Receivedmatcher.group(1);		
+			Pattern ReceivedString = Pattern.compile("<td>(.*?)</td>"); //SKU
+			Matcher ReceivedMatcher = ReceivedString.matcher(ReceivedValue);
+			while (ReceivedMatcher.find()) {  
+				String ReceivedData	= ReceivedMatcher.group(1);
+				//System.out.println(ReceivedData+"__");
+				ReceivedArray.add(html2text(ReceivedData));
+			}		
+			OrderedItemsMap.put(orderID, ReceivedArray);
+		}
+		
+		//System.out.println(OrderedArray);
+		//System.out.println(ReceivedArray);
+		//System.out.println(OrderedItemsMap);
+		
+		modItem.setOrderId(orderID);
+		List<String> sublist = new ArrayList<String>();
+		List<String> Received = new ArrayList<String>();
+		for (int start = 0; start < OrderedArray.size(); start += 4) {		
+	        int end = Math.min(start + 4, OrderedArray.size());
+	        
+	        sublist = OrderedArray.subList(start, end);
+	        System.out.println(sublist);
+	        int x =0;
+	        String itemOrdered= null;
+	        
+	         
+	        int rlist = 0;
+	        Received = ReceivedArray.subList(start, end);
+	        for(String eachItem:sublist){
+	        	x++;
+	        	switch(x){
+	        	case 1: 
+	        		modItem.setItemOrderedSKU(eachItem);
+	        		System.out.println("in modifiedItem table" +modItem.getItemOrderedSKU());
+	        		itemOrdered = eachItem;
+	        		break;
+	        	case 2:
+	        		modItem.setItemOrderedQty(eachItem);
+	        		break;
+	        	case 3:
+	        		modItem.setItemOrderedName(eachItem);        		
+	        		break;
+	        	case 4:
+	        		modItem.setItemOrderedSize(eachItem);
+	        	default: 
+	        		if(x>4){x=0;}
+	        		break;
+	        	}        	
+	        }
+	        for(String eachItem:Received){
+	        	rlist++;
+	        	switch(rlist){
+	        	case 1:
+	        		modItem.setItemRecievedSKU(eachItem);
+	        		break;
+	        	case 2:
+	        		modItem.setItemRecievedQty(eachItem);
+	        		break;
+	        	case 3:
+	        		modItem.setItemRecievedName(eachItem);
+	        		break;
+	        	case 4:
+	        		modItem.setItemRecievedSize(eachItem);
+	        		break;
+	        	default:
+	        		if(rlist>4){rlist=0;}
+	        		break;
+	        	}
+	        }
+	        
+	        if(!modItemService.exists(orderID, itemOrdered)){
+	        	modItemService.persistModifiedItem(modItem);
+	        }
+	        System.out.println(Received);
+	        
+	        
+		}
+	    //return custArray;
+	}
+  
 public List<String> currentOrder(String str){
 	  /*Has all the td of the order details page*/
 		  	//String newstr 	= str.replaceAll("\\s+","");

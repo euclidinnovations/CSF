@@ -36,8 +36,40 @@ public class ModifiedItem {
     
     @Column(name = "itemRecievedSize")
     private String itemRecievedSize;
+    
+   
+
+
+
+	@Column(name = "itemOrderedName")
+    private String itemOrderedName;
+    
+    
+	@Column(name = "itemRecievedName")
+    private String itemRecievedName;
  
     
+	 public String getItemRecievedName() {
+			return itemRecievedName;
+		}
+
+
+
+
+		public void setItemRecievedName(String itemRecievedName) {
+			this.itemRecievedName = itemRecievedName;
+		}
+		
+		public String getItemOrderedName() {
+			return itemOrderedName;
+		}
+
+
+
+
+		public void setItemOrderedName(String itemOrderedName) {
+			this.itemOrderedName = itemOrderedName;
+		}
 
 	    
     public String getOrderId() {

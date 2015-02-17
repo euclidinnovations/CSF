@@ -17,6 +17,7 @@ public interface ItemDAO {
 
 		Boolean exists(String id);
 
-		List<String[]> getMappedItems(String itemName);
+
+		List<String[]> getMappedItems(String itemName, String orderId);
 		  
 }

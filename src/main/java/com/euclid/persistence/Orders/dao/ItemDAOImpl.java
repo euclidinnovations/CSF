@@ -50,12 +50,13 @@ public class ItemDAOImpl implements ItemDAO {
 
 
 	@Override
-	public List<String[]> getMappedItems(String itemName) {
+	public List<String[]> getMappedItems(String itemName, String orderId) {
 		Query query = sessionFactory.getCurrentSession().             
-	    	    createQuery("select t.itemName from Item t where :key LIKE CONCAT('%', itemName,'%')");
+	    	    createQuery("select t.itemName from Item t where :key LIKE CONCAT('%', t.itemName,'%')");
 	    	        query.setString("key", itemName );
 	    	        
-	    	        List<String[]> mappedItems = query.list();
+	    	        List<String[]> mappedItems =(List<String[]>) query.list();
+	    	        
 		return mappedItems;
 	}
 }

@@ -35,6 +35,26 @@ public class CSF{
 	
 	private String substitutionPolicy;
 	
+	private String vic;
+	
+	private String vicSavings;
+	
+	public String getVicSavings() {
+		return vicSavings;
+	}
+
+	public void setVicSavings(String vicSavings) {
+		this.vicSavings = vicSavings;
+	}
+
+	public String getVic() {
+		return vic;
+	}
+
+	public void setVic(String vic) {
+		this.vic = vic;
+	}
+
 	public String getPickup() {
 		return pickup;
 	}
