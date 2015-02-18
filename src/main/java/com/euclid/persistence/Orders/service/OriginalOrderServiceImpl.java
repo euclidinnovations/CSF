@@ -1,5 +1,7 @@
 package com.euclid.persistence.Orders.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +46,14 @@ public class OriginalOrderServiceImpl implements OriginalOrderService{
 	public boolean exists(String orderID, String sku) {
 		// TODO Auto-generated method stub
 		return originalOrderDAO.exists(orderID,sku);
+	}
+
+	@Override
+	@Transactional
+	public List<String> getAllOriginalItemSKUs(String orderID) {
+		return originalOrderDAO.getAllOriginalItemSKUs(orderID);
+		
+		
 	}
 
 }

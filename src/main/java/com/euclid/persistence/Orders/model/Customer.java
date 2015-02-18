@@ -33,8 +33,19 @@ public class Customer {
     
     @Column(name = "address")
     private String address;
+    
+    @Column(name = "vic")
+    private String vic;
  
-    public String getCustomerId() {
+    public String getVic() {
+		return vic;
+	}
+
+	public void setVic(String vic) {
+		this.vic = vic;
+	}
+
+	public String getCustomerId() {
 		return customerId;
 	}
 

@@ -1,5 +1,7 @@
 package com.euclid.persistence.Orders.dao;
 
+import java.util.List;
+
 import com.euclid.persistence.Orders.model.OriginalOrder;
 
 public interface OriginalOrderDAO {
@@ -13,5 +15,7 @@ public interface OriginalOrderDAO {
 		  void deleteOriginalOrder(OriginalOrder originalOrder);
 
 		boolean exists(String orderID, String sku);
+
+		List<String> getAllOriginalItemSKUs(String orderID);
 		  
 }

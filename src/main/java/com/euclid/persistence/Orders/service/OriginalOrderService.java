@@ -1,5 +1,7 @@
 package com.euclid.persistence.Orders.service;
 
+import java.util.List;
+
 import com.euclid.persistence.Orders.model.OriginalOrder;
 
 public interface OriginalOrderService {
@@ -13,4 +15,6 @@ public interface OriginalOrderService {
 	void deleteOriginalOrder(OriginalOrder originalOrder);
 
 	boolean exists(String orderID, String sku);
+
+	List<String> getAllOriginalItemSKUs(String orderID);
 }

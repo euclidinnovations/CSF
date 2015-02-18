@@ -51,9 +51,9 @@ public class ItemServiceImpl implements ItemService{
 
 	@Override
 	@Transactional
-	public List<String[]> getMappedItems(String itemName, String orderId) {
+	public List<String> getMappedItems(String itemName) {
 		// TODO Auto-generated method stub
-		return itemDAO.getMappedItems(itemName, orderId);
+		return itemDAO.getMappedItems(itemName);
 	}
 
 }

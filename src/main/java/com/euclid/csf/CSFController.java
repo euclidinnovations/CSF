@@ -2,8 +2,10 @@ package com.euclid.csf;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -26,6 +28,7 @@ import com.euclid.persistence.Orders.service.ModifiedItemService;
 import com.euclid.persistence.Orders.service.OrderService;
 import com.euclid.persistence.Orders.service.OrderInstructionService;
 import com.euclid.persistence.Orders.service.OrderTotalService;
+import com.euclid.persistence.Orders.service.OriginalOrderService;
 
  
 @Controller
@@ -53,7 +56,7 @@ public class CSFController{
 		        }, 
 		        100000
 		);
-		
+		//LoadData loadData = new LoadData();
 		CSF csfRecievedData = new CSF();
 		
 		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
@@ -108,7 +111,8 @@ public class CSFController{
 		
 		
 		csfdata.setSubstitutionPolicy(ordInstService.findOrderInstructionById(orderId).getSubstitution());
-		System.out.println(ordInstService.findOrderInstructionById(orderId).getPaymentMethod());
+		
+		
 		
 		HashMap<String, ArrayList<String>> modifiedItemsMap = new HashMap<String, ArrayList<String>>();
 		ArrayList<String> modifiedItemsMatch ;
@@ -121,45 +125,70 @@ public class CSFController{
 			
 			String itemOrdered = (String) row[0];
 			
+			
 			String itemRecieved = (String) row[1];
-			/*System.out.println("setup 1"+ itemService.findItemById((String) row[1]).getItemName());
-			System.out.println("setup 2"+ itemService.findItemById(row[1].toString()).getItemName());*/
 			modifiedItemsMatch = new ArrayList<String>();
 			modifiedItemsMatch.add(itemRecieved);
+			ArrayList<String> newlist = (ArrayList<String>) getOriginalOrderItemNames(orderId);
 			
-		List<String[]> mappedItemsList = new ArrayList<String[]>();
-		
-		/*mappedItemsList = itemService.getMappedItems(itemOrdered, orderId);
-		System.out.println("mapped item list "+mappedItemsList.get(0));
-		for (String[] mapItem:mappedItemsList) {
-			String item =(String) mapItem[0];
-			System.out.println("ITEMMMMM "+item);
-		}*/
-		//modifiedItemsMatch.add(mappedItemsList.get(0).toString());
-			
-		//	modifiedItemsMatch.add(itemService.findItemById((String) row[1]).getItemName());
+			System.out.println("NEW LIST *** "+newlist);
+			newlist.retainAll(getModifiedItems(itemOrdered));
+			modifiedItemsMatch.addAll(newlist);
+			List<String[]> mappedItemsList = new ArrayList<String[]>();		
 			modifiedItemsMap.put(itemOrdered, modifiedItemsMatch);
-			//System.out.println("name: " + row[1]);	    
 		    
 		}
-		System.out.println(modifiedItemsMap);
-		//System.out.println(modifiedItemsMap);
-		
-		//csfdata.setModifiedItemsMap(modifiedItemsMap);
-		//System.out.println(modifiedItemsMap);
-		//lookupItems= modItemService.getLookupItems(orderId);
-		
-	//	System.out.println("LookupItems: "+lookupItems+ "CHekc is empty: "+lookupItems.isEmpty());
-		
-		//System.out.println("get item: "+lookupItems.size()+ "item:"+ lookupItems.get(0).toString());
-	//	System.out.println("LookupItems:  "+ lookupItems.get(0) +"size: "+lookupItems.size());
-		//modItemService.findModifiedItemById(orderId).
 		csfdata.setModifiedItemsMap(modifiedItemsMap);
 		csfdata.setOrderTotal(ordTotService.findOrderTotalById(orderId).getOrderTotal().toString());
 	
 		csfdata.setPickup(ordService.findOrderById(orderId).getPickup());
-		//cusService.deleteCustomer(cus);
 		context.close();
 		return csfdata;
+	}
+
+	private ArrayList<String> getOriginalOrderItemNames(String orderId) {
+		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
+		ItemService itemService = (ItemService)context.getBean("itemService");
+		OriginalOrderService orgOrderService = (OriginalOrderService)context.getBean("originalOrderService");
+		List<String> origList = new ArrayList<String>();
+		origList = orgOrderService.getAllOriginalItemSKUs(orderId);
+		ArrayList<String> origItemList = new ArrayList<String>();
+		for(String s: origList){
+			origItemList.add(itemService.findItemById(s).getItemName());
+		}
+		System.out.println("Orig Item List Names :"+origItemList);
+		return origItemList;
+	}
+
+	private List<String> getModifiedItems(String itemOrdered) {
+		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
+		ItemService itemService = (ItemService)context.getBean("itemService");
+		String str = itemOrdered;
+		String[] splitStrings = str.split("\\s+");
+		List<String> mappedItemsList = new ArrayList<String>();
+		for(String s:splitStrings){
+			
+			if(!(s.equalsIgnoreCase("-") || s.equalsIgnoreCase("and") || s.equalsIgnoreCase("or") || s.equalsIgnoreCase("per") || s.equalsIgnoreCase("a")|| s.equalsIgnoreCase("b") || s.equalsIgnoreCase("c") || s.equalsIgnoreCase("d") || s.equalsIgnoreCase("e") || s.equalsIgnoreCase("f") || s.equalsIgnoreCase("g") || s.equalsIgnoreCase("h") || s.equalsIgnoreCase("i") || s.equalsIgnoreCase("j") || s.equalsIgnoreCase("k") || s.equalsIgnoreCase("l") || s.equalsIgnoreCase("m") || s.equalsIgnoreCase("n") || s.equalsIgnoreCase("o") || s.equalsIgnoreCase("p") || s.equalsIgnoreCase("q") || s.equalsIgnoreCase("r") || s.equalsIgnoreCase("s") || s.equalsIgnoreCase("t") || s.equalsIgnoreCase("u") || s.equalsIgnoreCase("v") || s.equalsIgnoreCase("w") || s.equalsIgnoreCase("x") || s.equalsIgnoreCase("y") || s.equalsIgnoreCase("z"))){
+			List<String> mappedStrings = itemService.getMappedItems(s);
+			mappedItemsList.addAll(mappedStrings);
+			}
+			//System.out.println("Mapped Strings "+mappedItemsList.toString() +" and size is "+mappedItemsList.size());
+			
+			
+			
+		}
+		
+		Set<String> mySet = new HashSet<String>(mappedItemsList);
+
+
+		List<String> mappedItems = new ArrayList<String>(mySet);
+		for(String strItmOrdered:mappedItems){
+			if(mappedItems.contains(strItmOrdered)){
+				mappedItems.remove(strItmOrdered);
+			}
+		}
+
+		return mappedItems;
+		
 	}
 }

@@ -121,7 +121,7 @@ body::after {
 .f6{background-color: #F6F6F6;}
 .ff{background-color: #FFF;}
 .dropdown-toggle { top: 0px; cursor: pointer; }
-.open > .dropdown-menu { left: 63.6%; width: 33.7%; top: inherit;}
+.open > .dropdown-menu { left: 63.6%; width: 33.7%; top: inherit; max-height: 200px; overflow: auto;}
 #bill_table .dropdown-menu > li > a{white-space: normal;}
 hr, .hr { display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; border-style: inset;
     border-width: 1px; }

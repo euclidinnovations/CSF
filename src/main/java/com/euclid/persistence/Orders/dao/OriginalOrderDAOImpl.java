@@ -1,5 +1,7 @@
 package com.euclid.persistence.Orders.dao;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +48,16 @@ public class OriginalOrderDAOImpl implements OriginalOrderDAO {
 	    	        query.setString("key", orderID );
 	    	        query.setString("key2", sku);
 	    	    return (query.uniqueResult() != null);
+	}
+
+
+	@Override
+	public List<String> getAllOriginalItemSKUs(String orderID) {
+		Query query = sessionFactory.getCurrentSession().             
+	    	    createQuery("select o.SKU from OriginalOrder o where o.orderId = :key");
+	    	        query.setParameter("key", orderID);
+	    	        
+	    	        List<String> origItems = query.list();
+		return origItems;
 	}
 }

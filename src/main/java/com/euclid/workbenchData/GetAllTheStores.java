@@ -322,10 +322,11 @@ public class GetAllTheStores{
 		Pattern pattern = Pattern.compile("<aclass=\"bold-text\"href=\"javascript:loadStore(.*?);\">");
 		
 		Matcher matcher = pattern.matcher(newstr);
-		while (matcher.find()) { i++;   
-			if(i <= 5) {
+		//while (matcher.find()) { i++;   	
+			//if(i <= 5) {
 				//System.out.println("\n"+i);
-				String storeID	= matcher.group(1);
+				//String storeID	= matcher.group(1);
+				String storeID	="1632";
 				storeID	=	storeID.replace("(", "");
 				storeID	=	storeID.replace(")", "");
 
@@ -343,6 +344,8 @@ public class GetAllTheStores{
 //Step 4    // Storing single store details(Current+Pending) at local storage	
 				String CurrPenOrdersHtml 	= GetPageContent(current_pending);
 				PrintWriter StoreWriter = new PrintWriter("C:/temp/"+storeID+"_store.txt", "UTF-8");
+			//	PrintWriter StoreWriter = new PrintWriter("/root/wildfly-8.2.0.Final/Logs/"+storeID+"_store.txt", "UTF-8");
+				
 				StoreWriter.println(CurrPenOrdersHtml);			
 				StoreWriter.close();				
 
@@ -353,8 +356,9 @@ public class GetAllTheStores{
 				ReadOrdersFromLocal(storeID);
 				
 				storeArray.add(storeID);
-			}
-		}	  			
+			//}
+		//}	  			
+		//ReadOrdersFromLocal(1632");
 		//System.out.println(storeArray);
 	    return storeArray;				
 	  }
@@ -482,7 +486,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		    	System.out.println("\n address \n " + address);
 		    	String customerID	=	orderCustomerID(htmlPage).trim();
 		    	System.out.println("\n customerID \n " + customerID);
-		    	String email		=	orderEmail(htmlPage);
+		    	String email		=	orderEmail(custDetailsHTML);
 		    	System.out.println("\n email \n " + email);
 		    	String datetine		=	orderDateTime(htmlPage);
 		    	System.out.println("\n datetine \n " + datetine);
@@ -519,7 +523,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		    	System.out.println("\n addcharges \n " + addcharges);
 		    	String ordertotal	=	orderTotal(htmlPage);
 		    	System.out.println("\n ordertotal \n " + ordertotal);
-		    	
+		    			    			    
 		    	/*Start of StoreID and OrderID*/
 		    	HashMap storeMap  = new HashMap();
 		    	storeMap.put(storeID, orderID);
@@ -546,7 +550,16 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 						cus.setLastName(lName);
 						cus.setPhone(phone);
 						cus.setAddress(address);
-						cus.setEmail(email);						
+						cus.setEmail(email);				
+						
+						System.out.println("customerID: "+customerID);
+						System.out.println("fName: "+fName);
+						System.out.println("lName: "+lName);
+						System.out.println("phone: "+phone);
+						System.out.println("address: "+address);
+						System.out.println("\nCustomer\n " + custDetailsHTML);
+						System.out.println("email: "+email);
+						
 						cusService.persistCustomer(cus);
 		    	}
 		    	/* -- Customers Table End*/
@@ -846,22 +859,57 @@ public List<String> originalOrder(String str){
 	  	//String newstr 	= str.replaceAll("\\s+","");
 	  	//System.out.println(str);
 		List<String> custArray = new ArrayList<String>();  
+		List<String> sublist = new ArrayList<String>(); 
 		//Pattern pattern = Pattern.compile("javascript:ShowDetail(.*?);'><spanstyle"); //SKU
 		//Pattern pattern = Pattern.compile("class='pl'>(.*?)</TD>"); // All the order
 		
-		Pattern pattern = Pattern.compile("class='pl'>(.*?)</TD>");
+		Pattern pattern = Pattern.compile("class='pl'(.*?)</TD>");
 		Matcher matcher = pattern.matcher(str);		
 		while (matcher.find()) {    			
-			String value	= html2text(matcher.group(1)).trim();			
-			//value	=	value.replace("\")", "");
-			//System.out.println("\n"+value);
-		    custArray.add(value);
+			String value	=	matcher.group(1).trim();	
+			if(value.contains("ShowDetail")){
+				//System.out.println("In if : before value");
+				//System.out.println(value);	
+				value	=	value+"</span>";
+				Pattern pattern1 = Pattern.compile("class='pl'(.*?)</span>");
+				Matcher matcher1 = pattern1.matcher(value);		
+				while (matcher1.find()) {					
+					String value1	=	matcher1.group(1).trim();						
+					value1	=	html2text(value1);	
+					value1	=	value1.replace(",", " - ");
+					value1	=	value1.replace(">", "");
+					//value1	=	value1.replace("</span>", "");					
+					//System.out.println("\n"+value);
+					//System.out.println("In while : value : "+value1);
+				    custArray.add(value1);
+				}
+				//System.out.println("In if : after value");
+				//System.out.println(value);				
+			}
+			else {
+				//System.out.println("After if else : value : "+value);
+				value	=	html2text(value);	
+				value	=	value.replace(",", " - ");
+				value	=	value.replace(">", "");
+				//System.out.println("\n"+value);
+			    custArray.add(value);
+			}
 		}	  	
-		//After 8 it will break to new product
-		System.out.println(custArray);
-	
+		//System.out.println("After 8 it will break to new product");
+		//System.out.println(custArray);
+		
+		/*System.out.println("After 8 it will break to new product");
+		for (int start = 0; start < custArray.size(); start += 8) {
+    		System.out.println("\n Started count : \n"+start);	
+            String ProductSKU = null;
+            int end = Math.min(start + 8, custArray.size());
+            sublist = custArray.subList(start, end);
+            System.out.println(sublist);
+		}    
+		
+		System.exit(1);*/
 	    return custArray;	   
-	  }  
+}
 
 public void getModifiedItems(String str, String orderID){
 	//str 	= str.replaceAll("\\s+","");
@@ -1155,13 +1203,21 @@ public String orderCustomerID(String str){
 public String orderEmail(String str){
 	
 	List<String> custArray = new ArrayList<String>();  
-	Pattern pattern = Pattern.compile("<u>(.*?)</u></a>");
+	//Pattern pattern = Pattern.compile("<u>(.*?)</u></a>");
+	
+	Pattern pattern = Pattern.compile("name=\"loginEmail\"(.*?)>");
+	
 	Matcher matcher = pattern.matcher(str);
 	while (matcher.find()) {
-		String value	=	html2text(matcher.group(1));	    
-	    custArray.add(value);
+		String value	=	html2text(matcher.group(1));
+		value	=	value.replace("value=\"", "");
+		value	=	value.replace("disabled=\"disabled\"/", "");
+		value	=	value.replace("\"", "");		
+		//System.out.println(value);
+	    custArray.add(value.trim());
 	}	  	
-	
+	//System.out.println(custArray);
+	//System.exit(1);
   return custArray.get(0);	   
 }
 

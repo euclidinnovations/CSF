@@ -34,8 +34,20 @@ public class OrderInstruction {
     @Column(name = "promotionCode")
     private String promotionCode;
  
+    @Column(name = "vicSavings")
+    private String vicSavings;
     
-    public String getOrderId() {
+    public String getVicSavings() {
+		return vicSavings;
+	}
+
+
+	public void setVicSavings(String vicSavings) {
+		this.vicSavings = vicSavings;
+	}
+
+
+	public String getOrderId() {
 		return orderId;
 	}
 
