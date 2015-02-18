@@ -60,7 +60,9 @@ var itemCount = 2;
 			//alert("No if lines : "+numberOfLines)	
 			var dynamicHeight	=	25*numberOfLines;	// so you can multiply with your height of textarea
 			if(numberOfLines > 0)
-				$(selectedID).css('height',dynamicHeight);			
+				$(selectedID).css('height',dynamicHeight);	
+				
+			$(selectedID).autosize();	
 		});   
 		
 		/*$(".dropdown-toggle").click(function() {
@@ -226,14 +228,18 @@ var itemCount = 2;
     		$(".csf .homeshopper").css('width','100%');    		
     		$(".dropdown-toggle, .printnone, .delete, #addNewRow, .hide-oosi, .show-oosi, .btn-success, .btn-primary, .btn-warning, #bill_table tr th:nth-child(3)").hide();	    		                                              
             window.print();  
-            $(".container").css('width','86%');
+                        	
+            $(".container").css("width","86%");
+            $(".csf .homeshopper").css('width','75%');
             $(".dropdown-toggle, .printnone, .delete, #addNewRow, .hide-oosi, .btn-success, .btn-primary, .btn-warning, #bill_table tr th:nth-child(3)").show();
+            
+            
 		});			
     /*End Click on print button*/
 
 	    $("#bill_table tr.outofstockrow:odd").css('background-color','#F6F6F6');
 		$("#bill_table tr.outofstockrow:even").css('background-color','#FFF');	
-		
+	
 	});
 	
 	/*function showhideDOB(){

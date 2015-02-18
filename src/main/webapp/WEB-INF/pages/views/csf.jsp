@@ -26,6 +26,7 @@
 	<script src="resources/js/jqueryDobPicker.js"></script>
 	<script src="resources/js/jquery.placeholder.js"></script>
 	<script src="resources/js/jquery.corner.js"></script>	
+	<script src="resources/js/jquery.autosize.js"></script>
 	<script src="resources/js/siteJquery.js"></script>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ page import="java.util.ArrayList"%>
