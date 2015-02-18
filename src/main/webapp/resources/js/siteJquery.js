@@ -65,6 +65,10 @@ var itemCount = 2;
 			$(selectedID).autosize();	
 		});   
 		
+		$("body").delegate("textarea", "keydown",function(e){
+	        $(this).autosize();
+		});
+		
 		/*$(".dropdown-toggle").click(function() {
 			var spanTitle = $(this).attr("title");			
 			myValue = parseInt(spanTitle.replace('tr',''));			
@@ -107,10 +111,10 @@ var itemCount = 2;
    			else { cssclass = "ff"; }
 
 		    var tr 		=   '<tr id="tr'+numRow+'" class="outofstockrow '+cssclass+'">';
-				tr		+=			'<td class="title addedtd"><input type="text" class="input-medium addedinput" /></td>';
+				tr		+=			'<td class="title addedtd"><textarea class="input-medium addedinput autogrow"></textarea></td>';
 				tr		+=			'<td>';
 				tr		+=			'	<div id="sidd'+numRow+'">';
-				tr		+=			'		<input type="text" class="form-contorl input-xlarge pad15 width" id="sidd'+numRow+'_input" value="No item substituted"/>';
+				tr		+=			'		<textarea class="form-contorl input-xlarge pad15 width autogrow" id="sidd'+numRow+'_input">No item substituted</textarea>';
 				tr		+=			'	</div>';
 				tr		+=			'</td>';
 				tr		+=			'<td class="trash">';
