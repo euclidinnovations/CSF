@@ -430,6 +430,14 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 	ArrayList<String> orderIDarr = new ArrayList<String>();
 	String getOrderIDString = "OrderDetail(";
 	
+	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
+	OrderService ordService = (OrderService) context.getBean("orderService");
+	List<String> orderList = new ArrayList<String>();
+	
+	orderList = ordService.getAllOrderIDS();
+	
+	System.out.println("ORDER IDS LIST ****"+orderList);
+	
 	File folder = new File("c:/temp");
 	File[] listOfFiles = folder.listFiles();	
 
@@ -542,7 +550,6 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		    	customersArr.add(email);
 		    	customersArr.add(address);*/
 		    	
-		    	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
 		    	CustomerService cusService = (CustomerService) context.getBean("customerService");
 		    	System.out.println("ORDER ID ******"+orderID);
 		    	if(!cusService.exists(customerID)){
@@ -578,7 +585,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		    	/*HashMap ordersMap  = new HashMap();
 		    	ordersMap.put(orderID, ordersArr);*/
 		    	
-		    	OrderService ordService = (OrderService) context.getBean("orderService");
+		    //	OrderService ordService = (OrderService) context.getBean("orderService");
 		    	//ordService.deleteAll();
 		    	if(!ordService.exists(orderID)){
 				    	Order ord = new Order();
@@ -814,6 +821,11 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		    	getModifiedItems(exceptionReportHTML,orderID);
 
 	        }
+	        else {
+	        	//THis will hit if database has the orderID
+//	        /	getModifiedItems(exceptionReportHTML,orderID);
+	        }
+	        	
         
       } else if (listOfFiles[i].isDirectory()) {
        // System.out.println("Directory " + listOfFiles[i].getName());

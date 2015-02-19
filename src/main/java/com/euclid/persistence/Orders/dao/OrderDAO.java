@@ -1,5 +1,7 @@
 package com.euclid.persistence.Orders.dao;
 
+import java.util.List;
+
 import com.euclid.persistence.Orders.model.Order;
 
 public interface OrderDAO {
@@ -15,5 +17,7 @@ public interface OrderDAO {
 		  void deleteAll();
 
 		  Boolean exists(String id);
+
+		List<String> getAllOrderIDS();
 		  
 }
