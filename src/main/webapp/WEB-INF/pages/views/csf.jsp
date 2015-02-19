@@ -52,7 +52,7 @@
 				<span class="label label-default left w100">Picking UP on :</span><span class="custtext pickup">${message.pickup}</span>
 			</h4>
 			<h4>
-				<span class="label label-default left w100">VIC Card :</span><span class="custtext"></span>
+				<span class="label label-default left w100">VIC Card :</span><span class="custtext">${message.vic}</span>
 			</h4>
 			<!-- <h4>
 				<span class="label label-default left w100">Address :</span><span class="custtext">13836, Ballantyne Meadows Drive, Charlotte, NC 28277</span>

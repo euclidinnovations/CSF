@@ -54,7 +54,7 @@ public class CSFController{
 						}
 		            }
 		        }, 
-		        100000
+		        10000
 		);
 		//LoadData loadData = new LoadData();
 		CSF csfRecievedData = new CSF();
@@ -68,16 +68,14 @@ public class CSFController{
 			 
 			return new ModelAndView("views/csf", "message", csfRecievedData);
 		}
-		
-	   
 		return new ModelAndView("views/Result", "message", csfRecievedData);
 	}
 	
 	public CSF getDetails(String orderId){
-		System.out.println("load context");
+		//System.out.println("load context");
 		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
 		
-		System.out.println(context);
+		//System.out.println(context);
 		
 		CustomerService cusService = (CustomerService) context.getBean("customerService");
 		
@@ -85,7 +83,7 @@ public class CSFController{
 		
 		// Get CustomerId with orderid
 		OrderInstructionService ordInstService = (OrderInstructionService) context.getBean("orderInstructionService");
-		System.out.println(ordInstService);
+	//	System.out.println(ordInstService);
 		OrderService ordService = (OrderService) context.getBean("orderService");
 		OrderTotalService ordTotService = (OrderTotalService)context.getBean("orderTotalService");
 		ModifiedItemService modItemService = (ModifiedItemService)context.getBean("modifiedItemService");
@@ -109,9 +107,10 @@ public class CSFController{
 		
 		csfdata.setPaymentType(ordInstService.findOrderInstructionById(orderId).getPaymentMethod());
 		
+		csfdata.setVic(cusService.findCustomerById(ordService.findOrderById(orderId).getCustomerId()).getVic());
 		
 		csfdata.setSubstitutionPolicy(ordInstService.findOrderInstructionById(orderId).getSubstitution());
-		
+		csfdata.setVicSavings(ordInstService.findOrderInstructionById(orderId).getVicSavings());
 		
 		
 		HashMap<String, ArrayList<String>> modifiedItemsMap = new HashMap<String, ArrayList<String>>();
@@ -121,7 +120,7 @@ public class CSFController{
 		for (Object[] row: rows) {
 			
 			
-			System.out.println("id: " + row[0]);
+			//System.out.println("id: " + row[0]);
 			
 			String itemOrdered = (String) row[0];
 			
@@ -131,7 +130,7 @@ public class CSFController{
 			modifiedItemsMatch.add(itemRecieved);
 			ArrayList<String> newlist = (ArrayList<String>) getOriginalOrderItemNames(orderId);
 			
-			System.out.println("NEW LIST *** "+newlist);
+		//	System.out.println("NEW LIST *** "+newlist);
 			newlist.retainAll(getModifiedItems(itemOrdered));
 			modifiedItemsMatch.addAll(newlist);
 			List<String[]> mappedItemsList = new ArrayList<String[]>();		
@@ -156,7 +155,7 @@ public class CSFController{
 		for(String s: origList){
 			origItemList.add(itemService.findItemById(s).getItemName());
 		}
-		System.out.println("Orig Item List Names :"+origItemList);
+		//System.out.println("Orig Item List Names :"+origItemList);
 		return origItemList;
 	}
 

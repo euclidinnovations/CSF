@@ -103,6 +103,9 @@ var itemCount = 2;
         
         $('#addNewRow').click(function () {        	
         	var trID	=	$('#bill_table tr:last').attr('id');
+        	if(typeof trID == 'undefined') {
+                trID        =        'tr0';
+        	}        	
         	trID 		= 	trID.replace('tr', '');
         	var numRow 	= 	parseInt(trID) + 1;      
         	var cssclass; 
