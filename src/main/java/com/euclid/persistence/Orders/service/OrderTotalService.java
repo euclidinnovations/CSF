@@ -15,4 +15,6 @@ public interface OrderTotalService {
 	void deleteAll();
 
 	Boolean exists(String id);
+
+	Boolean remove(String orderID);
 }

@@ -54,4 +54,11 @@ public class OrderTotalServiceImpl implements OrderTotalService{
 		return orderTotalDAO.exists(id);
 	}
 
+	@Override
+	@Transactional
+	public Boolean remove(String orderID) {
+		// TODO Auto-generated method stub
+		return orderTotalDAO.remove(orderID);
+	}
+
 }

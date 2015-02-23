@@ -12,6 +12,15 @@
     <servlet-name>mvc-dispatcher</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>TimerServlet</servlet-name>
+    <servlet-class>com.euclid.csf.TimerServlet </servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TimerServlet</servlet-name>
+    <url-pattern>/TimerServlet</url-pattern>
+  </servlet-mapping>
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>

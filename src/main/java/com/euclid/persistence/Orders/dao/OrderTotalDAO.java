@@ -15,5 +15,7 @@ public interface OrderTotalDAO {
 		  void deleteAll();
 
 		Boolean exists(String id);
+
+		Boolean remove(String orderID);
 		  
 }

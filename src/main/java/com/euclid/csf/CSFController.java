@@ -3,9 +3,11 @@ package com.euclid.csf;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
 
 import javax.swing.JOptionPane;
 
@@ -42,21 +44,6 @@ public class CSFController{
 		System.out.println("Entered" + orderId);	
 		
 		//LoadData loadData = new LoadData();
-		new java.util.Timer().schedule( 
-		        new java.util.TimerTask() {
-		            @Override
-		            public void run() {
-		            	try {
-							LoadData loadData = new LoadData();
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-		            }
-		        }, 
-		        10000
-		);
-		//LoadData loadData = new LoadData();
 		CSF csfRecievedData = new CSF();
 		
 		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
@@ -65,10 +52,12 @@ public class CSFController{
 		if(ordService.exists(orderId)){
 			csfRecievedData =  getDetails(orderId);
 			// System.out.println(csfRecievedData);
-			 
+			context.close(); 
 			return new ModelAndView("views/csf", "message", csfRecievedData);
 		}
+		context.close();
 		return new ModelAndView("views/Result", "message", csfRecievedData);
+		
 	}
 	
 	public CSF getDetails(String orderId){
@@ -156,6 +145,7 @@ public class CSFController{
 			origItemList.add(itemService.findItemById(s).getItemName());
 		}
 		//System.out.println("Orig Item List Names :"+origItemList);
+		context.close();
 		return origItemList;
 	}
 
@@ -181,12 +171,18 @@ public class CSFController{
 
 
 		List<String> mappedItems = new ArrayList<String>(mySet);
-		for(String strItmOrdered:mappedItems){
-			if(mappedItems.contains(strItmOrdered)){
-				mappedItems.remove(strItmOrdered);
-			}
-		}
+		
+		
+		/*Iterator<String> iter = mappedItems.iterator();
 
+		while (iter.hasNext()) {
+		    String st = iter.next();
+
+		    if (mappedItems.contains(itemOrdered))
+		        iter.remove();
+		}*/
+			System.out.println("Mapped Items "+mappedItems);
+			context.close();
 		return mappedItems;
 		
 	}

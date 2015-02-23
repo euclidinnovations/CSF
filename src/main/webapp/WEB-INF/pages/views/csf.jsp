@@ -69,7 +69,7 @@
 				<span class="custtext">${message.orderId}</span><span class="label label-default left w100 marright">Order # :</span>
 			</h4>					
 			<h4 class="vicsavingsH4">
-				<span class="custtext"></span><span class="label label-default left w100 marright">VIC Savings :</span>
+				<span class="custtext"></span>${message.vicSavings}<span class="label label-default left w100 marright">VIC Savings :</span>
 			</h4>
 		</div>
 	</div> <!-- .col-sm-12 */ -->

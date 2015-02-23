@@ -1,5 +1,6 @@
 package com.euclid.persistence.Orders.dao;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +51,23 @@ public class OrderTotalDAOImpl implements OrderTotalDAO {
 	    	    createQuery("select 1 from OrderTotal t where t.orderId = :key");
 	    	        query.setString("key", id );
 	    	    return (query.uniqueResult() != null);
+	}
+
+
+	@Override
+	public Boolean remove(String orderID) {
+		try {
+			            OrderTotal ordTotal = (OrderTotal) sessionFactory.getCurrentSession().get(OrderTotal.class, orderID);
+			            sessionFactory.getCurrentSession().delete(ordTotal);
+			             System.out.println("DONE till delete");
+			       }
+			
+			        catch (HibernateException e) {
+			            e.printStackTrace();
+			          //  sessionFactory.getCurrentSession().getTransaction().rollback();
+			
+			        }
+	    	    return true;
+		
 	}
 }

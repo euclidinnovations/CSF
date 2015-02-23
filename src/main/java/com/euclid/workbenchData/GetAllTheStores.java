@@ -322,11 +322,11 @@ public class GetAllTheStores{
 		Pattern pattern = Pattern.compile("<aclass=\"bold-text\"href=\"javascript:loadStore(.*?);\">");
 		
 		Matcher matcher = pattern.matcher(newstr);
-		//while (matcher.find()) { i++;   	
+		while (matcher.find()) { i++;   	
 			//if(i <= 5) {
 				//System.out.println("\n"+i);
-				//String storeID	= matcher.group(1);
-				String storeID	="1632";
+				String storeID	= matcher.group(1);
+				//String storeID	="1632";
 				storeID	=	storeID.replace("(", "");
 				storeID	=	storeID.replace(")", "");
 
@@ -357,7 +357,7 @@ public class GetAllTheStores{
 				
 				storeArray.add(storeID);
 			//}
-		//}	  			
+		}	  			
 		//ReadOrdersFromLocal(1632");
 		//System.out.println(storeArray);
 	    return storeArray;				
@@ -431,6 +431,8 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 	String getOrderIDString = "OrderDetail(";
 	
 	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
+	try
+	{
 	OrderService ordService = (OrderService) context.getBean("orderService");
 	List<String> orderList = new ArrayList<String>();
 	
@@ -450,14 +452,16 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
     	  
       	Fname = Fname.substring(0, Fname.lastIndexOf("."));
       
-	        //System.out.println("File " + Fname);
 	        //if(!Fname.toLowerCase().contains("_customer") && !Fname.toLowerCase().contains("_exceptionreport") && !Fname.toLowerCase().contains("_store")){	//If is contains "customer" it will not in
 	        if(Fname.toLowerCase().contains(storeID) && Fname.toLowerCase().contains("_order")){	//If file is order then it goes in	
 		        String path	=	"C:/temp/";
 	        	
 	        	// It will get ORDER details HTML from the local system
 		        String orderID			=	Fname.replace("_order", "");		        		       
-		        orderID					=	orderID.replace(storeID+"_", "");		        
+		        orderID					=	orderID.replace(storeID+"_", "");	
+		        
+		        if(!orderList.contains(orderID)) {
+		        		        
 		        String OrderFileURL		=	path+storeID+"_"+orderID+"_order.txt";
 		    	String htmlPage 		= 	new Scanner(new File(OrderFileURL)).useDelimiter("\\Z").next();
 		    	String orderDetailsHTML	=	htmlPage;		    			    	
@@ -814,17 +818,69 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		                    
 		       //             System.out.println(currentOrderMap);
 		            }
-		            x++;
-		            
+		            x++;		            
 		        }
 		    	
 		    	getModifiedItems(exceptionReportHTML,orderID);
+		    	
+		        } // if there is an orderID in database
+		        else {
+	        		//System.out.println("ORDER ID is this : "+orderID);
+	        		// It will get Exceptionreport details HTML from the local system	
+		        	String OrderFileURL		=	path+storeID+"_"+orderID+"_order.txt";
+		        	String htmlPage 		= 	new Scanner(new File(OrderFileURL)).useDelimiter("\\Z").next();
+				    String orderDetailsHTML	=	htmlPage;		    			    	
+				    	
+		        	String promotioncode=	orderPromotionCode(htmlPage);
+//			    	System.out.println("\n promotioncode \n " + promotioncode);
+			    	String prdtotal		=	orderProductTotal(htmlPage);
+		//	    	System.out.println("\n prdtotal \n " + prdtotal);
+			    	String diposit		=	orderDiposit(htmlPage);		    	
+		//	    	System.out.println("\n diposit \n " + diposit);
+			    	String taxtotal			=	orderTaxTotal(htmlPage);
+//			    	System.out.println("\n taxtotal \n " + taxtotal);
+			    	String discountcharge	=	orderDiscountCharge(htmlPage);
+		//	    	System.out.println("\n discountcharge \n " + discountcharge);
+			    	String servicefee		=	orderServiceFee(htmlPage);		
+		//	    	System.out.println("\n servicefee \n " + servicefee);
+			    	String specialpromotion	=	orderSpecialPromotions(htmlPage);	
+		//	    	System.out.println("\n specialpromotion \n " + specialpromotion);
+		//	    	System.out.println(htmlPage);
+			    	String addcharges	=	orderAdditionalCharges(htmlPage);
+			    	//System.out.println("\n addcharges \n " + addcharges);
+			    	String ordertotal	=	orderTotal(htmlPage);
+			    	OrderTotalService ordTotService = (OrderTotalService) context.getBean("orderTotalService");
+			    	
+			    	if(ordTotService.exists(orderID)){
+			    		
+			    		ordTotService.remove(orderID);
+					    	OrderTotal ordTotal = new OrderTotal();
+					    	//ordTotService.deleteAll();
+					    	
+					    	ordTotal.setOrderId(orderID);
+					    	ordTotal.setAdditionalCharges(addcharges);
+					    	ordTotal.setDeposit(diposit);
+					    	ordTotal.setDiscount(discountcharge);
+					    	ordTotal.setOrderTotal(ordertotal);
+					    	ordTotal.setProductTotal(prdtotal);
+					    	ordTotal.setServiceFee(servicefee);
+					    	ordTotal.setSpecialPromotions(specialpromotion);
+					    	ordTotal.setTaxTotal(taxtotal);
+					    	
+					    	ordTotService.persistOrderTotal(ordTotal);
+			    	}
+	        		String ReportURL			=	path+storeID+"_"+orderID+"_exceptionreport.txt";
+			    	//System.out.println("THis is the URL : "+ReportURL);
+			    	String exceptionReportHTML 	= 	new Scanner(new File(ReportURL)).useDelimiter("\\Z").next();
+			    	//System.out.println("\nExceptionreport\n " + exceptionReportHTML);
+                    //System.exit(1);
+                    getModifiedItems(exceptionReportHTML,orderID);
+                    
+                    
+		        }		        
 
 	        }
-	        else {
-	        	//THis will hit if database has the orderID
-//	        /	getModifiedItems(exceptionReportHTML,orderID);
-	        }
+
 	        	
         
       } else if (listOfFiles[i].isDirectory()) {
@@ -833,6 +889,9 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
       //if else ends /* (listOfFiles[i].isFile()) {
     
     }
+	}finally{
+		context.close();
+	}
   }
 
 
@@ -932,10 +991,11 @@ public List<String> originalOrder(String str){
 	    return custArray;	   
 }
 
-public void getModifiedItems(String str, String orderID){
+public void getModifiedItems(String str, String orderID){	
 	//str 	= str.replaceAll("\\s+","");
   	//System.out.println(newstr);
 	
+	System.out.println("ORDER ID in ModifiedITems "+orderID);
 	List<String> OrderedArray = new ArrayList<String>();  
 	List<String> ReceivedArray = new ArrayList<String>();  
 	//Pattern pattern = Pattern.compile("javascript:ShowDetail(.*?);'><spanstyle"); //SKU
@@ -951,9 +1011,6 @@ public void getModifiedItems(String str, String orderID){
 			OrderedArray.add(html2text(ModifiedData));
 		}		
 	}	
-	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
-	ModifiedItemService modItemService = (ModifiedItemService) context.getBean("modifiedItemService");
-	ModifiedItem modItem = new ModifiedItem();
 	HashMap OrderedItemsMap  	= new HashMap();
 	Pattern ReceivedPattern = Pattern.compile("<td>Received:</td>(.*?)</tr>"); //SKU
 	Matcher Receivedmatcher = ReceivedPattern.matcher(str);
@@ -972,6 +1029,10 @@ public void getModifiedItems(String str, String orderID){
 	//System.out.println(OrderedArray);
 	//System.out.println(ReceivedArray);
 	//System.out.println(OrderedItemsMap);
+	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
+	try{
+	ModifiedItemService modItemService = (ModifiedItemService) context.getBean("modifiedItemService");
+	ModifiedItem modItem = new ModifiedItem();
 	
 	modItem.setOrderId(orderID);
 	List<String> sublist = new ArrayList<String>();
@@ -988,7 +1049,7 @@ public void getModifiedItems(String str, String orderID){
         	switch(x){
         	case 1: 
         		modItem.setItemOrderedSKU(eachItem);
-   //     		System.out.println("in modifiedItem table" +modItem.getItemOrderedSKU());
+        		System.out.println("in modifiedItem table" +modItem.getItemOrderedSKU());
         		itemOrdered = eachItem;
         		break;
         	case 2:
@@ -1028,14 +1089,18 @@ public void getModifiedItems(String str, String orderID){
         	}
         }
         
-        if(modItemService.exists(orderID, itemOrdered))
-        modItemService.persistModifiedItem(modItem);
-  //      System.out.println(Received);
-        
+        if(!modItemService.exists(orderID, itemOrdered))
+        	modItemService.persistModifiedItem(modItem);
+        System.out.println("Modified ITems"+Received);
         
 	}
-    //return custArray;
+	
+}finally{
+        context.close();
 }
+        
+	}
+
 
 
 public List<String> originalOrderSKU(String str){
