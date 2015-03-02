@@ -1,6 +1,5 @@
 package com.euclid.persistence.Orders.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.euclid.persistence.Orders.model.Item;

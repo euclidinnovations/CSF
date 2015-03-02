@@ -1,6 +1,5 @@
 package com.euclid.persistence.Orders.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.euclid.persistence.Orders.model.ModifiedItem;
@@ -17,5 +16,10 @@ public interface ModifiedItemDAO {
 
 		  List<Object[]> getLookupItems(String orderId);
 
-		boolean exists(String orderID, String productSKU);
+
+		void updateMItem(String orderId, String key, String value);
+
+		String getModId(String orderId, String key, String value);
+
+		boolean exists(String modID);
 }

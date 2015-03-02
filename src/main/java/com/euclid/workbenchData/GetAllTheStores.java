@@ -12,7 +12,7 @@ import java.net.CookieManager;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
  
@@ -20,9 +20,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jxl.write.WritableSheet;
 import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -34,12 +32,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.euclid.persistence.Orders.model.CurrentOrder;
 import com.euclid.persistence.Orders.model.Customer;
 import com.euclid.persistence.Orders.model.Item;
 import com.euclid.persistence.Orders.model.ModifiedItem;
@@ -47,7 +42,6 @@ import com.euclid.persistence.Orders.model.Order;
 import com.euclid.persistence.Orders.model.OrderInstruction;
 import com.euclid.persistence.Orders.model.OrderTotal;
 import com.euclid.persistence.Orders.model.OriginalOrder;
-import com.euclid.persistence.Orders.service.CurrentOrderService;
 import com.euclid.persistence.Orders.service.CustomerService;
 import com.euclid.persistence.Orders.service.ItemService;
 import com.euclid.persistence.Orders.service.ModifiedItemService;
@@ -91,12 +85,12 @@ public class GetAllTheStores{
 			//System.out.println("\nStep 1\n"+step1);
 			String step2	=	http.GetPageContent(SelectStore);		// Click on particular store
 			//System.out.println("\nStep 2\n"+step2);
-			String step3	=	http.GetPageContent(StoreIDurl);		// Get store info
+			String step3	=	http.GetPageContent(StoreIDurl);		// Get store info //NA
 			//System.out.println("\nStep 3\n"+step3);
 				
-			String OneStoreHtml 		= http.GetPageContentsStore(storeMenu,StoreIDurl);	
+			String OneStoreHtml 		= http.GetPageContentsStore(storeMenu,StoreIDurl);	// NA
 			
-			String CurrPenOrdersHtml 	= http.GetPageContent(current_pending);
+			String CurrPenOrdersHtml 	= http.GetPageContent(current_pending);	// NA
 		// End working code
 		
 		//Find the store and store that stores in local system
@@ -312,7 +306,7 @@ public class GetAllTheStores{
 		String SelectStore		=	"https://wb2.harristeeter.com/SelectAStore.aspx";
 		String AllStoreURL		=	"https://wb2.harristeeter.com/CorporateWorkbench.asp?dayspassexp=55";								 
 		String CorporateMenuURL	=	"https://wb2.harristeeter.com/CorporateMenu.asp?dayspassexp=55"; 		
-		String storeMenu	=	"https://wb2.harristeeter.com/StoreMenu.aspx";
+		String storeMenu		=	"https://wb2.harristeeter.com/StoreMenu.aspx";
 	  
 		int i=0;
 	  	String newstr 	= str.replaceAll("\\s+","");
@@ -322,11 +316,11 @@ public class GetAllTheStores{
 		Pattern pattern = Pattern.compile("<aclass=\"bold-text\"href=\"javascript:loadStore(.*?);\">");
 		
 		Matcher matcher = pattern.matcher(newstr);
-		while (matcher.find()) { i++;   	
+		//while (matcher.find()) { i++;   	
 			//if(i <= 5) {
 				//System.out.println("\n"+i);
-				String storeID	= matcher.group(1);
-				//String storeID	="1632";
+				//String storeID	= matcher.group(1);
+				String storeID	="1632";
 				storeID	=	storeID.replace("(", "");
 				storeID	=	storeID.replace(")", "");
 
@@ -341,23 +335,32 @@ public class GetAllTheStores{
 			// Get store home page		
 				String OneStoreHtml 		= GetPageContentsStore(storeMenu,StoreIDurl);	
 
+	//Step 3.1	Get completed orders											
+				String StartDate	=	getBeforeAfterDate(-7);		//Before7Days
+				String EndDate		=	getBeforeAfterDate(7);		//AFter7Days
+				String CompletedOrdersHTML 			= 	GetPageContent("https://wb2.harristeeter.com/Default.asp?ProcessDates=1&SearchDates=1&View=Completed&StartDate="+StartDate+"&EndDate="+EndDate+"&OrderType=All&submit1=Search+Orders");
+				//System.out.println("\n 2 Completed orders \n"+CompletedOrdersHTML);
+				//System.exit(1);				
+	// **END** Step 3.1				
+				
 //Step 4    // Storing single store details(Current+Pending) at local storage	
 				String CurrPenOrdersHtml 	= GetPageContent(current_pending);
 				PrintWriter StoreWriter = new PrintWriter("C:/temp/"+storeID+"_store.txt", "UTF-8");
-			//	PrintWriter StoreWriter = new PrintWriter("/root/wildfly-8.2.0.Final/Logs/"+storeID+"_store.txt", "UTF-8");
-				
+			//	PrintWriter StoreWriter = new PrintWriter("/root/wildfly-8.2.0.Final/Logs/"+storeID+"_store.txt", "UTF-8");				
 				StoreWriter.println(CurrPenOrdersHtml);			
 				StoreWriter.close();				
 
 //Step 5	// Write orderID from the current HTML and store into the local 	
 				WriteOrdersToLocal(CurrPenOrdersHtml,storeID);
+				WriteCompletedOrdersToLocal(CompletedOrdersHTML,storeID);
 				
 //Step 6	// Read the data from the local 								
 				ReadOrdersFromLocal(storeID);
+				ReadCompletedOrdersFromLocal(storeID);
 				
 				storeArray.add(storeID);
 			//}
-		}	  			
+	//	}	  			
 		//ReadOrdersFromLocal(1632");
 		//System.out.println(storeArray);
 	    return storeArray;				
@@ -390,7 +393,7 @@ public void WriteOrdersToLocal(String str, String storeID) throws Exception{
 			// This is the entire order details page
 			// Create orders file  			
 			String fetchOrderDetailsPage = orderIDPage+orderID;
-			String htmlPage = GetPageContent(fetchOrderDetailsPage);
+			String htmlPage = GetPageContent(fetchOrderDetailsPage);	// Order Detail Page
 			PrintWriter OrderWriter = new PrintWriter("C:/temp/"+storeID+"_"+orderID+"_order.txt", "UTF-8");
 			OrderWriter.println(htmlPage);			
 			OrderWriter.close();
@@ -420,7 +423,91 @@ public void WriteOrdersToLocal(String str, String storeID) throws Exception{
 	}	
 //	System.out.println(orderIDarr);		
   }
-  
+
+
+public void WriteCompletedOrdersToLocal(String str, String storeID) throws Exception{
+	System.out.println("\n IN WriteCompletedOrdersToLocal \n " + storeID);
+	int j = 0; int k = 0;  	
+	String orderIDPage 			= 	"https://wb2.harristeeter.com/OrderDetail.asp?OrderID=";
+	String custDetailsPage 		= 	"https://wb2.harristeeter.com/CustomerAccount.aspx?&CustomerID=";
+	String exceptionReportURL 	= 	"https://wb2.harristeeter.com/OrderReport.aspx?OrderID=";
+	String billed				=	"https://wb2.harristeeter.com/InvoiceDetail.asp?OrderID=";
+	ArrayList<String> orderIDarr = new ArrayList<String>();
+	String getOrderIDString 	= 	"OrderDetail(";
+	
+	// find all occurrences forward
+	// this is only for the OrderID
+	for (int i = -1; (i = str.indexOf(getOrderIDString , i + 1)) != -1; ) {		
+		j = i;		
+		//if(i<=3){ //DONT KNOW
+	    String orderID	=	str.substring(j+12, j+20);	// Fetching the orderID
+	       	    	    	    	  
+	    String regex = "\\d+";	// This will check for the digits	    
+	    
+	    //If the orderId has only digits then only, it will added to the array or whatever
+	    if(orderID.matches(regex)){	  
+			
+			//System.out.println("\n"+k+"\n");
+			orderIDarr.add(orderID);	// Add the orderID into the ArrayList (If anyone wants)
+								
+			// This is the entire order details page
+			// Create orders file  	
+			String OrderFile	=	"C:/temp/"+storeID+"_"+orderID+"_order_completed.txt";
+			File f = new File(OrderFile);
+			if(f.exists() && !f.isDirectory()) 
+			{ 
+				// If orderID is there create exceptionReport	
+				System.out.print(OrderFile+" - File already exist so go for exceptionReport only.");
+				String exeptionReportHTML = GetPageContent(exceptionReportURL+orderID);
+				PrintWriter ReportWriter = new PrintWriter("C:/temp/"+storeID+"_"+orderID+"_exceptionreport_completed.txt", "UTF-8");
+				ReportWriter.println(exeptionReportHTML);			
+				ReportWriter.close();
+				//WriteExcelFile(exeptionReportHTML,storeID+"_"+orderID+"_exceptionreport");
+				//System.out.println("\n this is the exception report\n"+exeptionReportHTML);
+			}
+			else 
+			{
+				// If orderID is not there create three files as usual				
+				//System.out.print("In to Else");		
+				
+				String fetchOrderDetailsPage = orderIDPage+orderID;
+				String htmlPage = GetPageContent(fetchOrderDetailsPage);
+				PrintWriter OrderWriter = new PrintWriter(OrderFile, "UTF-8");
+				OrderWriter.println(htmlPage);			
+				OrderWriter.close();
+				//WriteExcelFile(htmlPage,storeID+"_"+orderID+"_order"); // creating the file for order	
+				//System.out.println("\n"+orderIDPage+orderID);	
+				//System.out.println("\nThis is the orderDetail page\n"+htmlPage);
+				
+				String exeptionReportHTML = GetPageContent(exceptionReportURL+orderID);
+				PrintWriter ReportWriter = new PrintWriter("C:/temp/"+storeID+"_"+orderID+"_exceptionreport_completed.txt", "UTF-8");
+				ReportWriter.println(exeptionReportHTML);			
+				ReportWriter.close();
+				//WriteExcelFile(exeptionReportHTML,storeID+"_"+orderID+"_exceptionreport");
+				//System.out.println("\n this is the exception report\n"+exeptionReportHTML);
+				
+				// Create customer/user file
+				String custID				=	orderCustomerID(htmlPage).trim();
+				String custDetailsHTML 		= 	GetPageContent(custDetailsPage+custID);
+				PrintWriter CustomerWriter 	= 	new PrintWriter("C:/temp/"+custID+"_customer_completed.txt", "UTF-8");
+				CustomerWriter.println(custDetailsHTML);			
+				CustomerWriter.close();
+				//WriteExcelFile(custDetailsHTML,custID+"_customer");  // creating the file for customer
+				
+				// Create billed order			
+				/*String billedHTML	 		= 	GetPageContent(billed+orderID);
+				PrintWriter BilledWriter 	= 	new PrintWriter("C:/temp/"+orderID+"_billed_completed.txt", "UTF-8");
+				BilledWriter.println(billedHTML);			
+				BilledWriter.close();*/
+	    	}
+					
+	    }	  
+	    k++;
+		//} DONT KNOW
+	}	
+//	System.out.println(orderIDarr);		
+  }
+
 public void ReadOrdersFromLocal(String storeID) throws Exception{
 		
 //	System.out.println("\n IN ReadOrdersFromLocal \n " + storeID);
@@ -436,7 +523,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 	OrderService ordService = (OrderService) context.getBean("orderService");
 	List<String> orderList = new ArrayList<String>();
 	
-	orderList = ordService.getAllOrderIDS();
+	orderList = ordService.getCurrentOrderIDS();
 	
 	System.out.println("ORDER IDS LIST ****"+orderList);
 	
@@ -453,7 +540,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
       	Fname = Fname.substring(0, Fname.lastIndexOf("."));
       
 	        //if(!Fname.toLowerCase().contains("_customer") && !Fname.toLowerCase().contains("_exceptionreport") && !Fname.toLowerCase().contains("_store")){	//If is contains "customer" it will not in
-	        if(Fname.toLowerCase().contains(storeID) && Fname.toLowerCase().contains("_order")){	//If file is order then it goes in	
+	        if(Fname.toLowerCase().contains(storeID) && Fname.toLowerCase().contains("_order") && !Fname.toLowerCase().contains("_order_completed")){	//If file is order then it goes in	
 		        String path	=	"C:/temp/";
 	        	
 	        	// It will get ORDER details HTML from the local system
@@ -596,6 +683,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 				    	ord.setCustomerId(customerID);
 				    	ord.setOrderId(orderID);
 				    	ord.setPickup(fullfilment);
+				    	ord.setFlag("cp");
 				    	ordService.persistOrder(ord);
 		    	}
 		    	/*---------------------------------------*/
@@ -827,6 +915,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		        else {
 	        		//System.out.println("ORDER ID is this : "+orderID);
 	        		// It will get Exceptionreport details HTML from the local system	
+		        	if(orderList.contains(orderID)) {
 		        	String OrderFileURL		=	path+storeID+"_"+orderID+"_order.txt";
 		        	String htmlPage 		= 	new Scanner(new File(OrderFileURL)).useDelimiter("\\Z").next();
 				    String orderDetailsHTML	=	htmlPage;		    			    	
@@ -877,7 +966,8 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
                     getModifiedItems(exceptionReportHTML,orderID);
                     
                     
-		        }		        
+		        }
+		        }
 
 	        }
 
@@ -894,6 +984,489 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 	}
   }
 
+public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
+	
+//	System.out.println("\n IN ReadOrdersFromLocal \n " + storeID);
+	
+	int j = 0; int k = 0;  	
+	
+	ArrayList<String> orderIDarr = new ArrayList<String>();
+	String getOrderIDString = "OrderDetail(";
+	
+	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
+	try
+	{
+	OrderService ordService = (OrderService) context.getBean("orderService");
+	List<String> orderList = new ArrayList<String>();
+	
+	orderList = ordService.getCompletedOrderIDS();
+	
+	System.out.println("ORDER IDS LIST ****"+orderList);
+	
+	File folder = new File("c:/temp");
+	File[] listOfFiles = folder.listFiles();	
+
+  for (int i = 0; i < listOfFiles.length; i++) {
+    if (listOfFiles[i].isFile()) {
+      
+      String Fname = listOfFiles[i].getName();
+      
+      if (Fname.indexOf(".") > 0)
+    	  
+      	Fname = Fname.substring(0, Fname.lastIndexOf("."));
+      
+	        //if(!Fname.toLowerCase().contains("_customer") && !Fname.toLowerCase().contains("_exceptionreport") && !Fname.toLowerCase().contains("_store")){	//If is contains "customer" it will not in
+	        if(Fname.toLowerCase().contains(storeID) && Fname.toLowerCase().contains("_order_completed")){	//If file is order then it goes in	
+		        String path	=	"C:/temp/";
+	        	
+	        	// It will get ORDER details HTML from the local system
+		        String orderID			=	Fname.replace("_order_completed", "");		        		       
+		        orderID					=	orderID.replace(storeID+"_", "");	
+		        
+		        if(!orderList.contains(orderID)) {	// If orderID is not there into database then goes in
+		        									// Other wise go to modified items condition		        		       
+		        String OrderFileURL		=	path+storeID+"_"+orderID+"_order_completed.txt";
+		    	String htmlPage 		= 	new Scanner(new File(OrderFileURL)).useDelimiter("\\Z").next();
+		    	String orderDetailsHTML	=	htmlPage;		    			    	
+		    	//System.out.println("\nOrder\n " + orderDetailsHTML);
+		    	
+		    	// It will get Exceptionreport details HTML from the local system		    	
+		    	String ReportURL			=	path+storeID+"_"+orderID+"_exceptionreport_completed.txt";
+		    	String exceptionReportHTML 	= 	new Scanner(new File(ReportURL)).useDelimiter("\\Z").next();
+		    	//System.out.println("\nExceptionreport\n " + exceptionReportHTML);
+		    	
+		    	// It will get CUSTOMER details HTML from the local system
+		    	String custID			=	orderCustomerID(htmlPage).trim();   
+		    	String CustomerURL		=	path+custID+"_customer_completed.txt";
+		    	String custDetailsHTML 	= 	new Scanner(new File(CustomerURL)).useDelimiter("\\Z").next();
+		    	//System.out.println("\nCustomer\n " + custDetailsHTML);
+		    	
+		    	// Create billed order			
+				/*String billedURL	 	= 	path+orderID+"_billed_completed.txt";
+				String billedHTML 		= 	new Scanner(new File(billedURL)).useDelimiter("\\Z").next();
+				getBilledData(billedHTML);*/
+		    	//extractCustomerData(custDetailsHTML);
+		    	
+		    	String fName		=	custFirstname(custDetailsHTML);
+	//	    	System.out.println("\nFirstname\n " + fName);
+		    	String lName		=	custLastname(custDetailsHTML);
+	//	    	System.out.println("\nLastname\n " + lName);
+		    	String add1			=	custAddress1(custDetailsHTML);
+	//	    	System.out.println("\n Add1 \n " + add1);
+		    	String add2			=	custAddress2(custDetailsHTML);
+	//	    	System.out.println("\n add2 \n " + add2);
+		    	String city			=	custCity(custDetailsHTML);
+	//	    	System.out.println("\n city \n " + city);
+		    	String state		=	custState(custDetailsHTML);
+	//	    	System.out.println("\n state \n " + state);
+		    	String zip			=	custZip(custDetailsHTML);
+	//	    	System.out.println("\n zip \n " + zip);
+		    	String phone		=	custPhone(custDetailsHTML);		
+	//	    	System.out.println("\n phone \n " + phone);
+		    	String address		=	add1+" "+add2+" "+city+" "+state+" "+zip+" "+phone;		
+	//	    	System.out.println("\n address \n " + address);
+		    	String customerID	=	orderCustomerID(htmlPage).trim();
+	//	    	System.out.println("\n customerID \n " + customerID);
+		    	String email		=	orderEmail(custDetailsHTML);
+	//	    	System.out.println("\n email \n " + email);
+		    	String datetine		=	orderDateTime(htmlPage);
+	//	    	System.out.println("\n datetine \n " + datetine);
+		    	String billadd		=	orderBillAddress(htmlPage);
+	//	    	System.out.println("\n billadd \n " + billadd);
+		    	String substitution	=	orderSubstitution(htmlPage);
+	//	    	System.out.println("\n substitution \n " + substitution);
+		    	String fullfilment	=	orderFulfillment(htmlPage);
+	//	    	System.out.println("\n fullfilment \n " + fullfilment);
+		    	fullfilment			=	fullfilment.replace("Pickup -", "").trim();		   
+		//    	System.out.println("\n fullfilment \n " + fullfilment);
+		    	String specialinst	=	orderSpecialInstructions(htmlPage);
+	//	    	System.out.println("\n specialinst \n " + specialinst);
+		    	String paymethod	=	orderPaymentMethod(htmlPage);
+//		    	System.out.println("\n paymethod \n " + paymethod);
+		    	String totesused	=	orderTotesUsed(htmlPage);
+//		    	System.out.println("\n totesused \n " + totesused);
+		    	String promotioncode=	orderPromotionCode(htmlPage);
+//		    	System.out.println("\n promotioncode \n " + promotioncode);
+		    	String prdtotal		=	orderProductTotal(htmlPage);
+	//	    	System.out.println("\n prdtotal \n " + prdtotal);
+		    	String diposit		=	orderDiposit(htmlPage);		    	
+	//	    	System.out.println("\n diposit \n " + diposit);
+		    	String taxtotal			=	orderTaxTotal(htmlPage);
+//		    	System.out.println("\n taxtotal \n " + taxtotal);
+		    	String discountcharge	=	orderDiscountCharge(htmlPage);
+	//	    	System.out.println("\n discountcharge \n " + discountcharge);
+		    	String servicefee		=	orderServiceFee(htmlPage);		
+	//	    	System.out.println("\n servicefee \n " + servicefee);
+		    	String specialpromotion	=	orderSpecialPromotions(htmlPage);	
+	//	    	System.out.println("\n specialpromotion \n " + specialpromotion);
+	//	    	System.out.println(htmlPage);
+		    	String addcharges	=	orderAdditionalCharges(htmlPage);
+		    	//System.out.println("\n addcharges \n " + addcharges);
+		    	String ordertotal	=	orderTotal(htmlPage);
+		    	//System.out.println("\n ordertotal \n " + ordertotal);
+		    	String viccard        =        orderVICcard(htmlPage);
+                System.out.println("\n VIC card : " + viccard + "\n OrderID :"+orderID);
+                String viccardsavings        =        orderVICcardSavings(htmlPage);
+		    	
+		    	/*Start of StoreID and OrderID*/
+		    	HashMap storeMap  = new HashMap();
+		    	storeMap.put(storeID, orderID);
+		    	//System.out.println("\n storeMap \n " +storeMap);
+		    	/*END of StoreID and orderID*/
+		    	
+		    	/*Customers Map*/
+		    	/*List<String> customersArr  = new ArrayList<String>(); 
+		    	customersArr.add(customerID);
+		    	customersArr.add(fName);
+		    	customersArr.add(lName);
+		    	customersArr.add(phone);
+		    	customersArr.add(email);
+		    	customersArr.add(address);*/
+		    	
+		    	CustomerService cusService = (CustomerService) context.getBean("customerService");
+		    	System.out.println("ORDER ID ******"+orderID);
+		    	if(!cusService.exists(customerID)){
+		    		//System.out.println("cusID ********* inside"+customerID);
+				    	Customer cus = new Customer();
+						cus.setCustomerId(customerID);
+						cus.setFirstName(fName);
+						cus.setLastName(lName);
+						cus.setPhone(phone);
+						cus.setAddress(address);
+						cus.setEmail(email);	
+						if(!(viccard.equalsIgnoreCase("NO VIC CARD"))){
+							cus.setVic(viccard);
+						}
+						
+					/*	System.out.println("customerID: "+customerID);
+						System.out.println("fName: "+fName);
+						System.out.println("lName: "+lName);
+						System.out.println("phone: "+phone);
+						System.out.println("address: "+address);
+						System.out.println("\nCustomer\n " + custDetailsHTML);
+						System.out.println("email: "+email);*/
+						
+						cusService.persistCustomer(cus);
+		    	}
+		    	/* -- Customers Table End*/
+		    	/*---------------------------------------*/
+		    	
+		    	/*Orders Map*/
+		    	/*List<String> ordersArr  = new ArrayList<String>(); 
+		    	ordersArr.add(customerID);
+		    	ordersArr.add(fullfilment);*/
+		    	/*HashMap ordersMap  = new HashMap();
+		    	ordersMap.put(orderID, ordersArr);*/
+		    	
+		    //	OrderService ordService = (OrderService) context.getBean("orderService");
+		    	//ordService.deleteAll();
+		    	if(!ordService.exists(orderID)){
+				    	Order ord = new Order();
+				    	ord.setCustomerId(customerID);
+				    	ord.setFlag("cmp");
+				    	ord.setOrderId(orderID);
+				    	ord.setPickup(fullfilment);
+				    	ordService.persistOrder(ord);
+		    	}
+		    	/*---------------------------------------*/
+		    			    	
+		    	/*OrderInstructions Map*/
+		    	/*List<String> orderInstructionsArr   = new ArrayList<String>(); 
+		    	orderInstructionsArr.add(substitution);
+		    	orderInstructionsArr.add(specialinst);
+		    	orderInstructionsArr.add(paymethod);
+		    	orderInstructionsArr.add(totesused);
+		    	orderInstructionsArr.add(promotioncode);*/		    	
+		    	/*HashMap orderInstructionsMap  = new HashMap();
+		    	orderInstructionsMap.put(orderID, orderInstructionsArr);*/
+		    	//if(1 == 2) {
+		    	OrderInstructionService ordInstService = (OrderInstructionService) context.getBean("orderInstructionService") ;
+		    	if(!ordInstService.exists(orderID)){
+			    	OrderInstruction ordInst = new OrderInstruction();
+			    //	ordInstService.deleteAll();
+			    	ordInst.setOrderId(orderID);
+			    	ordInst.setPaymentMethod(paymethod);
+			    	ordInst.setPromotionCode(promotioncode);
+			    	ordInst.setSpecialInstructions(specialinst);
+			    	ordInst.setSubstitution(substitution);
+			    	ordInst.setTotesUsed(totesused);
+			    	if(!(viccardsavings.equalsIgnoreCase("NO VIC CARD SAVINGS"))){
+
+				    	ordInst.setVicSavings(viccardsavings);
+			    	}
+			    	ordInstService.persistOrderInstruction(ordInst);
+		    	}
+		    	/*---------------------------------------*/
+		    	
+		    	/*orderTotals Map*/
+		   /* 	List<String> orderTotalsArr   = new ArrayList<String>(); 
+		    	orderTotalsArr.add(prdtotal);
+		    	orderTotalsArr.add(taxtotal);
+		    	orderTotalsArr.add(servicefee);
+		    	orderTotalsArr.add(addcharges);
+		    	orderTotalsArr.add(diposit);
+		    	orderTotalsArr.add(discountcharge);
+		    	orderTotalsArr.add(specialpromotion);
+		    	orderTotalsArr.add(ordertotal);
+		    	*/
+		    	OrderTotalService ordTotService = (OrderTotalService) context.getBean("orderTotalService");
+		    	
+		    	if(!ordTotService.exists(orderID)){
+				    	OrderTotal ordTotal = new OrderTotal();
+				    	//ordTotService.deleteAll();
+				    	
+				    	ordTotal.setOrderId(orderID);
+				    	ordTotal.setAdditionalCharges(addcharges);
+				    	ordTotal.setDeposit(diposit);
+				    	ordTotal.setDiscount(discountcharge);
+				    	ordTotal.setOrderTotal(ordertotal);
+				    	ordTotal.setProductTotal(prdtotal);
+				    	ordTotal.setServiceFee(servicefee);
+				    	ordTotal.setSpecialPromotions(specialpromotion);
+				    	ordTotal.setTaxTotal(taxtotal);
+				    	
+				    	ordTotService.persistOrderTotal(ordTotal);
+		    	}
+		    	/*
+		    	HashMap orderTotalsMap  = new HashMap();
+		    	orderTotalsMap.put(orderID, orderTotalsArr);
+		    	/*---------------------------------------*/
+		    	
+		    	
+		    	/*Get data from the exceptiona report*/
+		    	//exceptionReportHTML
+		    	
+		    	/*Get data from the exceptiona report*/
+		    	
+		    	OriginalOrderService origOrderService = (OriginalOrderService) context.getBean("originalOrderService");
+		    	OriginalOrder origOrder = new OriginalOrder();
+		    	
+		    	ItemService itemService = (ItemService) context.getBean("itemService");
+		    	Item itm = new Item();
+		    	
+		    	ModifiedItemService modItemService = (ModifiedItemService) context.getBean("modifiedItemService");
+		    	ModifiedItem modItem = new ModifiedItem();
+		    	
+		    	
+		    	List<String> sublist = new ArrayList<String>(); 
+		    	
+		    	HashMap allOrdersMap  		= new HashMap();
+		    	HashMap originalOrderMap  	= new HashMap();
+		    	HashMap currentOrderMap  	= new HashMap();
+		    	
+		    	List<String> originalOrderGetItemsCount = originalOrderGetItemsCount(htmlPage); 		    	
+		    	List<String> allOrdersSKU = originalOrderSKU(htmlPage); 		    		    	
+		    	
+		    	
+		  //  	System.out.println("\nHTML PAGE:\n"+htmlPage);		 
+		    	List<String> originalOrderArray = originalOrder(htmlPage);
+		    //	System.out.println("\nOder Array:\n"+originalOrderArray);
+		    	
+		    	//System.exit(1);		    	
+		//    	System.out.println("\n ORDER ID : \n"+orderID);		 
+		    	int x = 0;
+		    	for (int start = 0; start < originalOrderArray.size(); start += 8) {
+                    String ProductSKU = null;
+		            int end = Math.min(start + 8, originalOrderArray.size());
+		            sublist = originalOrderArray.subList(start, end);        
+		            
+		  //          System.out.println("\nIN Sublist:\n"+sublist+"\nORDER NO:"+orderID);		            
+		            
+		            if(x < Integer.parseInt(originalOrderGetItemsCount.get(0))){                
+		                    ProductSKU        =        allOrdersSKU.get(x);
+		                    //System.out.println("\nOriginal:x-"+x+":SKU-"+ProductSKU+"\n");                                    
+		                    originalOrderMap.put(orderID, allOrdersSKU.get(x));
+		                    
+		                    String sku =  allOrdersSKU.get(x).replaceAll("\\s","");
+		                    origOrder.setSKU(sku);
+		                    itm.setSKU(sku);
+		                    originalOrderMap.put(orderID,sublist); // This is the original order
+		                    origOrder.setOrderId(orderID);
+		                    int temp=0;
+		                    for(String eachItem:sublist){
+		          //          	System.out.println("IN Sublist: "+eachItem);
+		                    	temp++;
+		                    	switch(temp){
+		                    		case 1:
+		                    			itm.setAisle(eachItem);
+		                    			break;
+		                    		case 2:
+		                    			origOrder.setQty(eachItem);
+		                    			break;
+		                    		case 3:
+		                    			itm.setItemName(eachItem);
+		                    			itm.setDescription(eachItem);
+		                    			break;
+		                    		case 4:
+		                    			origOrder.setSize(eachItem);
+		                    			break;
+		                    		case 5:
+		                    			itm.setUnitPrice(eachItem);
+		                    			break;
+		                    		case 6:
+		        //            			System.out.println("tax "+eachItem);
+		                    			break;
+		                    		case 7:
+		         //           			System.out.println("dep "+eachItem);
+		                    			break;
+		                    		case 8:
+		        //            			System.out.println("Item Original/Substituted" + eachItem);
+		                    			break;
+		                    		
+		                    		default:
+		          //          			System.out.println("List Messed up");
+		                    			break;
+		                    	}
+		                    	
+		                    }
+		                    
+		       //             System.out.println(originalOrderMap);
+		                    if(!origOrderService.exists(orderID,sku)){
+			                    origOrderService.persistOriginalOrder(origOrder);
+		                    }
+		                    
+		                    if(!itemService.exists(sku)){
+			                    itemService.persistItem(itm);
+		                    }
+		            }
+		            else {                            
+		                    ProductSKU        =        allOrdersSKU.get(x);
+		                    
+		                    
+		                    //System.out.println("\nCurrent-"+x+":SKU-"+ProductSKU+"\n");                                            
+		                    currentOrderMap.put(orderID, allOrdersSKU.get(x));
+		                    currentOrderMap.put(orderID,sublist);
+		                    
+		                    int temp=0;
+		                    String Aisle= null,Qty= null,Name= null,Description= null,size= null,unitPrice = null;
+		                    for(String eachItem:sublist){
+		        //            	System.out.println("IN Sublist: "+eachItem);
+		                    	temp++;
+		                    	switch(temp){
+		                    		case 1:
+		                    			Aisle = eachItem;
+		                    			break;
+		                    		case 2:
+		                    			Qty = eachItem;
+		                    			break;
+		                    		case 3:
+		                    			Name = eachItem;
+		                    			Description = eachItem;
+		                    			break;
+		                    		case 4:
+		                    			size = eachItem;
+		                    			break;
+		                    		case 5:
+		                    			unitPrice = eachItem;
+		                    			break;
+		                    		case 6:
+		        //            			System.out.println("tax "+eachItem);
+		                    			break;
+		                    		case 7:
+		      //              			System.out.println("dep "+eachItem);
+		                    			break;
+		                    		case 8:
+		        //            			System.out.println("Item Original/Substituted" + eachItem);                  			
+		                    			
+		                    			break;
+		                    		
+		                    		default:
+		                    			break;
+		                    	}
+		                    	if(!eachItem.equalsIgnoreCase("Orig.")){
+                    				if(!itemService.exists(ProductSKU)){
+	                    				itm.setAisle(Aisle);
+	                    				itm.setDescription(Description);
+	                    				itm.setItemName(Name);
+	                    				itm.setsize(size);
+	                    				itm.setSKU(ProductSKU);
+	                    				itm.setUnitPrice(unitPrice);
+	                    				itemService.persistItem(itm);
+                    				}
+		                    	} 
+		                    }
+		                    
+		       //             System.out.println(currentOrderMap);
+		            }
+		    	 }//1 == 2
+		            x++;		            
+		        //} // 1 == 2
+		    	
+		    	getModifiedItems(exceptionReportHTML,orderID);
+		    	
+		        } // if there is an orderID in database
+		        else {
+	        		//System.out.println("ORDER ID is this : "+orderID);
+	        		// It will get Exceptionreport details HTML from the local system	
+		        	System.out.println("ORDER LIST COMPLETED: "+orderList);
+		        	if(orderList.contains(orderID)) {	// If orderID is not there into database then goes in
+		        		
+		        	String OrderFileURL		=	path+storeID+"_"+orderID+"_order_completed.txt";
+		        	String htmlPage 		= 	new Scanner(new File(OrderFileURL)).useDelimiter("\\Z").next();
+				    String orderDetailsHTML	=	htmlPage;		    			    	
+				    	
+		        	String promotioncode=	orderPromotionCode(htmlPage);
+//			    	System.out.println("\n promotioncode \n " + promotioncode);
+			    	String prdtotal		=	orderProductTotal(htmlPage);
+		//	    	System.out.println("\n prdtotal \n " + prdtotal);
+			    	String diposit		=	orderDiposit(htmlPage);		    	
+		//	    	System.out.println("\n diposit \n " + diposit);
+			    	String taxtotal			=	orderTaxTotal(htmlPage);
+//			    	System.out.println("\n taxtotal \n " + taxtotal);
+			    	String discountcharge	=	orderDiscountCharge(htmlPage);
+		//	    	System.out.println("\n discountcharge \n " + discountcharge);
+			    	String servicefee		=	orderServiceFee(htmlPage);		
+		//	    	System.out.println("\n servicefee \n " + servicefee);
+			    	String specialpromotion	=	orderSpecialPromotions(htmlPage);	
+		//	    	System.out.println("\n specialpromotion \n " + specialpromotion);
+		//	    	System.out.println(htmlPage);
+			    	String addcharges	=	orderAdditionalCharges(htmlPage);
+			    	//System.out.println("\n addcharges \n " + addcharges);
+			    	String ordertotal	=	orderTotal(htmlPage);
+			    	OrderTotalService ordTotService = (OrderTotalService) context.getBean("orderTotalService");
+			    	
+			    	if(ordTotService.exists(orderID)){
+			    		
+			    		ordTotService.remove(orderID);
+					    	OrderTotal ordTotal = new OrderTotal();
+					    	//ordTotService.deleteAll();
+					    	
+					    	ordTotal.setOrderId(orderID);
+					    	ordTotal.setAdditionalCharges(addcharges);
+					    	ordTotal.setDeposit(diposit);
+					    	ordTotal.setDiscount(discountcharge);
+					    	ordTotal.setOrderTotal(ordertotal);
+					    	ordTotal.setProductTotal(prdtotal);
+					    	ordTotal.setServiceFee(servicefee);
+					    	ordTotal.setSpecialPromotions(specialpromotion);
+					    	ordTotal.setTaxTotal(taxtotal);
+					    	
+					    	ordTotService.persistOrderTotal(ordTotal);
+			    	}
+	        		String ReportURL			=	path+storeID+"_"+orderID+"_exceptionreport_completed.txt";
+			    	//System.out.println("THis is the URL : "+ReportURL);
+			    	String exceptionReportHTML 	= 	new Scanner(new File(ReportURL)).useDelimiter("\\Z").next();
+			    	//System.out.println("\nExceptionreport\n " + exceptionReportHTML);
+                    //System.exit(1);
+                    getModifiedItems(exceptionReportHTML,orderID);
+                    
+                    
+		        }		        
+		        }
+	        }
+
+	        	
+        
+      } else if (listOfFiles[i].isDirectory()) {
+       // System.out.println("Directory " + listOfFiles[i].getName());
+      }
+      //if else ends /* (listOfFiles[i].isFile()) {
+    
+    }
+	}finally{
+		context.close();
+	}
+  }
 
 public List<String> currentOrder(String str){
 	  /*Has all the td of the order details page*/
@@ -1026,8 +1599,36 @@ public void getModifiedItems(String str, String orderID){
 		OrderedItemsMap.put(orderID, ReceivedArray);
 	}
 	
-	//System.out.println(OrderedArray);
-	//System.out.println(ReceivedArray);
+	
+	
+	System.out.println("\n ORDERED Array in Modified Items: "+OrderedArray);
+	System.out.println("\n Received Array in Modified Items: "+ReceivedArray);
+	
+	ArrayList<String> tempList = new ArrayList<String>();
+	tempList=(ArrayList<String>) ReceivedArray;
+	for(int i=0; i< OrderedArray.size();i=i+4){
+		
+		int tempOcc=0;
+		for(int j=0; j<ReceivedArray.size();j=j+4){
+			//System.out.println("\n"+j);
+			//System.out.println("\n"+list2.get(j));
+			if(OrderedArray.get(i) == ReceivedArray.get(j))
+			{
+				tempOcc++;
+				//System.out.println("\n"+tempOcc);
+				System.out.println("List 1 element "+OrderedArray.get(i)+"   "+ReceivedArray.get(j));
+				if(tempOcc>1){					
+					System.out.println("temp list"+ tempList);
+					for(int temp=0; temp<=3;temp++){
+						tempList.remove(j);							
+					}
+				}
+			}
+		}
+		
+	}
+	ReceivedArray=tempList;
+	
 	//System.out.println(OrderedItemsMap);
 	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
 	try{
@@ -1037,6 +1638,7 @@ public void getModifiedItems(String str, String orderID){
 	modItem.setOrderId(orderID);
 	List<String> sublist = new ArrayList<String>();
 	List<String> Received = new ArrayList<String>();
+	if(OrderedArray.size() == ReceivedArray.size() ){
 	for (int start = 0; start < OrderedArray.size(); start += 4) {		
         int end = Math.min(start + 4, OrderedArray.size());
         
@@ -1044,19 +1646,25 @@ public void getModifiedItems(String str, String orderID){
         System.out.println(sublist);
         int x =0;
         String itemOrdered= null;
+        String modId=null;
         for(String eachItem:sublist){
         	x++;
         	switch(x){
         	case 1: 
         		modItem.setItemOrderedSKU(eachItem);
-        		System.out.println("in modifiedItem table" +modItem.getItemOrderedSKU());
-        		itemOrdered = eachItem;
+        		System.out.println("in modifiedItem table" +modItem.getItemOrderedSKU()+" Order ID:"+orderID);
+        		
         		break;
         	case 2:
         		modItem.setItemOrderedQty(eachItem);
+        		itemOrdered = eachItem;
         		break;
         	case 3:
-        		modItem.setItemOrderedName(eachItem);        		
+        		modItem.setItemOrderedName(eachItem);    
+        		modId= orderID + eachItem;
+        		if(!modItemService.exists(modId)){
+        		modItem.setModId(modId);
+        		}
         		break;
         	case 4:
         		modItem.setItemOrderedSize(eachItem);
@@ -1067,7 +1675,9 @@ public void getModifiedItems(String str, String orderID){
         }
          
         int rlist = 0;
+        System.out.println("\n HERE THE START AND END "+start+"---"+end);
         Received = ReceivedArray.subList(start, end);
+        System.out.println("\n Received "+Received);
         for(String eachItem:Received){
         	rlist++;
         	switch(rlist){
@@ -1089,10 +1699,11 @@ public void getModifiedItems(String str, String orderID){
         	}
         }
         
-        if(!modItemService.exists(orderID, itemOrdered))
+        if(!modItemService.exists(modId))
         	modItemService.persistModifiedItem(modItem);
         System.out.println("Modified ITems"+Received);
         
+	}
 	}
 	
 }finally{
@@ -1766,5 +2377,14 @@ public boolean isAlpha(String name) {
 public static String html2text(String html) {
 	    return Jsoup.parse(html).text();
 }
-  
+public String getBeforeAfterDate(int days){
+	Calendar now = Calendar.getInstance();	    
+    // add days to current date using Calendar.add method
+    // 2%2F18%2F2015
+    // 3%2F4%2F2015
+    now.add(Calendar.DATE, days);
+    String yourDate	=	(now.get(Calendar.MONTH) + 1) + "%2F"
+	        + now.get(Calendar.DATE) + "%2F" + now.get(Calendar.YEAR);
+    return yourDate;
+} 
 }

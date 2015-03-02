@@ -19,5 +19,9 @@ public interface OrderDAO {
 		  Boolean exists(String id);
 
 		List<String> getAllOrderIDS();
+
+		List<String> getCompletedOrderIDS();
+
+		List<String> getCurrentOrderIDS();
 		  
 }

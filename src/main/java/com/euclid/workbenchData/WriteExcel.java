@@ -152,7 +152,8 @@ public void setOutputFile(String inputFile) {
         .println("Please check the result file under c:/temp/lars.xls ");
   }
   
-  private void createFile(WritableSheet sheet,String file)
+  @SuppressWarnings("unused")
+private void createFile(WritableSheet sheet,String file)
 	      throws WriteException {
 	//addLabel(sheet, 0, i, "Boring text " + i);  
 	Label label;

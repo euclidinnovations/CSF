@@ -1,6 +1,5 @@
 package com.euclid.persistence.Orders.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.euclid.persistence.Orders.model.ModifiedItem;
@@ -17,6 +16,10 @@ public interface ModifiedItemService {
 	
 	List<Object[]> getLookupItems(String orderId);
 
-	boolean exists(String orderID, String productSKU);
+	boolean exists(String modID);
+
+	void updateMItem(String orderId, String key, String value);
+	
+	
 	
 }

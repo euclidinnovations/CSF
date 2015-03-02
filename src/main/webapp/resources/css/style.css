@@ -254,7 +254,8 @@ span.custname{padding-bottom: 10px;}
 	.csf .shopper_delivered textarea.input-xxlarge{width:95%;}
 	.csf .topinfo .col-sm-7 .label, .csf .topinfo .col-sm-4 .label{width: 100px; text-align: left; padding: 5px 5px 5px 5px;}
 	.csf #HStr7 #cc_dd{margin-right: 10px;}	
-	.csf .headings th{height: 30px;}		
+	.csf .headings th{height: 30px;}	
+	.csf .novic{text-decoration: underline;}	
 /*CSF*/		
  
 /*ORDER ID*/

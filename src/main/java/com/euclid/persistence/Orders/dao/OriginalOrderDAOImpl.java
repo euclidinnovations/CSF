@@ -51,6 +51,7 @@ public class OriginalOrderDAOImpl implements OriginalOrderDAO {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getAllOriginalItemSKUs(String orderID) {
 		Query query = sessionFactory.getCurrentSession().             

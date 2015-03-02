@@ -1,7 +1,5 @@
 package com.euclid.controller;
 
-import java.util.HashMap;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

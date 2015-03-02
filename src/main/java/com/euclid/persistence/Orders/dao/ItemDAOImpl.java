@@ -49,6 +49,7 @@ public class ItemDAOImpl implements ItemDAO {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getMappedItems(String itemString) {
 		

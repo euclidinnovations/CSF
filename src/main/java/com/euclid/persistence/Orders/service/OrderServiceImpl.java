@@ -60,5 +60,19 @@ public class OrderServiceImpl implements OrderService{
 		// TODO Auto-generated method stub
 		return orderDAO.getAllOrderIDS();
 	}
+	
+	@Override
+	@Transactional
+	public List<String> getCompletedOrderIDS() {
+		// TODO Auto-generated method stub
+		return orderDAO.getCompletedOrderIDS();
+	}
+	
+	@Override
+	@Transactional
+	public List<String> getCurrentOrderIDS() {
+		// TODO Auto-generated method stub
+		return orderDAO.getCurrentOrderIDS();
+	}
 
 }

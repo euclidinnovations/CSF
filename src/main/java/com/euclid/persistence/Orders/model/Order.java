@@ -24,9 +24,27 @@ public class Order {
  
     @Column(name = "pickup")
     private String pickup;
-     
- 	    
-    public String getOrderId() {
+    
+    @Column(name = "flag")
+    private String flag;
+    
+    /**
+	 * @return the flag
+	 */
+	public String getFlag() {
+		return flag;
+	}
+
+
+	/**
+	 * @param flag the flag to set
+	 */
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+
+
+	public String getOrderId() {
 		return orderId;
 	}
 

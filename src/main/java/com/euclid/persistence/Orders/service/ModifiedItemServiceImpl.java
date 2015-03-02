@@ -1,6 +1,5 @@
 package com.euclid.persistence.Orders.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +50,16 @@ public class ModifiedItemServiceImpl implements ModifiedItemService{
 
 	@Override
 	@Transactional
-	public boolean exists(String orderID, String productSKU) {
+	public void updateMItem(String orderId, String key, String value) {
+		 modifiedItemDAO.updateMItem(orderId,key,value);
+		
+	}
+
+	@Override
+	@Transactional
+	public boolean exists(String modID) {
 		// TODO Auto-generated method stub
-		return modifiedItemDAO.exists(orderID,productSKU);
+		return modifiedItemDAO.exists(modID);
 	}
 
 }

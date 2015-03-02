@@ -2,7 +2,6 @@ package com.euclid.csfcommunication;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -22,7 +21,6 @@ public class SendEmailController {
 
 	@Autowired
 	private JavaMailSender mailSender;
-    private SessionFactory sessionFactory;
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public String doSendEmail(HttpServletRequest request, @RequestParam("orderID") String orderID) {
@@ -56,7 +54,7 @@ public class SendEmailController {
 		
 		// sends the e-mail
 		mailSender.send(email);
-		
+		context.close();
 		// forwards to the view named "Result"
 		return "views/order";
 	}

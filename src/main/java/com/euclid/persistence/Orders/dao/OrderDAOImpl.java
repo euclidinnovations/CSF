@@ -55,10 +55,34 @@ public class OrderDAOImpl implements OrderDAO {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getAllOrderIDS() {
 		Query query = sessionFactory.getCurrentSession().             
 	    	    createQuery("select o.orderId from Order o");
+	    	         
+	    	        List<String> orderIDList = query.list();
+		return orderIDList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getCompletedOrderIDS() {
+		//cmp is completed orders
+		Query query = sessionFactory.getCurrentSession().             
+	    	    createQuery("select o.orderId from Order o where o.flag=:key");
+		query.setString("key", "cmp" );      
+	    	        List<String> orderIDList = query.list();
+		return orderIDList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getCurrentOrderIDS() {
+		//cp is current and pending orders
+		Query query = sessionFactory.getCurrentSession().             
+	    	    createQuery("select o.orderId from Order o where o.flag=:key");
+		query.setString("key", "cp" );
 	    	         
 	    	        List<String> orderIDList = query.list();
 		return orderIDList;

@@ -12,6 +12,10 @@ import com.euclid.dbSave.LoadData;
 public class TimerServlet extends HttpServlet {
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Timer m_timer;
 	public void init(ServletConfig config)  throws ServletException{
 		m_timer = new Timer();
@@ -22,7 +26,7 @@ public class TimerServlet extends HttpServlet {
 		int count=0;
         public void run() {
         	try {
-				LoadData loadData = new LoadData();
+        			new LoadData();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

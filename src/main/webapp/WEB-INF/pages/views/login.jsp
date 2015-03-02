@@ -1,3 +1,4 @@
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -40,7 +41,7 @@
 						<strong> Sign in to continue</strong>
 					</div>
 					<div class="panel-body">
-						<form method="POST" action="${pageContext.request.contextPath}/login">
+						<form:form method="POST" action="${pageContext.request.contextPath}/csfdata">
 							<fieldset>
 <!-- 								<div class="row">
 									<div class="center-block">
@@ -72,7 +73,7 @@
 									</div>
 								</div>
 							</fieldset>
-						</form>
+						</form:form>
 					</div>
 					<div class="panel-footer ">
 						View the <a href="views/dashboard.jsp" onClick=""> Dashboard </a>

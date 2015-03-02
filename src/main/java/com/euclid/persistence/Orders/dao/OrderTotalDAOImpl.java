@@ -56,10 +56,9 @@ public class OrderTotalDAOImpl implements OrderTotalDAO {
 
 	@Override
 	public Boolean remove(String orderID) {
-		try {
+				try {
 			            OrderTotal ordTotal = (OrderTotal) sessionFactory.getCurrentSession().get(OrderTotal.class, orderID);
-			            sessionFactory.getCurrentSession().delete(ordTotal);
-			             System.out.println("DONE till delete");
+			            deleteOrderTotal(ordTotal);
 			       }
 			
 			        catch (HibernateException e) {

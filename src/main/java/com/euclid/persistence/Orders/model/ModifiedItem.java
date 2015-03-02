@@ -14,9 +14,12 @@ import javax.persistence.Table;
 public class ModifiedItem {
 
  
-
+	
     @Id
-    @Column(name = "orderId", nullable = false)
+    @Column(name = "modId", nullable = false)
+    private String modId;
+	
+    @Column(name = "orderId")
     private String orderId;
     
     @Column(name = "itemOrderedSKU")
@@ -37,11 +40,7 @@ public class ModifiedItem {
     @Column(name = "itemRecievedSize")
     private String itemRecievedSize;
     
-   
-
-
-
-	@Column(name = "itemOrderedName")
+   	@Column(name = "itemOrderedName")
     private String itemOrderedName;
     
     
@@ -49,7 +48,21 @@ public class ModifiedItem {
     private String itemRecievedName;
  
     
-	 public String getItemRecievedName() {
+	 public String getModId() {
+		return modId;
+	}
+
+
+
+
+	public void setModId(String modId) {
+		this.modId = modId;
+	}
+
+
+
+
+	public String getItemRecievedName() {
 			return itemRecievedName;
 		}
 
