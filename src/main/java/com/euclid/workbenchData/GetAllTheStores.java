@@ -99,7 +99,7 @@ public class GetAllTheStores{
 		//Find out the orderIDs
 		//http.FindOrderIDs(SelectStoreHtml);	
 		
-		System.out.println("Done");
+		// System.out.println("Done");
   }
  
   private void sendPost(String url, List<NameValuePair> postParams) 
@@ -127,7 +127,7 @@ public class GetAllTheStores{
  
 	int responseCode = response.getStatusLine().getStatusCode();
  
-	System.out.println("\nSending 'POST' request to URL : " + url);
+	// System.out.println("\nSending 'POST' request to URL : " + url);
 //	System.out.println("Post parameters : " + postParams);
 //	System.out.println("Response Code : " + responseCode);
  
@@ -156,7 +156,7 @@ public class GetAllTheStores{
 	HttpResponse response = client.execute(request);
 	int responseCode = response.getStatusLine().getStatusCode();
  
-	System.out.println("\nSending 'GET' request to URL : " + url);
+	// System.out.println("\nSending 'GET' request to URL : " + url);
 //	System.out.println("Response Code : " + responseCode);
  
 	BufferedReader rd = new BufferedReader(
@@ -190,7 +190,7 @@ public class GetAllTheStores{
 		HttpResponse response = client.execute(request);
 		int responseCode = response.getStatusLine().getStatusCode();
 	 
-		System.out.println("\nSending 'GET' request to URL : " + url);
+		// System.out.println("\nSending 'GET' request to URL : " + url);
 	//	System.out.println("Response Code : " + responseCode);
 	 
 		BufferedReader rd = new BufferedReader(
@@ -214,7 +214,7 @@ public class GetAllTheStores{
              String html, String username, String password)
 			throws UnsupportedEncodingException {
  
-	System.out.println("Extracting form's data...");
+	// System.out.println("Extracting form's data...");
  
 	Document doc = Jsoup.parse(html);
 	
@@ -294,8 +294,7 @@ public class GetAllTheStores{
 		WriteExcel test = new WriteExcel();
 	    test.setOutputFile("c:/temp/"+name+".xls");
 	    test.write(str);
-	    System.out
-	        .println("Please check the result file under c:/temp/ ");
+	    // System.out.println("Please check the result file under c:/temp/ ");
   }  
   
   public List<String> FindStoresSaveOnLocal(String str) throws Exception{
@@ -367,7 +366,7 @@ public class GetAllTheStores{
 	  }
 
 public void WriteOrdersToLocal(String str, String storeID) throws Exception{
-	System.out.println("\n IN WriteOrdersToLocal \n " + storeID);
+	// System.out.println("\n IN WriteOrdersToLocal \n " + storeID);
 	int j = 0; int k = 0;  	
 	String orderIDPage = "https://wb2.harristeeter.com/OrderDetail.asp?OrderID=";
 	String custDetailsPage = "https://wb2.harristeeter.com/CustomerAccount.aspx?&CustomerID=";
@@ -426,7 +425,7 @@ public void WriteOrdersToLocal(String str, String storeID) throws Exception{
 
 
 public void WriteCompletedOrdersToLocal(String str, String storeID) throws Exception{
-	System.out.println("\n IN WriteCompletedOrdersToLocal \n " + storeID);
+	// System.out.println("\n IN WriteCompletedOrdersToLocal \n " + storeID);
 	int j = 0; int k = 0;  	
 	String orderIDPage 			= 	"https://wb2.harristeeter.com/OrderDetail.asp?OrderID=";
 	String custDetailsPage 		= 	"https://wb2.harristeeter.com/CustomerAccount.aspx?&CustomerID=";
@@ -457,7 +456,7 @@ public void WriteCompletedOrdersToLocal(String str, String storeID) throws Excep
 			if(f.exists() && !f.isDirectory()) 
 			{ 
 				// If orderID is there create exceptionReport	
-				System.out.print(OrderFile+" - File already exist so go for exceptionReport only.");
+				 System.out.print(OrderFile+" - File already exist so go for exceptionReport only.");
 				String exeptionReportHTML = GetPageContent(exceptionReportURL+orderID);
 				PrintWriter ReportWriter = new PrintWriter("C:/temp/"+storeID+"_"+orderID+"_exceptionreport_completed.txt", "UTF-8");
 				ReportWriter.println(exeptionReportHTML);			
@@ -525,7 +524,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 	
 	orderList = ordService.getCurrentOrderIDS();
 	
-	System.out.println("ORDER IDS LIST ****"+orderList);
+	// System.out.println("ORDER IDS LIST ****"+orderList);
 	
 	File folder = new File("c:/temp");
 	File[] listOfFiles = folder.listFiles();	
@@ -642,7 +641,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		    	customersArr.add(address);*/
 		    	
 		    	CustomerService cusService = (CustomerService) context.getBean("customerService");
-		    	System.out.println("ORDER ID ******"+orderID);
+		    	 System.out.println("ORDER ID ******"+orderID);
 		    	if(!cusService.exists(customerID)){
 		    		//System.out.println("cusID ********* inside"+customerID);
 				    	Customer cus = new Customer();
@@ -794,11 +793,13 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		                    ProductSKU        =        allOrdersSKU.get(x);
 		                    //System.out.println("\nOriginal:x-"+x+":SKU-"+ProductSKU+"\n");                                    
 		                    originalOrderMap.put(orderID, allOrdersSKU.get(x));
-		                    
+		                    // System.out.println("Original Order Map "+originalOrderMap);
 		                    String sku =  allOrdersSKU.get(x).replaceAll("\\s","");
 		                    origOrder.setSKU(sku);
 		                    itm.setSKU(sku);
 		                    originalOrderMap.put(orderID,sublist); // This is the original order
+		                    // System.out.println("Sublist in original order: "+originalOrderMap);
+		                   // System.exit(1);
 		                    origOrder.setOrderId(orderID);
 		                    int temp=0;
 		                    for(String eachItem:sublist){
@@ -1001,7 +1002,7 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 	
 	orderList = ordService.getCompletedOrderIDS();
 	
-	System.out.println("ORDER IDS LIST ****"+orderList);
+	// System.out.println("ORDER IDS LIST ****"+orderList);
 	
 	File folder = new File("c:/temp");
 	File[] listOfFiles = folder.listFiles();	
@@ -1124,7 +1125,7 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		    	customersArr.add(address);*/
 		    	
 		    	CustomerService cusService = (CustomerService) context.getBean("customerService");
-		    	System.out.println("ORDER ID ******"+orderID);
+		    	System.out.println("ORDER ID in completed ******"+orderID);
 		    	if(!cusService.exists(customerID)){
 		    		//System.out.println("cusID ********* inside"+customerID);
 				    	Customer cus = new Customer();
@@ -1276,11 +1277,12 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		                    ProductSKU        =        allOrdersSKU.get(x);
 		                    //System.out.println("\nOriginal:x-"+x+":SKU-"+ProductSKU+"\n");                                    
 		                    originalOrderMap.put(orderID, allOrdersSKU.get(x));
-		                    
+		                    // System.out.println("Original Order Map "+originalOrderMap);
 		                    String sku =  allOrdersSKU.get(x).replaceAll("\\s","");
 		                    origOrder.setSKU(sku);
 		                    itm.setSKU(sku);
 		                    originalOrderMap.put(orderID,sublist); // This is the original order
+		                   
 		                    origOrder.setOrderId(orderID);
 		                    int temp=0;
 		                    for(String eachItem:sublist){
@@ -1388,19 +1390,17 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		                    
 		       //             System.out.println(currentOrderMap);
 		            }
-		    	 }//1 == 2
 		            x++;		            
-		        //} // 1 == 2
-		    	
+		        }
+		    	/* System.out.println("Sublist in original order: "+originalOrderMap);
+                 System.exit(1);*/
 		    	getModifiedItems(exceptionReportHTML,orderID);
 		    	
 		        } // if there is an orderID in database
 		        else {
 	        		//System.out.println("ORDER ID is this : "+orderID);
 	        		// It will get Exceptionreport details HTML from the local system	
-		        	System.out.println("ORDER LIST COMPLETED: "+orderList);
-		        	if(orderList.contains(orderID)) {	// If orderID is not there into database then goes in
-		        		
+		        	if(orderList.contains(orderID)) {
 		        	String OrderFileURL		=	path+storeID+"_"+orderID+"_order_completed.txt";
 		        	String htmlPage 		= 	new Scanner(new File(OrderFileURL)).useDelimiter("\\Z").next();
 				    String orderDetailsHTML	=	htmlPage;		    			    	
@@ -1451,8 +1451,9 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
                     getModifiedItems(exceptionReportHTML,orderID);
                     
                     
-		        }		        
 		        }
+		        }
+
 	        }
 
 	        	
@@ -1601,8 +1602,8 @@ public void getModifiedItems(String str, String orderID){
 	
 	
 	
-	System.out.println("\n ORDERED Array in Modified Items: "+OrderedArray);
-	System.out.println("\n Received Array in Modified Items: "+ReceivedArray);
+	// System.out.println("\n ORDERED Array in Modified Items: "+OrderedArray);
+	// System.out.println("\n Received Array in Modified Items: "+ReceivedArray);
 	
 	ArrayList<String> tempList = new ArrayList<String>();
 	tempList=(ArrayList<String>) ReceivedArray;
@@ -1616,9 +1617,9 @@ public void getModifiedItems(String str, String orderID){
 			{
 				tempOcc++;
 				//System.out.println("\n"+tempOcc);
-				System.out.println("List 1 element "+OrderedArray.get(i)+"   "+ReceivedArray.get(j));
+				// System.out.println("List 1 element "+OrderedArray.get(i)+"   "+ReceivedArray.get(j));
 				if(tempOcc>1){					
-					System.out.println("temp list"+ tempList);
+					// System.out.println("temp list"+ tempList);
 					for(int temp=0; temp<=3;temp++){
 						tempList.remove(j);							
 					}
@@ -1643,7 +1644,7 @@ public void getModifiedItems(String str, String orderID){
         int end = Math.min(start + 4, OrderedArray.size());
         
         sublist = OrderedArray.subList(start, end);
-        System.out.println(sublist);
+        // System.out.println(sublist);
         int x =0;
         String itemOrdered= null;
         String modId=null;
@@ -1652,7 +1653,7 @@ public void getModifiedItems(String str, String orderID){
         	switch(x){
         	case 1: 
         		modItem.setItemOrderedSKU(eachItem);
-        		System.out.println("in modifiedItem table" +modItem.getItemOrderedSKU()+" Order ID:"+orderID);
+        		// System.out.println("in modifiedItem table" +modItem.getItemOrderedSKU()+" Order ID:"+orderID);
         		
         		break;
         	case 2:
@@ -1675,9 +1676,9 @@ public void getModifiedItems(String str, String orderID){
         }
          
         int rlist = 0;
-        System.out.println("\n HERE THE START AND END "+start+"---"+end);
+        // System.out.println("\n HERE THE START AND END "+start+"---"+end);
         Received = ReceivedArray.subList(start, end);
-        System.out.println("\n Received "+Received);
+        // System.out.println("\n Received "+Received);
         for(String eachItem:Received){
         	rlist++;
         	switch(rlist){
@@ -1701,7 +1702,7 @@ public void getModifiedItems(String str, String orderID){
         
         if(!modItemService.exists(modId))
         	modItemService.persistModifiedItem(modItem);
-        System.out.println("Modified ITems"+Received);
+        // System.out.println("Modified ITems"+Received);
         
 	}
 	}
@@ -2247,7 +2248,7 @@ public String FindPhone(String str){
 		  phoneArray.add(phone);	  		  		  
 	  }
 
-	  System.out.println(phoneArray);	
+	  // System.out.println(phoneArray);	
 	  return "Phone";
 }
 public String FindPhone(String str, int index){
@@ -2265,7 +2266,7 @@ public String FindPhone(String str, int index){
 		  phoneArray.add(phone);	  		  		  
 	  }
 
-	  //System.out.println(phoneArray);	
+	  //// System.out.println(phoneArray);	
 	  return phoneArray.get(index);
 }
 
@@ -2283,7 +2284,7 @@ public String FindZip(String str){
 		  zipArray.add(zip);	  		  		  
 	  }
 
-	  System.out.println(zipArray);	
+	  // System.out.println(zipArray);	
 	  return "Zip";
 }
 public String FindZip(String str, int index){

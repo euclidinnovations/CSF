@@ -50,9 +50,8 @@ width: 100%;}
     	
     	<br/>
     	<br/><br/><br/><br/><br/><br/><br/>
-    	<br/><br/><center>
-    		
-    			<h3> Order ID ${message.orderId }Not Found</h4>
+    	<br/><br/><center>    		
+    			<h3> Order number ${message.orderId } not found</h3>
     			<br/>
     			<h4>If you would prefer to contact us by phone, our toll free number is <b>1-800-432-6111</b>. <br/><br/>you can also send an email to customerrelations@harristeeter.com</h4>
     		
