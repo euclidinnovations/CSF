@@ -52,7 +52,7 @@
 	<script src="resources/js/chosen.jquery.js" type="text/javascript"></script>
 	<script>
 		function myFunction(){
-			document.getElementById('orderid').value="";
+			$("input[type=text]").val("");
 		};
 	</script>
 	<script type="text/javascript">

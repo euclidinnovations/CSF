@@ -20,6 +20,6 @@ public interface ModifiedItemService {
 
 	void updateMItem(String orderId, String key, String value);
 	
-	
+	void deleteAll(String orderId);
 	
 }

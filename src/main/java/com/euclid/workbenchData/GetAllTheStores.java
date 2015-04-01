@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.List;
  
 import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +27,7 @@ import jxl.write.WriteException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -52,29 +56,30 @@ import com.euclid.persistence.Orders.service.OriginalOrderService;
  
 public class GetAllTheStores{
  
+	
+//  private static String path = "/root/wildfly-8.2.0.Final/Logs/";
+  private static String path = "../temp/";
   private String cookies;
   private HttpClient client = HttpClientBuilder.create().build();
   private final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36";
- 
    public void getData() throws Exception {
- 
-	   String url 				=	"https://wb2.harristeeter.com/Login.aspx";
+	   
+	   	String url 				=	"https://wb2.harristeeter.com/Login.aspx";
 		String wg 				=	"https://wb2.harristeeter.com/StoreMenu.aspx?dayspassexp=61";
 		String current_pending 	=	"https://wb2.harristeeter.com/default.asp?View=NewPending";								 
 		String uncommited 		=	"https://wb2.harristeeter.com/default.asp?View=Future";			
 		String SelectStore		=	"https://wb2.harristeeter.com/SelectAStore.aspx";
 		String AllStoreURL		=	"https://wb2.harristeeter.com/CorporateWorkbench.asp?dayspassexp=55";								 
 		String CorporateMenuURL	=	"https://wb2.harristeeter.com/CorporateMenu.asp?dayspassexp=55"; 
-		String StoreIDurl			=	"https://wb2.harristeeter.com/LoadStore.aspx?StoreId=4236";	
-		String storeMenu	=	"https://wb2.harristeeter.com/StoreMenu.aspx";
+		String StoreIDurl		=	"https://wb2.harristeeter.com/LoadStore.aspx?StoreId=4236";	
+		String storeMenu		=	"https://wb2.harristeeter.com/StoreMenu.aspx";
 		
 		// make sure cookies is turn on
 		CookieHandler.setDefault(new CookieManager());
 	 
 		GetAllTheStores http = new GetAllTheStores();
-	 
 		String page = http.GetPageContent(url); // Login
-	 
+			if(page != null){
 		List<NameValuePair> postParams = 
 	               http.getFormParams(page, "hteeter1","Shop001");
 	 
@@ -82,11 +87,8 @@ public class GetAllTheStores{
 		
 		// Start working code	
 			String step1	=	http.GetPageContent(CorporateMenuURL);	// Get all the store
-			//System.out.println("\nStep 1\n"+step1);
 			String step2	=	http.GetPageContent(SelectStore);		// Click on particular store
-			//System.out.println("\nStep 2\n"+step2);
 			String step3	=	http.GetPageContent(StoreIDurl);		// Get store info //NA
-			//System.out.println("\nStep 3\n"+step3);
 				
 			String OneStoreHtml 		= http.GetPageContentsStore(storeMenu,StoreIDurl);	// NA
 			
@@ -99,7 +101,7 @@ public class GetAllTheStores{
 		//Find out the orderIDs
 		//http.FindOrderIDs(SelectStoreHtml);	
 		
-		// System.out.println("Done");
+		}
   }
  
   private void sendPost(String url, List<NameValuePair> postParams) 
@@ -108,8 +110,7 @@ public class GetAllTheStores{
 	HttpPost post = new HttpPost(url);
  
 	// add header
-	post.setHeader("Accept", 
-            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+	post.setHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 	post.setHeader("Accept-Encoding", "gzip, deflate");
 	post.setHeader("Accept-Language", "en-US,en;q=0.8");
 	post.setHeader("Cache-Control", "max-age=0");
@@ -127,10 +128,7 @@ public class GetAllTheStores{
  
 	int responseCode = response.getStatusLine().getStatusCode();
  
-	// System.out.println("\nSending 'POST' request to URL : " + url);
-//	System.out.println("Post parameters : " + postParams);
-//	System.out.println("Response Code : " + responseCode);
- 
+	
 	BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
  
@@ -140,29 +138,26 @@ public class GetAllTheStores{
 		result.append(line);
 	}
  
-//	System.out.println(result.toString());
- 
+	
   }
  
-  private String GetPageContent(String url) throws Exception {
+  private String GetPageContent(String url) throws ClientProtocolException, IOException  {
  
 	HttpGet request = new HttpGet(url);
  
 	request.setHeader("User-Agent", USER_AGENT);
-	request.setHeader("Accept",
-		"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+	request.setHeader("Accept",	"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 	request.setHeader("Accept-Language", "en-US,en;q=0.5");
  
-	HttpResponse response = client.execute(request);
-	int responseCode = response.getStatusLine().getStatusCode();
- 
-	// System.out.println("\nSending 'GET' request to URL : " + url);
-//	System.out.println("Response Code : " + responseCode);
+	
+		HttpResponse response = client.execute(request);
+		int responseCode = response.getStatusLine().getStatusCode();
+		StringBuffer result = new StringBuffer();
  
 	BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
- 
-	StringBuffer result = new StringBuffer();
+	
+	
 	String line = "";
 	while ((line = rd.readLine()) != null) {
 		result.append(line);
@@ -171,9 +166,8 @@ public class GetAllTheStores{
 	// set cookies
 	setCookies(response.getFirstHeader("Set-Cookie") == null ? "" : 
                      response.getFirstHeader("Set-Cookie").toString());
- 
+	
 	return result.toString();
- 
   }
  
   private String GetPageContentsStore(String url, String referer) throws Exception {
@@ -181,8 +175,7 @@ public class GetAllTheStores{
 		HttpGet request = new HttpGet(url);
 	 
 		request.setHeader("User-Agent", USER_AGENT);
-		request.setHeader("Accept",
-			"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+		request.setHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 		request.setHeader("Accept-Language", "en-US,en;q=0.5");
 		request.setHeader("Host", "wb2.harristeeter.com");
 		request.setHeader("Referer", referer);		
@@ -190,8 +183,6 @@ public class GetAllTheStores{
 		HttpResponse response = client.execute(request);
 		int responseCode = response.getStatusLine().getStatusCode();
 	 
-		// System.out.println("\nSending 'GET' request to URL : " + url);
-	//	System.out.println("Response Code : " + responseCode);
 	 
 		BufferedReader rd = new BufferedReader(
 	                new InputStreamReader(response.getEntity().getContent()));
@@ -214,30 +205,12 @@ public class GetAllTheStores{
              String html, String username, String password)
 			throws UnsupportedEncodingException {
  
-	// System.out.println("Extracting form's data...");
+	// // // System.out.println("Extracting form's data...");
  
 	Document doc = Jsoup.parse(html);
 	
 	List<NameValuePair> paramList = new ArrayList<NameValuePair>();
 	
-	// Google form id
-	/*Element loginform = doc.getElementById("gaia_loginform");
-	Elements inputElements = loginform.getElementsByTag("input");
- 
-	List<NameValuePair> paramList = new ArrayList<NameValuePair>();
- 
-	for (Element inputElement : inputElements) {
-		String key = inputElement.attr("name");
-		String value = inputElement.attr("value");
- 
-		if (key.equals("Email"))
-			value = username;
-		else if (key.equals("Passwd"))
-			value = password;
-		
-		paramList.add(new BasicNameValuePair(key, value));
- 
-	}*/
 	paramList.add(new BasicNameValuePair("hdnLoginPostBack", "1"));
 	paramList.add(new BasicNameValuePair("txtUsername", "hteeter1"));
 	paramList.add(new BasicNameValuePair("txtPassword", "Shop001"));
@@ -280,7 +253,6 @@ public class GetAllTheStores{
          ioe.printStackTrace();
     } finally {
         try {
-        	
             if (is != null) is.close();
         } catch (IOException ioe) {
             // nothing to see here
@@ -292,9 +264,8 @@ public class GetAllTheStores{
   
   public void WriteExcelFile(String str, String name) throws IOException, WriteException {
 		WriteExcel test = new WriteExcel();
-	    test.setOutputFile("c:/temp/"+name+".xls");
+	    test.setOutputFile(path+name+".xls");
 	    test.write(str);
-	    // System.out.println("Please check the result file under c:/temp/ ");
   }  
   
   public List<String> FindStoresSaveOnLocal(String str) throws Exception{
@@ -309,7 +280,7 @@ public class GetAllTheStores{
 	  
 		int i=0;
 	  	String newstr 	= str.replaceAll("\\s+","");
-	  	//System.out.println(str);
+	  	//// // System.out.println(str);
 		List<String> storeArray = new ArrayList<String>();  
 		//Pattern pattern = Pattern.compile("javascript:ShowDetail(.*?);'><spanstyle"); //SKU
 		Pattern pattern = Pattern.compile("<aclass=\"bold-text\"href=\"javascript:loadStore(.*?);\">");
@@ -317,7 +288,7 @@ public class GetAllTheStores{
 		Matcher matcher = pattern.matcher(newstr);
 		//while (matcher.find()) { i++;   	
 			//if(i <= 5) {
-				//System.out.println("\n"+i);
+				//// // System.out.println("\n"+i);
 				//String storeID	= matcher.group(1);
 				String storeID	="1632";
 				storeID	=	storeID.replace("(", "");
@@ -338,14 +309,14 @@ public class GetAllTheStores{
 				String StartDate	=	getBeforeAfterDate(-7);		//Before7Days
 				String EndDate		=	getBeforeAfterDate(7);		//AFter7Days
 				String CompletedOrdersHTML 			= 	GetPageContent("https://wb2.harristeeter.com/Default.asp?ProcessDates=1&SearchDates=1&View=Completed&StartDate="+StartDate+"&EndDate="+EndDate+"&OrderType=All&submit1=Search+Orders");
-				//System.out.println("\n 2 Completed orders \n"+CompletedOrdersHTML);
-				//System.exit(1);				
+				//// // System.out.println("\n 2 Completed orders \n"+CompletedOrdersHTML);
+				//// // System.exit(1);				
 	// **END** Step 3.1				
 				
 //Step 4    // Storing single store details(Current+Pending) at local storage	
 				String CurrPenOrdersHtml 	= GetPageContent(current_pending);
-				PrintWriter StoreWriter = new PrintWriter("C:/temp/"+storeID+"_store.txt", "UTF-8");
-			//	PrintWriter StoreWriter = new PrintWriter("/root/wildfly-8.2.0.Final/Logs/"+storeID+"_store.txt", "UTF-8");				
+				PrintWriter StoreWriter = new PrintWriter(path+storeID+"_store.txt", "UTF-8");
+			//	PrintWriter StoreWriter = new PrintWriter(path+storeID+"_store.txt", "UTF-8");				
 				StoreWriter.println(CurrPenOrdersHtml);			
 				StoreWriter.close();				
 
@@ -361,16 +332,16 @@ public class GetAllTheStores{
 			//}
 	//	}	  			
 		//ReadOrdersFromLocal(1632");
-		//System.out.println(storeArray);
+		//// // System.out.println(storeArray);
 	    return storeArray;				
 	  }
 
 public void WriteOrdersToLocal(String str, String storeID) throws Exception{
-	// System.out.println("\n IN WriteOrdersToLocal \n " + storeID);
+	// // // System.out.println("\n IN WriteOrdersToLocal \n " + storeID);
 	int j = 0; int k = 0;  	
-	String orderIDPage = "https://wb2.harristeeter.com/OrderDetail.asp?OrderID=";
-	String custDetailsPage = "https://wb2.harristeeter.com/CustomerAccount.aspx?&CustomerID=";
-	String exceptionReportURL = "https://wb2.harristeeter.com/OrderReport.aspx?OrderID=";
+	String orderIDPage 				= "https://wb2.harristeeter.com/OrderDetail.asp?OrderID=";
+	String custDetailsPage 			= "https://wb2.harristeeter.com/CustomerAccount.aspx?&CustomerID=";
+	String exceptionReportURL 		= "https://wb2.harristeeter.com/OrderReport.aspx?OrderID=";
 	ArrayList<String> orderIDarr = new ArrayList<String>();
 	String getOrderIDString = "OrderDetail(";
 	
@@ -386,31 +357,30 @@ public void WriteOrdersToLocal(String str, String storeID) throws Exception{
 	    //If the orderId has only digits then only, it will added to the array or whatever
 	    if(orderID.matches(regex)){	  
 			
-			//System.out.println("\n"+k+"\n");
+			//// // System.out.println("\n"+k+"\n");
 			orderIDarr.add(orderID);	// Add the orderID into the ArrayList (If anyone wants)
 								
 			// This is the entire order details page
 			// Create orders file  			
 			String fetchOrderDetailsPage = orderIDPage+orderID;
 			String htmlPage = GetPageContent(fetchOrderDetailsPage);	// Order Detail Page
-			PrintWriter OrderWriter = new PrintWriter("C:/temp/"+storeID+"_"+orderID+"_order.txt", "UTF-8");
+			//PrintWriter OrderWriter = new PrintWriter("C:/temp/"+storeID+"_"+orderID+"_order.txt", "UTF-8");
+			//PrintWriter OrderWriter = new PrintWriter(path+storeID+"_"+orderID+"_order.txt", "UTF-8");
+			PrintWriter OrderWriter = new PrintWriter(path+storeID+"_"+orderID+"_order.txt", "UTF-8");
 			OrderWriter.println(htmlPage);			
 			OrderWriter.close();
 			//WriteExcelFile(htmlPage,storeID+"_"+orderID+"_order"); // creating the file for order	
-			//System.out.println("\n"+orderIDPage+orderID);	
-			//System.out.println("\nThis is the orderDetail page\n"+htmlPage);			
-
+			
 			String exeptionReportHTML = GetPageContent(exceptionReportURL+orderID);
-			PrintWriter ReportWriter = new PrintWriter("C:/temp/"+storeID+"_"+orderID+"_exceptionreport.txt", "UTF-8");
+			PrintWriter ReportWriter = new PrintWriter(path+storeID+"_"+orderID+"_exceptionreport.txt", "UTF-8");
 			ReportWriter.println(exeptionReportHTML);			
 			ReportWriter.close();
 			//WriteExcelFile(exeptionReportHTML,storeID+"_"+orderID+"_exceptionreport");
-			//System.out.println("\n this is the exception report\n"+exeptionReportHTML);
 			
 			// Create customer/user file
 			String custID				=	orderCustomerID(htmlPage).trim();
 			String custDetailsHTML 		= 	GetPageContent(custDetailsPage+custID);
-			PrintWriter CustomerWriter 	= 	new PrintWriter("C:/temp/"+custID+"_customer.txt", "UTF-8");
+			PrintWriter CustomerWriter 	= 	new PrintWriter(path+custID+"_customer.txt", "UTF-8");
 			CustomerWriter.println(custDetailsHTML);			
 			CustomerWriter.close();
 			//WriteExcelFile(custDetailsHTML,custID+"_customer");  // creating the file for customer
@@ -420,12 +390,12 @@ public void WriteOrdersToLocal(String str, String storeID) throws Exception{
 	    k++;
 		//} DONT KNOW
 	}	
-//	System.out.println(orderIDarr);		
+	
   }
 
 
 public void WriteCompletedOrdersToLocal(String str, String storeID) throws Exception{
-	// System.out.println("\n IN WriteCompletedOrdersToLocal \n " + storeID);
+	// // // System.out.println("\n IN WriteCompletedOrdersToLocal \n " + storeID);
 	int j = 0; int k = 0;  	
 	String orderIDPage 			= 	"https://wb2.harristeeter.com/OrderDetail.asp?OrderID=";
 	String custDetailsPage 		= 	"https://wb2.harristeeter.com/CustomerAccount.aspx?&CustomerID=";
@@ -446,28 +416,28 @@ public void WriteCompletedOrdersToLocal(String str, String storeID) throws Excep
 	    //If the orderId has only digits then only, it will added to the array or whatever
 	    if(orderID.matches(regex)){	  
 			
-			//System.out.println("\n"+k+"\n");
+			//// // System.out.println("\n"+k+"\n");
 			orderIDarr.add(orderID);	// Add the orderID into the ArrayList (If anyone wants)
 								
 			// This is the entire order details page
 			// Create orders file  	
-			String OrderFile	=	"C:/temp/"+storeID+"_"+orderID+"_order_completed.txt";
+			String OrderFile	=	path+storeID+"_"+orderID+"_order_completed.txt";
 			File f = new File(OrderFile);
 			if(f.exists() && !f.isDirectory()) 
 			{ 
 				// If orderID is there create exceptionReport	
-				 System.out.print(OrderFile+" - File already exist so go for exceptionReport only.");
+				 // // System.out.print(OrderFile+" - File already exist so go for exceptionReport only.");
 				String exeptionReportHTML = GetPageContent(exceptionReportURL+orderID);
-				PrintWriter ReportWriter = new PrintWriter("C:/temp/"+storeID+"_"+orderID+"_exceptionreport_completed.txt", "UTF-8");
+				PrintWriter ReportWriter = new PrintWriter(path+storeID+"_"+orderID+"_exceptionreport_completed.txt", "UTF-8");
 				ReportWriter.println(exeptionReportHTML);			
 				ReportWriter.close();
 				//WriteExcelFile(exeptionReportHTML,storeID+"_"+orderID+"_exceptionreport");
-				//System.out.println("\n this is the exception report\n"+exeptionReportHTML);
+				//// // System.out.println("\n this is the exception report\n"+exeptionReportHTML);
 			}
 			else 
 			{
 				// If orderID is not there create three files as usual				
-				//System.out.print("In to Else");		
+				//// // System.out.print("In to Else");		
 				
 				String fetchOrderDetailsPage = orderIDPage+orderID;
 				String htmlPage = GetPageContent(fetchOrderDetailsPage);
@@ -475,20 +445,20 @@ public void WriteCompletedOrdersToLocal(String str, String storeID) throws Excep
 				OrderWriter.println(htmlPage);			
 				OrderWriter.close();
 				//WriteExcelFile(htmlPage,storeID+"_"+orderID+"_order"); // creating the file for order	
-				//System.out.println("\n"+orderIDPage+orderID);	
-				//System.out.println("\nThis is the orderDetail page\n"+htmlPage);
+				//// // System.out.println("\n"+orderIDPage+orderID);	
+				//// // System.out.println("\nThis is the orderDetail page\n"+htmlPage);
 				
 				String exeptionReportHTML = GetPageContent(exceptionReportURL+orderID);
-				PrintWriter ReportWriter = new PrintWriter("C:/temp/"+storeID+"_"+orderID+"_exceptionreport_completed.txt", "UTF-8");
+				PrintWriter ReportWriter = new PrintWriter(path+storeID+"_"+orderID+"_exceptionreport_completed.txt", "UTF-8");
 				ReportWriter.println(exeptionReportHTML);			
 				ReportWriter.close();
 				//WriteExcelFile(exeptionReportHTML,storeID+"_"+orderID+"_exceptionreport");
-				//System.out.println("\n this is the exception report\n"+exeptionReportHTML);
+				//// // System.out.println("\n this is the exception report\n"+exeptionReportHTML);
 				
 				// Create customer/user file
 				String custID				=	orderCustomerID(htmlPage).trim();
 				String custDetailsHTML 		= 	GetPageContent(custDetailsPage+custID);
-				PrintWriter CustomerWriter 	= 	new PrintWriter("C:/temp/"+custID+"_customer_completed.txt", "UTF-8");
+				PrintWriter CustomerWriter 	= 	new PrintWriter(path+custID+"_customer_completed.txt", "UTF-8");
 				CustomerWriter.println(custDetailsHTML);			
 				CustomerWriter.close();
 				//WriteExcelFile(custDetailsHTML,custID+"_customer");  // creating the file for customer
@@ -504,12 +474,12 @@ public void WriteCompletedOrdersToLocal(String str, String storeID) throws Excep
 	    k++;
 		//} DONT KNOW
 	}	
-//	System.out.println(orderIDarr);		
+//	// // System.out.println(orderIDarr);		
   }
 
 public void ReadOrdersFromLocal(String storeID) throws Exception{
 		
-//	System.out.println("\n IN ReadOrdersFromLocal \n " + storeID);
+//	// // System.out.println("\n IN ReadOrdersFromLocal \n " + storeID);
 	
 	int j = 0; int k = 0;  	
 	
@@ -524,9 +494,9 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 	
 	orderList = ordService.getCurrentOrderIDS();
 	
-	// System.out.println("ORDER IDS LIST ****"+orderList);
+	// // // System.out.println("ORDER IDS LIST ****"+orderList);
 	
-	File folder = new File("c:/temp");
+	File folder = new File(path);
 	File[] listOfFiles = folder.listFiles();	
 
   for (int i = 0; i < listOfFiles.length; i++) {
@@ -540,8 +510,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
       
 	        //if(!Fname.toLowerCase().contains("_customer") && !Fname.toLowerCase().contains("_exceptionreport") && !Fname.toLowerCase().contains("_store")){	//If is contains "customer" it will not in
 	        if(Fname.toLowerCase().contains(storeID) && Fname.toLowerCase().contains("_order") && !Fname.toLowerCase().contains("_order_completed")){	//If file is order then it goes in	
-		        String path	=	"C:/temp/";
-	        	
+		       
 	        	// It will get ORDER details HTML from the local system
 		        String orderID			=	Fname.replace("_order", "");		        		       
 		        orderID					=	orderID.replace(storeID+"_", "");	
@@ -551,99 +520,61 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		        String OrderFileURL		=	path+storeID+"_"+orderID+"_order.txt";
 		    	String htmlPage 		= 	new Scanner(new File(OrderFileURL)).useDelimiter("\\Z").next();
 		    	String orderDetailsHTML	=	htmlPage;		    			    	
-		    	//System.out.println("\nOrder\n " + orderDetailsHTML);
+		    	//// // System.out.println("\nOrder\n " + orderDetailsHTML);
 		    	
 		    	// It will get Exceptionreport details HTML from the local system		    	
 		    	String ReportURL			=	path+storeID+"_"+orderID+"_exceptionreport.txt";
 		    	String exceptionReportHTML 	= 	new Scanner(new File(ReportURL)).useDelimiter("\\Z").next();
-		    	//System.out.println("\nExceptionreport\n " + exceptionReportHTML);
 		    	
 		    	// It will get CUSTOMER details HTML from the local system
 		    	String custID			=	orderCustomerID(htmlPage).trim();   
 		    	String CustomerURL		=	path+custID+"_customer.txt";
 		    	String custDetailsHTML 	= 	new Scanner(new File(CustomerURL)).useDelimiter("\\Z").next();
-		    	//System.out.println("\nCustomer\n " + custDetailsHTML);
 		    	
 		    	String fName		=	custFirstname(custDetailsHTML);
-	//	    	System.out.println("\nFirstname\n " + fName);
 		    	String lName		=	custLastname(custDetailsHTML);
-	//	    	System.out.println("\nLastname\n " + lName);
 		    	String add1			=	custAddress1(custDetailsHTML);
-	//	    	System.out.println("\n Add1 \n " + add1);
 		    	String add2			=	custAddress2(custDetailsHTML);
-	//	    	System.out.println("\n add2 \n " + add2);
 		    	String city			=	custCity(custDetailsHTML);
-	//	    	System.out.println("\n city \n " + city);
 		    	String state		=	custState(custDetailsHTML);
-	//	    	System.out.println("\n state \n " + state);
 		    	String zip			=	custZip(custDetailsHTML);
-	//	    	System.out.println("\n zip \n " + zip);
-		    	String phone		=	custPhone(custDetailsHTML);		
-	//	    	System.out.println("\n phone \n " + phone);
+		    	String phone		=	custPhone(custDetailsHTML);	
 		    	String address		=	add1+" "+add2+" "+city+" "+state+" "+zip+" "+phone;		
-	//	    	System.out.println("\n address \n " + address);
 		    	String customerID	=	orderCustomerID(htmlPage).trim();
-	//	    	System.out.println("\n customerID \n " + customerID);
 		    	String email		=	orderEmail(custDetailsHTML);
-	//	    	System.out.println("\n email \n " + email);
 		    	String datetine		=	orderDateTime(htmlPage);
-	//	    	System.out.println("\n datetine \n " + datetine);
 		    	String billadd		=	orderBillAddress(htmlPage);
-	//	    	System.out.println("\n billadd \n " + billadd);
 		    	String substitution	=	orderSubstitution(htmlPage);
-	//	    	System.out.println("\n substitution \n " + substitution);
 		    	String fullfilment	=	orderFulfillment(htmlPage);
-	//	    	System.out.println("\n fullfilment \n " + fullfilment);
-		    	fullfilment			=	fullfilment.replace("Pickup -", "").trim();		   
-		//    	System.out.println("\n fullfilment \n " + fullfilment);
+		    	fullfilment			=	fullfilment.replace("Pickup -", "").trim();	
 		    	String specialinst	=	orderSpecialInstructions(htmlPage);
-	//	    	System.out.println("\n specialinst \n " + specialinst);
 		    	String paymethod	=	orderPaymentMethod(htmlPage);
-//		    	System.out.println("\n paymethod \n " + paymethod);
 		    	String totesused	=	orderTotesUsed(htmlPage);
-//		    	System.out.println("\n totesused \n " + totesused);
 		    	String promotioncode=	orderPromotionCode(htmlPage);
-//		    	System.out.println("\n promotioncode \n " + promotioncode);
 		    	String prdtotal		=	orderProductTotal(htmlPage);
-	//	    	System.out.println("\n prdtotal \n " + prdtotal);
-		    	String diposit		=	orderDiposit(htmlPage);		    	
-	//	    	System.out.println("\n diposit \n " + diposit);
+		    	String diposit		=	orderDiposit(htmlPage);		   
 		    	String taxtotal			=	orderTaxTotal(htmlPage);
-//		    	System.out.println("\n taxtotal \n " + taxtotal);
 		    	String discountcharge	=	orderDiscountCharge(htmlPage);
-	//	    	System.out.println("\n discountcharge \n " + discountcharge);
 		    	String servicefee		=	orderServiceFee(htmlPage);		
-	//	    	System.out.println("\n servicefee \n " + servicefee);
 		    	String specialpromotion	=	orderSpecialPromotions(htmlPage);	
-	//	    	System.out.println("\n specialpromotion \n " + specialpromotion);
-	//	    	System.out.println(htmlPage);
 		    	String addcharges	=	orderAdditionalCharges(htmlPage);
-		    	//System.out.println("\n addcharges \n " + addcharges);
 		    	String ordertotal	=	orderTotal(htmlPage);
-		    	//System.out.println("\n ordertotal \n " + ordertotal);
 		    	String viccard        =        orderVICcard(htmlPage);
-                System.out.println("\n VIC card : " + viccard + "\n OrderID :"+orderID);
                 String viccardsavings        =        orderVICcardSavings(htmlPage);
 		    	
 		    	/*Start of StoreID and OrderID*/
 		    	HashMap storeMap  = new HashMap();
 		    	storeMap.put(storeID, orderID);
-		    	//System.out.println("\n storeMap \n " +storeMap);
+		    	//// // System.out.println("\n storeMap \n " +storeMap);
 		    	/*END of StoreID and orderID*/
 		    	
 		    	/*Customers Map*/
-		    	/*List<String> customersArr  = new ArrayList<String>(); 
-		    	customersArr.add(customerID);
-		    	customersArr.add(fName);
-		    	customersArr.add(lName);
-		    	customersArr.add(phone);
-		    	customersArr.add(email);
-		    	customersArr.add(address);*/
+		    	
 		    	
 		    	CustomerService cusService = (CustomerService) context.getBean("customerService");
-		    	 System.out.println("ORDER ID ******"+orderID);
+		    	 // // System.out.println("ORDER ID ******"+orderID);
 		    	if(!cusService.exists(customerID)){
-		    		//System.out.println("cusID ********* inside"+customerID);
+		    		//// // System.out.println("cusID ********* inside"+customerID);
 				    	Customer cus = new Customer();
 						cus.setCustomerId(customerID);
 						cus.setFirstName(fName);
@@ -655,28 +586,12 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 							cus.setVic(viccard);
 						}
 						
-					/*	System.out.println("customerID: "+customerID);
-						System.out.println("fName: "+fName);
-						System.out.println("lName: "+lName);
-						System.out.println("phone: "+phone);
-						System.out.println("address: "+address);
-						System.out.println("\nCustomer\n " + custDetailsHTML);
-						System.out.println("email: "+email);*/
+					
 						
 						cusService.persistCustomer(cus);
 		    	}
 		    	/* -- Customers Table End*/
-		    	/*---------------------------------------*/
-		    	
-		    	/*Orders Map*/
-		    	/*List<String> ordersArr  = new ArrayList<String>(); 
-		    	ordersArr.add(customerID);
-		    	ordersArr.add(fullfilment);*/
-		    	/*HashMap ordersMap  = new HashMap();
-		    	ordersMap.put(orderID, ordersArr);*/
-		    	
-		    //	OrderService ordService = (OrderService) context.getBean("orderService");
-		    	//ordService.deleteAll();
+		    
 		    	if(!ordService.exists(orderID)){
 				    	Order ord = new Order();
 				    	ord.setCustomerId(customerID);
@@ -687,15 +602,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		    	}
 		    	/*---------------------------------------*/
 		    			    	
-		    	/*OrderInstructions Map*/
-		    	/*List<String> orderInstructionsArr   = new ArrayList<String>(); 
-		    	orderInstructionsArr.add(substitution);
-		    	orderInstructionsArr.add(specialinst);
-		    	orderInstructionsArr.add(paymethod);
-		    	orderInstructionsArr.add(totesused);
-		    	orderInstructionsArr.add(promotioncode);*/		    	
-		    	/*HashMap orderInstructionsMap  = new HashMap();
-		    	orderInstructionsMap.put(orderID, orderInstructionsArr);*/
+		    
 		    	
 		    	OrderInstructionService ordInstService = (OrderInstructionService) context.getBean("orderInstructionService") ;
 		    	if(!ordInstService.exists(orderID)){
@@ -715,17 +622,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		    	}
 		    	/*---------------------------------------*/
 		    	
-		    	/*orderTotals Map*/
-		   /* 	List<String> orderTotalsArr   = new ArrayList<String>(); 
-		    	orderTotalsArr.add(prdtotal);
-		    	orderTotalsArr.add(taxtotal);
-		    	orderTotalsArr.add(servicefee);
-		    	orderTotalsArr.add(addcharges);
-		    	orderTotalsArr.add(diposit);
-		    	orderTotalsArr.add(discountcharge);
-		    	orderTotalsArr.add(specialpromotion);
-		    	orderTotalsArr.add(ordertotal);
-		    	*/
+		 
 		    	OrderTotalService ordTotService = (OrderTotalService) context.getBean("orderTotalService");
 		    	
 		    	if(!ordTotService.exists(orderID)){
@@ -775,35 +672,35 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		    	List<String> allOrdersSKU = originalOrderSKU(htmlPage); 		    		    	
 		    	
 		    	
-		  //  	System.out.println("\nHTML PAGE:\n"+htmlPage);		 
+		  //  	// // System.out.println("\nHTML PAGE:\n"+htmlPage);		 
 		    	List<String> originalOrderArray = originalOrder(htmlPage);
-		    //	System.out.println("\nOder Array:\n"+originalOrderArray);
+		    //	// // System.out.println("\nOder Array:\n"+originalOrderArray);
 		    	
-		    	//System.exit(1);		    	
-		//    	System.out.println("\n ORDER ID : \n"+orderID);		 
+		    	//// // System.exit(1);		    	
+		//    	// // System.out.println("\n ORDER ID : \n"+orderID);		 
 		    	int x = 0;
 		    	for (int start = 0; start < originalOrderArray.size(); start += 8) {
                     String ProductSKU = null;
 		            int end = Math.min(start + 8, originalOrderArray.size());
 		            sublist = originalOrderArray.subList(start, end);        
 		            
-		  //          System.out.println("\nIN Sublist:\n"+sublist+"\nORDER NO:"+orderID);		            
+		  //          // // System.out.println("\nIN Sublist:\n"+sublist+"\nORDER NO:"+orderID);		            
 		            
 		            if(x < Integer.parseInt(originalOrderGetItemsCount.get(0))){                
 		                    ProductSKU        =        allOrdersSKU.get(x);
-		                    //System.out.println("\nOriginal:x-"+x+":SKU-"+ProductSKU+"\n");                                    
+		                    //// // System.out.println("\nOriginal:x-"+x+":SKU-"+ProductSKU+"\n");                                    
 		                    originalOrderMap.put(orderID, allOrdersSKU.get(x));
-		                    // System.out.println("Original Order Map "+originalOrderMap);
+		                    // // // System.out.println("Original Order Map "+originalOrderMap);
 		                    String sku =  allOrdersSKU.get(x).replaceAll("\\s","");
 		                    origOrder.setSKU(sku);
 		                    itm.setSKU(sku);
 		                    originalOrderMap.put(orderID,sublist); // This is the original order
-		                    // System.out.println("Sublist in original order: "+originalOrderMap);
-		                   // System.exit(1);
+		                    // // // System.out.println("Sublist in original order: "+originalOrderMap);
+		                   // // // System.exit(1);
 		                    origOrder.setOrderId(orderID);
 		                    int temp=0;
 		                    for(String eachItem:sublist){
-		          //          	System.out.println("IN Sublist: "+eachItem);
+		          //          	// // System.out.println("IN Sublist: "+eachItem);
 		                    	temp++;
 		                    	switch(temp){
 		                    		case 1:
@@ -823,23 +720,23 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		                    			itm.setUnitPrice(eachItem);
 		                    			break;
 		                    		case 6:
-		        //            			System.out.println("tax "+eachItem);
+		        //            			// // System.out.println("tax "+eachItem);
 		                    			break;
 		                    		case 7:
-		         //           			System.out.println("dep "+eachItem);
+		         //           			// // System.out.println("dep "+eachItem);
 		                    			break;
 		                    		case 8:
-		        //            			System.out.println("Item Original/Substituted" + eachItem);
+		        //            			// // System.out.println("Item Original/Substituted" + eachItem);
 		                    			break;
 		                    		
 		                    		default:
-		          //          			System.out.println("List Messed up");
+		          //          			// // System.out.println("List Messed up");
 		                    			break;
 		                    	}
 		                    	
 		                    }
 		                    
-		       //             System.out.println(originalOrderMap);
+		       //             // // System.out.println(originalOrderMap);
 		                    if(!origOrderService.exists(orderID,sku)){
 			                    origOrderService.persistOriginalOrder(origOrder);
 		                    }
@@ -852,14 +749,14 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		                    ProductSKU        =        allOrdersSKU.get(x);
 		                    
 		                    
-		                    //System.out.println("\nCurrent-"+x+":SKU-"+ProductSKU+"\n");                                            
+		                    //// // System.out.println("\nCurrent-"+x+":SKU-"+ProductSKU+"\n");                                            
 		                    currentOrderMap.put(orderID, allOrdersSKU.get(x));
 		                    currentOrderMap.put(orderID,sublist);
 		                    
 		                    int temp=0;
 		                    String Aisle= null,Qty= null,Name= null,Description= null,size= null,unitPrice = null;
 		                    for(String eachItem:sublist){
-		        //            	System.out.println("IN Sublist: "+eachItem);
+		        //            	// // System.out.println("IN Sublist: "+eachItem);
 		                    	temp++;
 		                    	switch(temp){
 		                    		case 1:
@@ -879,13 +776,13 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		                    			unitPrice = eachItem;
 		                    			break;
 		                    		case 6:
-		        //            			System.out.println("tax "+eachItem);
+		        //            			// // System.out.println("tax "+eachItem);
 		                    			break;
 		                    		case 7:
-		      //              			System.out.println("dep "+eachItem);
+		      //              			// // System.out.println("dep "+eachItem);
 		                    			break;
 		                    		case 8:
-		        //            			System.out.println("Item Original/Substituted" + eachItem);                  			
+		        //            			// // System.out.println("Item Original/Substituted" + eachItem);                  			
 		                    			
 		                    			break;
 		                    		
@@ -905,7 +802,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		                    	} 
 		                    }
 		                    
-		       //             System.out.println(currentOrderMap);
+		       //             // // System.out.println(currentOrderMap);
 		            }
 		            x++;		            
 		        }
@@ -914,7 +811,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 		    	
 		        } // if there is an orderID in database
 		        else {
-	        		//System.out.println("ORDER ID is this : "+orderID);
+	        		//// // System.out.println("ORDER ID is this : "+orderID);
 	        		// It will get Exceptionreport details HTML from the local system	
 		        	if(orderList.contains(orderID)) {
 		        	String OrderFileURL		=	path+storeID+"_"+orderID+"_order.txt";
@@ -922,22 +819,22 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 				    String orderDetailsHTML	=	htmlPage;		    			    	
 				    	
 		        	String promotioncode=	orderPromotionCode(htmlPage);
-//			    	System.out.println("\n promotioncode \n " + promotioncode);
+//			    	// // System.out.println("\n promotioncode \n " + promotioncode);
 			    	String prdtotal		=	orderProductTotal(htmlPage);
-		//	    	System.out.println("\n prdtotal \n " + prdtotal);
+		//	    	// // System.out.println("\n prdtotal \n " + prdtotal);
 			    	String diposit		=	orderDiposit(htmlPage);		    	
-		//	    	System.out.println("\n diposit \n " + diposit);
+		//	    	// // System.out.println("\n diposit \n " + diposit);
 			    	String taxtotal			=	orderTaxTotal(htmlPage);
-//			    	System.out.println("\n taxtotal \n " + taxtotal);
+//			    	// // System.out.println("\n taxtotal \n " + taxtotal);
 			    	String discountcharge	=	orderDiscountCharge(htmlPage);
-		//	    	System.out.println("\n discountcharge \n " + discountcharge);
+		//	    	// // System.out.println("\n discountcharge \n " + discountcharge);
 			    	String servicefee		=	orderServiceFee(htmlPage);		
-		//	    	System.out.println("\n servicefee \n " + servicefee);
+		//	    	// // System.out.println("\n servicefee \n " + servicefee);
 			    	String specialpromotion	=	orderSpecialPromotions(htmlPage);	
-		//	    	System.out.println("\n specialpromotion \n " + specialpromotion);
-		//	    	System.out.println(htmlPage);
+		//	    	// // System.out.println("\n specialpromotion \n " + specialpromotion);
+		//	    	// // System.out.println(htmlPage);
 			    	String addcharges	=	orderAdditionalCharges(htmlPage);
-			    	//System.out.println("\n addcharges \n " + addcharges);
+			    	//// // System.out.println("\n addcharges \n " + addcharges);
 			    	String ordertotal	=	orderTotal(htmlPage);
 			    	OrderTotalService ordTotService = (OrderTotalService) context.getBean("orderTotalService");
 			    	
@@ -960,10 +857,10 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 					    	ordTotService.persistOrderTotal(ordTotal);
 			    	}
 	        		String ReportURL			=	path+storeID+"_"+orderID+"_exceptionreport.txt";
-			    	//System.out.println("THis is the URL : "+ReportURL);
+			    	//// // System.out.println("THis is the URL : "+ReportURL);
 			    	String exceptionReportHTML 	= 	new Scanner(new File(ReportURL)).useDelimiter("\\Z").next();
-			    	//System.out.println("\nExceptionreport\n " + exceptionReportHTML);
-                    //System.exit(1);
+			    	//// // System.out.println("\nExceptionreport\n " + exceptionReportHTML);
+                    //// // System.exit(1);
                     getModifiedItems(exceptionReportHTML,orderID);
                     
                     
@@ -975,7 +872,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 	        	
         
       } else if (listOfFiles[i].isDirectory()) {
-       // System.out.println("Directory " + listOfFiles[i].getName());
+       // // // System.out.println("Directory " + listOfFiles[i].getName());
       }
       //if else ends /* (listOfFiles[i].isFile()) {
     
@@ -987,7 +884,7 @@ public void ReadOrdersFromLocal(String storeID) throws Exception{
 
 public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 	
-//	System.out.println("\n IN ReadOrdersFromLocal \n " + storeID);
+//	// // System.out.println("\n IN ReadOrdersFromLocal \n " + storeID);
 	
 	int j = 0; int k = 0;  	
 	
@@ -1002,9 +899,9 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 	
 	orderList = ordService.getCompletedOrderIDS();
 	
-	// System.out.println("ORDER IDS LIST ****"+orderList);
+	// // // System.out.println("ORDER IDS LIST ****"+orderList);
 	
-	File folder = new File("c:/temp");
+	File folder = new File(path);
 	File[] listOfFiles = folder.listFiles();	
 
   for (int i = 0; i < listOfFiles.length; i++) {
@@ -1018,8 +915,7 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
       
 	        //if(!Fname.toLowerCase().contains("_customer") && !Fname.toLowerCase().contains("_exceptionreport") && !Fname.toLowerCase().contains("_store")){	//If is contains "customer" it will not in
 	        if(Fname.toLowerCase().contains(storeID) && Fname.toLowerCase().contains("_order_completed")){	//If file is order then it goes in	
-		        String path	=	"C:/temp/";
-	        	
+		        
 	        	// It will get ORDER details HTML from the local system
 		        String orderID			=	Fname.replace("_order_completed", "");		        		       
 		        orderID					=	orderID.replace(storeID+"_", "");	
@@ -1029,18 +925,18 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		        String OrderFileURL		=	path+storeID+"_"+orderID+"_order_completed.txt";
 		    	String htmlPage 		= 	new Scanner(new File(OrderFileURL)).useDelimiter("\\Z").next();
 		    	String orderDetailsHTML	=	htmlPage;		    			    	
-		    	//System.out.println("\nOrder\n " + orderDetailsHTML);
+		    	//// // System.out.println("\nOrder\n " + orderDetailsHTML);
 		    	
 		    	// It will get Exceptionreport details HTML from the local system		    	
 		    	String ReportURL			=	path+storeID+"_"+orderID+"_exceptionreport_completed.txt";
 		    	String exceptionReportHTML 	= 	new Scanner(new File(ReportURL)).useDelimiter("\\Z").next();
-		    	//System.out.println("\nExceptionreport\n " + exceptionReportHTML);
+		    	//// // System.out.println("\nExceptionreport\n " + exceptionReportHTML);
 		    	
 		    	// It will get CUSTOMER details HTML from the local system
 		    	String custID			=	orderCustomerID(htmlPage).trim();   
 		    	String CustomerURL		=	path+custID+"_customer_completed.txt";
 		    	String custDetailsHTML 	= 	new Scanner(new File(CustomerURL)).useDelimiter("\\Z").next();
-		    	//System.out.println("\nCustomer\n " + custDetailsHTML);
+		    	//// // System.out.println("\nCustomer\n " + custDetailsHTML);
 		    	
 		    	// Create billed order			
 				/*String billedURL	 	= 	path+orderID+"_billed_completed.txt";
@@ -1049,70 +945,70 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		    	//extractCustomerData(custDetailsHTML);
 		    	
 		    	String fName		=	custFirstname(custDetailsHTML);
-	//	    	System.out.println("\nFirstname\n " + fName);
+	//	    	// // System.out.println("\nFirstname\n " + fName);
 		    	String lName		=	custLastname(custDetailsHTML);
-	//	    	System.out.println("\nLastname\n " + lName);
+	//	    	// // System.out.println("\nLastname\n " + lName);
 		    	String add1			=	custAddress1(custDetailsHTML);
-	//	    	System.out.println("\n Add1 \n " + add1);
+	//	    	// // System.out.println("\n Add1 \n " + add1);
 		    	String add2			=	custAddress2(custDetailsHTML);
-	//	    	System.out.println("\n add2 \n " + add2);
+	//	    	// // System.out.println("\n add2 \n " + add2);
 		    	String city			=	custCity(custDetailsHTML);
-	//	    	System.out.println("\n city \n " + city);
+	//	    	// // System.out.println("\n city \n " + city);
 		    	String state		=	custState(custDetailsHTML);
-	//	    	System.out.println("\n state \n " + state);
+	//	    	// // System.out.println("\n state \n " + state);
 		    	String zip			=	custZip(custDetailsHTML);
-	//	    	System.out.println("\n zip \n " + zip);
+	//	    	// // System.out.println("\n zip \n " + zip);
 		    	String phone		=	custPhone(custDetailsHTML);		
-	//	    	System.out.println("\n phone \n " + phone);
+	//	    	// // System.out.println("\n phone \n " + phone);
 		    	String address		=	add1+" "+add2+" "+city+" "+state+" "+zip+" "+phone;		
-	//	    	System.out.println("\n address \n " + address);
+	//	    	// // System.out.println("\n address \n " + address);
 		    	String customerID	=	orderCustomerID(htmlPage).trim();
-	//	    	System.out.println("\n customerID \n " + customerID);
+	//	    	// // System.out.println("\n customerID \n " + customerID);
 		    	String email		=	orderEmail(custDetailsHTML);
-	//	    	System.out.println("\n email \n " + email);
+	//	    	// // System.out.println("\n email \n " + email);
 		    	String datetine		=	orderDateTime(htmlPage);
-	//	    	System.out.println("\n datetine \n " + datetine);
+	//	    	// // System.out.println("\n datetine \n " + datetine);
 		    	String billadd		=	orderBillAddress(htmlPage);
-	//	    	System.out.println("\n billadd \n " + billadd);
+	//	    	// // System.out.println("\n billadd \n " + billadd);
 		    	String substitution	=	orderSubstitution(htmlPage);
-	//	    	System.out.println("\n substitution \n " + substitution);
+	//	    	// // System.out.println("\n substitution \n " + substitution);
 		    	String fullfilment	=	orderFulfillment(htmlPage);
-	//	    	System.out.println("\n fullfilment \n " + fullfilment);
+	//	    	// // System.out.println("\n fullfilment \n " + fullfilment);
 		    	fullfilment			=	fullfilment.replace("Pickup -", "").trim();		   
-		//    	System.out.println("\n fullfilment \n " + fullfilment);
+		//    	// // System.out.println("\n fullfilment \n " + fullfilment);
 		    	String specialinst	=	orderSpecialInstructions(htmlPage);
-	//	    	System.out.println("\n specialinst \n " + specialinst);
+	//	    	// // System.out.println("\n specialinst \n " + specialinst);
 		    	String paymethod	=	orderPaymentMethod(htmlPage);
-//		    	System.out.println("\n paymethod \n " + paymethod);
+//		    	// // System.out.println("\n paymethod \n " + paymethod);
 		    	String totesused	=	orderTotesUsed(htmlPage);
-//		    	System.out.println("\n totesused \n " + totesused);
+//		    	// // System.out.println("\n totesused \n " + totesused);
 		    	String promotioncode=	orderPromotionCode(htmlPage);
-//		    	System.out.println("\n promotioncode \n " + promotioncode);
+//		    	// // System.out.println("\n promotioncode \n " + promotioncode);
 		    	String prdtotal		=	orderProductTotal(htmlPage);
-	//	    	System.out.println("\n prdtotal \n " + prdtotal);
+	//	    	// // System.out.println("\n prdtotal \n " + prdtotal);
 		    	String diposit		=	orderDiposit(htmlPage);		    	
-	//	    	System.out.println("\n diposit \n " + diposit);
+	//	    	// // System.out.println("\n diposit \n " + diposit);
 		    	String taxtotal			=	orderTaxTotal(htmlPage);
-//		    	System.out.println("\n taxtotal \n " + taxtotal);
+//		    	// // System.out.println("\n taxtotal \n " + taxtotal);
 		    	String discountcharge	=	orderDiscountCharge(htmlPage);
-	//	    	System.out.println("\n discountcharge \n " + discountcharge);
+	//	    	// // System.out.println("\n discountcharge \n " + discountcharge);
 		    	String servicefee		=	orderServiceFee(htmlPage);		
-	//	    	System.out.println("\n servicefee \n " + servicefee);
+	//	    	// // System.out.println("\n servicefee \n " + servicefee);
 		    	String specialpromotion	=	orderSpecialPromotions(htmlPage);	
-	//	    	System.out.println("\n specialpromotion \n " + specialpromotion);
-	//	    	System.out.println(htmlPage);
+	//	    	// // System.out.println("\n specialpromotion \n " + specialpromotion);
+	//	    	// // System.out.println(htmlPage);
 		    	String addcharges	=	orderAdditionalCharges(htmlPage);
-		    	//System.out.println("\n addcharges \n " + addcharges);
+		    	//// // System.out.println("\n addcharges \n " + addcharges);
 		    	String ordertotal	=	orderTotal(htmlPage);
-		    	//System.out.println("\n ordertotal \n " + ordertotal);
+		    	//// // System.out.println("\n ordertotal \n " + ordertotal);
 		    	String viccard        =        orderVICcard(htmlPage);
-                System.out.println("\n VIC card : " + viccard + "\n OrderID :"+orderID);
+                // // System.out.println("\n VIC card : " + viccard + "\n OrderID :"+orderID);
                 String viccardsavings        =        orderVICcardSavings(htmlPage);
 		    	
 		    	/*Start of StoreID and OrderID*/
 		    	HashMap storeMap  = new HashMap();
 		    	storeMap.put(storeID, orderID);
-		    	//System.out.println("\n storeMap \n " +storeMap);
+		    	//// // System.out.println("\n storeMap \n " +storeMap);
 		    	/*END of StoreID and orderID*/
 		    	
 		    	/*Customers Map*/
@@ -1125,9 +1021,9 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		    	customersArr.add(address);*/
 		    	
 		    	CustomerService cusService = (CustomerService) context.getBean("customerService");
-		    	System.out.println("ORDER ID in completed ******"+orderID);
+		    	// // System.out.println("ORDER ID in completed ******"+orderID);
 		    	if(!cusService.exists(customerID)){
-		    		//System.out.println("cusID ********* inside"+customerID);
+		    		//// // System.out.println("cusID ********* inside"+customerID);
 				    	Customer cus = new Customer();
 						cus.setCustomerId(customerID);
 						cus.setFirstName(fName);
@@ -1139,13 +1035,13 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 							cus.setVic(viccard);
 						}
 						
-					/*	System.out.println("customerID: "+customerID);
-						System.out.println("fName: "+fName);
-						System.out.println("lName: "+lName);
-						System.out.println("phone: "+phone);
-						System.out.println("address: "+address);
-						System.out.println("\nCustomer\n " + custDetailsHTML);
-						System.out.println("email: "+email);*/
+					/*	// // System.out.println("customerID: "+customerID);
+						// // System.out.println("fName: "+fName);
+						// // System.out.println("lName: "+lName);
+						// // System.out.println("phone: "+phone);
+						// // System.out.println("address: "+address);
+						// // System.out.println("\nCustomer\n " + custDetailsHTML);
+						// // System.out.println("email: "+email);*/
 						
 						cusService.persistCustomer(cus);
 		    	}
@@ -1259,25 +1155,25 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		    	List<String> allOrdersSKU = originalOrderSKU(htmlPage); 		    		    	
 		    	
 		    	
-		  //  	System.out.println("\nHTML PAGE:\n"+htmlPage);		 
+		  //  	// // System.out.println("\nHTML PAGE:\n"+htmlPage);		 
 		    	List<String> originalOrderArray = originalOrder(htmlPage);
-		    //	System.out.println("\nOder Array:\n"+originalOrderArray);
+		    //	// // System.out.println("\nOder Array:\n"+originalOrderArray);
 		    	
-		    	//System.exit(1);		    	
-		//    	System.out.println("\n ORDER ID : \n"+orderID);		 
+		    	//// // System.exit(1);		    	
+		//    	// // System.out.println("\n ORDER ID : \n"+orderID);		 
 		    	int x = 0;
 		    	for (int start = 0; start < originalOrderArray.size(); start += 8) {
                     String ProductSKU = null;
 		            int end = Math.min(start + 8, originalOrderArray.size());
 		            sublist = originalOrderArray.subList(start, end);        
 		            
-		  //          System.out.println("\nIN Sublist:\n"+sublist+"\nORDER NO:"+orderID);		            
+		  //          // // System.out.println("\nIN Sublist:\n"+sublist+"\nORDER NO:"+orderID);		            
 		            
 		            if(x < Integer.parseInt(originalOrderGetItemsCount.get(0))){                
 		                    ProductSKU        =        allOrdersSKU.get(x);
-		                    //System.out.println("\nOriginal:x-"+x+":SKU-"+ProductSKU+"\n");                                    
+		                    //// // System.out.println("\nOriginal:x-"+x+":SKU-"+ProductSKU+"\n");                                    
 		                    originalOrderMap.put(orderID, allOrdersSKU.get(x));
-		                    // System.out.println("Original Order Map "+originalOrderMap);
+		                    // // // System.out.println("Original Order Map "+originalOrderMap);
 		                    String sku =  allOrdersSKU.get(x).replaceAll("\\s","");
 		                    origOrder.setSKU(sku);
 		                    itm.setSKU(sku);
@@ -1286,7 +1182,7 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		                    origOrder.setOrderId(orderID);
 		                    int temp=0;
 		                    for(String eachItem:sublist){
-		          //          	System.out.println("IN Sublist: "+eachItem);
+		          //          	// // System.out.println("IN Sublist: "+eachItem);
 		                    	temp++;
 		                    	switch(temp){
 		                    		case 1:
@@ -1306,23 +1202,23 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		                    			itm.setUnitPrice(eachItem);
 		                    			break;
 		                    		case 6:
-		        //            			System.out.println("tax "+eachItem);
+		        //            			// // System.out.println("tax "+eachItem);
 		                    			break;
 		                    		case 7:
-		         //           			System.out.println("dep "+eachItem);
+		         //           			// // System.out.println("dep "+eachItem);
 		                    			break;
 		                    		case 8:
-		        //            			System.out.println("Item Original/Substituted" + eachItem);
+		        //            			// // System.out.println("Item Original/Substituted" + eachItem);
 		                    			break;
 		                    		
 		                    		default:
-		          //          			System.out.println("List Messed up");
+		          //          			// // System.out.println("List Messed up");
 		                    			break;
 		                    	}
 		                    	
 		                    }
 		                    
-		       //             System.out.println(originalOrderMap);
+		       //             // // System.out.println(originalOrderMap);
 		                    if(!origOrderService.exists(orderID,sku)){
 			                    origOrderService.persistOriginalOrder(origOrder);
 		                    }
@@ -1335,14 +1231,14 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		                    ProductSKU        =        allOrdersSKU.get(x);
 		                    
 		                    
-		                    //System.out.println("\nCurrent-"+x+":SKU-"+ProductSKU+"\n");                                            
+		                    //// // System.out.println("\nCurrent-"+x+":SKU-"+ProductSKU+"\n");                                            
 		                    currentOrderMap.put(orderID, allOrdersSKU.get(x));
 		                    currentOrderMap.put(orderID,sublist);
 		                    
 		                    int temp=0;
 		                    String Aisle= null,Qty= null,Name= null,Description= null,size= null,unitPrice = null;
 		                    for(String eachItem:sublist){
-		        //            	System.out.println("IN Sublist: "+eachItem);
+		        //            	// // System.out.println("IN Sublist: "+eachItem);
 		                    	temp++;
 		                    	switch(temp){
 		                    		case 1:
@@ -1362,13 +1258,13 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		                    			unitPrice = eachItem;
 		                    			break;
 		                    		case 6:
-		        //            			System.out.println("tax "+eachItem);
+		        //            			// // System.out.println("tax "+eachItem);
 		                    			break;
 		                    		case 7:
-		      //              			System.out.println("dep "+eachItem);
+		      //              			// // System.out.println("dep "+eachItem);
 		                    			break;
 		                    		case 8:
-		        //            			System.out.println("Item Original/Substituted" + eachItem);                  			
+		        //            			// // System.out.println("Item Original/Substituted" + eachItem);                  			
 		                    			
 		                    			break;
 		                    		
@@ -1388,17 +1284,17 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 		                    	} 
 		                    }
 		                    
-		       //             System.out.println(currentOrderMap);
+		       //             // // System.out.println(currentOrderMap);
 		            }
 		            x++;		            
 		        }
-		    	/* System.out.println("Sublist in original order: "+originalOrderMap);
-                 System.exit(1);*/
+		    	/* // // System.out.println("Sublist in original order: "+originalOrderMap);
+                 // // System.exit(1);*/
 		    	getModifiedItems(exceptionReportHTML,orderID);
 		    	
 		        } // if there is an orderID in database
 		        else {
-	        		//System.out.println("ORDER ID is this : "+orderID);
+	        		//// // System.out.println("ORDER ID is this : "+orderID);
 	        		// It will get Exceptionreport details HTML from the local system	
 		        	if(orderList.contains(orderID)) {
 		        	String OrderFileURL		=	path+storeID+"_"+orderID+"_order_completed.txt";
@@ -1406,22 +1302,22 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 				    String orderDetailsHTML	=	htmlPage;		    			    	
 				    	
 		        	String promotioncode=	orderPromotionCode(htmlPage);
-//			    	System.out.println("\n promotioncode \n " + promotioncode);
+//			    	// // System.out.println("\n promotioncode \n " + promotioncode);
 			    	String prdtotal		=	orderProductTotal(htmlPage);
-		//	    	System.out.println("\n prdtotal \n " + prdtotal);
+		//	    	// // System.out.println("\n prdtotal \n " + prdtotal);
 			    	String diposit		=	orderDiposit(htmlPage);		    	
-		//	    	System.out.println("\n diposit \n " + diposit);
+		//	    	// // System.out.println("\n diposit \n " + diposit);
 			    	String taxtotal			=	orderTaxTotal(htmlPage);
-//			    	System.out.println("\n taxtotal \n " + taxtotal);
+//			    	// // System.out.println("\n taxtotal \n " + taxtotal);
 			    	String discountcharge	=	orderDiscountCharge(htmlPage);
-		//	    	System.out.println("\n discountcharge \n " + discountcharge);
+		//	    	// // System.out.println("\n discountcharge \n " + discountcharge);
 			    	String servicefee		=	orderServiceFee(htmlPage);		
-		//	    	System.out.println("\n servicefee \n " + servicefee);
+		//	    	// // System.out.println("\n servicefee \n " + servicefee);
 			    	String specialpromotion	=	orderSpecialPromotions(htmlPage);	
-		//	    	System.out.println("\n specialpromotion \n " + specialpromotion);
-		//	    	System.out.println(htmlPage);
+		//	    	// // System.out.println("\n specialpromotion \n " + specialpromotion);
+		//	    	// // System.out.println(htmlPage);
 			    	String addcharges	=	orderAdditionalCharges(htmlPage);
-			    	//System.out.println("\n addcharges \n " + addcharges);
+			    	//// // System.out.println("\n addcharges \n " + addcharges);
 			    	String ordertotal	=	orderTotal(htmlPage);
 			    	OrderTotalService ordTotService = (OrderTotalService) context.getBean("orderTotalService");
 			    	
@@ -1444,10 +1340,10 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 					    	ordTotService.persistOrderTotal(ordTotal);
 			    	}
 	        		String ReportURL			=	path+storeID+"_"+orderID+"_exceptionreport_completed.txt";
-			    	//System.out.println("THis is the URL : "+ReportURL);
+			    	//// // System.out.println("THis is the URL : "+ReportURL);
 			    	String exceptionReportHTML 	= 	new Scanner(new File(ReportURL)).useDelimiter("\\Z").next();
-			    	//System.out.println("\nExceptionreport\n " + exceptionReportHTML);
-                    //System.exit(1);
+			    	//// // System.out.println("\nExceptionreport\n " + exceptionReportHTML);
+                    //// // System.exit(1);
                     getModifiedItems(exceptionReportHTML,orderID);
                     
                     
@@ -1459,7 +1355,7 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 	        	
         
       } else if (listOfFiles[i].isDirectory()) {
-       // System.out.println("Directory " + listOfFiles[i].getName());
+       // // // System.out.println("Directory " + listOfFiles[i].getName());
       }
       //if else ends /* (listOfFiles[i].isFile()) {
     
@@ -1472,7 +1368,7 @@ public void ReadCompletedOrdersFromLocal(String storeID) throws Exception{
 public List<String> currentOrder(String str){
 	  /*Has all the td of the order details page*/
 		  	//String newstr 	= str.replaceAll("\\s+","");
-		//  	System.out.println(str);
+		//  	// // System.out.println(str);
 			List<String> custArray = new ArrayList<String>();  
 			//Pattern pattern = Pattern.compile("javascript:ShowDetail(.*?);'><spanstyle"); //SKU
 			Pattern pattern = Pattern.compile("Current Order(.*?)</TD>");
@@ -1483,35 +1379,35 @@ public List<String> currentOrder(String str){
 				String value	= html2text(matcher.group(1)).trim();
 				//value	=	value.replace("(\"", "");
 				//value	=	value.replace("\")", "");
-				//System.out.println("\n"+value);
+				//// // System.out.println("\n"+value);
 			    custArray.add(value);
 			}	  	
 			//After 8 it will break to new product
-	//		System.out.println(custArray);
+	//		// // System.out.println(custArray);
 		    return custArray;	   
 		  }
 
 public List<String> originalOrderGetItemsCount(String str){
 	String newstr 	= str.replaceAll("\\s+","");
-	//System.out.println(str);
+	//// // System.out.println(str);
 	List<String> custArray = new ArrayList<String>();  	
 	Pattern pattern = Pattern.compile("<Bstyle='color:blue;'>(.*?)</B>");
 	Matcher matcher = pattern.matcher(newstr);		
 	while (matcher.find()) {    			
 		String value	= html2text(matcher.group(1)).trim();		
 		value	=	value.replace("items", "");
-		//System.out.println("\n"+value);
+		//// // System.out.println("\n"+value);
 	    custArray.add(value);
 	}	  	
 	//After 8 it will break to new product
-	//System.out.println(custArray);
+	//// // System.out.println(custArray);
   return custArray;
 }
 
 public List<String> originalOrder(String str){
 /*Has all the td of the order details page*/
 	  	//String newstr 	= str.replaceAll("\\s+","");
-	  	//System.out.println(str);
+	  	//// // System.out.println(str);
 		List<String> custArray = new ArrayList<String>();  
 		List<String> sublist = new ArrayList<String>(); 
 		//Pattern pattern = Pattern.compile("javascript:ShowDetail(.*?);'><spanstyle"); //SKU
@@ -1522,8 +1418,8 @@ public List<String> originalOrder(String str){
 		while (matcher.find()) {    			
 			String value	=	matcher.group(1).trim();	
 			if(value.contains("ShowDetail")){
-				//System.out.println("In if : before value");
-				//System.out.println(value);	
+				//// // System.out.println("In if : before value");
+				//// // System.out.println(value);	
 				value	=	value+"</span>";
 				Pattern pattern1 = Pattern.compile("class='pl'(.*?)</span>");
 				Matcher matcher1 = pattern1.matcher(value);		
@@ -1533,181 +1429,279 @@ public List<String> originalOrder(String str){
 					value1	=	value1.replace(",", " - ");
 					value1	=	value1.replace(">", "");
 					//value1	=	value1.replace("</span>", "");					
-					//System.out.println("\n"+value);
-					//System.out.println("In while : value : "+value1);
+					//// // System.out.println("\n"+value);
+					//// // System.out.println("In while : value : "+value1);
 				    custArray.add(value1);
 				}
-				//System.out.println("In if : after value");
-				//System.out.println(value);				
+				//// // System.out.println("In if : after value");
+				//// // System.out.println(value);				
 			}
 			else {
-				//System.out.println("After if else : value : "+value);
+				//// // System.out.println("After if else : value : "+value);
 				value	=	html2text(value);	
 				value	=	value.replace(",", " - ");
 				value	=	value.replace(">", "");
-				//System.out.println("\n"+value);
+				//// // System.out.println("\n"+value);
 			    custArray.add(value);
 			}
 		}	  	
-		//System.out.println("After 8 it will break to new product");
-		//System.out.println(custArray);
+		//// // System.out.println("After 8 it will break to new product");
+		//// // System.out.println(custArray);
 		
-		/*System.out.println("After 8 it will break to new product");
+		/*// // System.out.println("After 8 it will break to new product");
 		for (int start = 0; start < custArray.size(); start += 8) {
-    		System.out.println("\n Started count : \n"+start);	
+    		// // System.out.println("\n Started count : \n"+start);	
             String ProductSKU = null;
             int end = Math.min(start + 8, custArray.size());
             sublist = custArray.subList(start, end);
-            System.out.println(sublist);
+            // // System.out.println(sublist);
 		}    
 		
-		System.exit(1);*/
+		// // System.exit(1);*/
 	    return custArray;	   
 }
 
 public void getModifiedItems(String str, String orderID){	
-	//str 	= str.replaceAll("\\s+","");
-  	//System.out.println(newstr);
-	
-	System.out.println("ORDER ID in ModifiedITems "+orderID);
-	List<String> OrderedArray = new ArrayList<String>();  
-	List<String> ReceivedArray = new ArrayList<String>();  
-	//Pattern pattern = Pattern.compile("javascript:ShowDetail(.*?);'><spanstyle"); //SKU
-	Pattern pattern = Pattern.compile("<td>Ordered:</td>(.*?)</tr>"); //SKU
-	Matcher matcher = pattern.matcher(str);
-	while (matcher.find()) {    
-		String value	= matcher.group(1);		
-		Pattern modifiedPattern = Pattern.compile("<td>(.*?)</td>"); //SKU
-		Matcher modifiedMatcher = modifiedPattern.matcher(value);
-		while (modifiedMatcher.find()) {
-			String ModifiedData	= modifiedMatcher.group(1);
-			//System.out.println(ModifiedData+"__");
-			OrderedArray.add(html2text(ModifiedData));
-		}		
-	}	
-	HashMap OrderedItemsMap  	= new HashMap();
-	Pattern ReceivedPattern = Pattern.compile("<td>Received:</td>(.*?)</tr>"); //SKU
-	Matcher Receivedmatcher = ReceivedPattern.matcher(str);
-	while (Receivedmatcher.find()) {    			
-		String ReceivedValue	= Receivedmatcher.group(1);		
-		Pattern ReceivedString = Pattern.compile("<td>(.*?)</td>"); //SKU
-		Matcher ReceivedMatcher = ReceivedString.matcher(ReceivedValue);
-		while (ReceivedMatcher.find()) {  
-			String ReceivedData	= ReceivedMatcher.group(1);
-			//System.out.println(ReceivedData+"__");
-			ReceivedArray.add(html2text(ReceivedData));
-		}		
-		OrderedItemsMap.put(orderID, ReceivedArray);
-	}
-	
-	
-	
-	// System.out.println("\n ORDERED Array in Modified Items: "+OrderedArray);
-	// System.out.println("\n Received Array in Modified Items: "+ReceivedArray);
-	
-	ArrayList<String> tempList = new ArrayList<String>();
-	tempList=(ArrayList<String>) ReceivedArray;
-	for(int i=0; i< OrderedArray.size();i=i+4){
-		
-		int tempOcc=0;
-		for(int j=0; j<ReceivedArray.size();j=j+4){
-			//System.out.println("\n"+j);
-			//System.out.println("\n"+list2.get(j));
-			if(OrderedArray.get(i) == ReceivedArray.get(j))
-			{
-				tempOcc++;
-				//System.out.println("\n"+tempOcc);
-				// System.out.println("List 1 element "+OrderedArray.get(i)+"   "+ReceivedArray.get(j));
-				if(tempOcc>1){					
-					// System.out.println("temp list"+ tempList);
-					for(int temp=0; temp<=3;temp++){
-						tempList.remove(j);							
-					}
-				}
-			}
-		}
-		
-	}
-	ReceivedArray=tempList;
-	
-	//System.out.println(OrderedItemsMap);
+
 	ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
 	try{
 	ModifiedItemService modItemService = (ModifiedItemService) context.getBean("modifiedItemService");
 	ModifiedItem modItem = new ModifiedItem();
 	
-	modItem.setOrderId(orderID);
-	List<String> sublist = new ArrayList<String>();
-	List<String> Received = new ArrayList<String>();
-	if(OrderedArray.size() == ReceivedArray.size() ){
-	for (int start = 0; start < OrderedArray.size(); start += 4) {		
-        int end = Math.min(start + 4, OrderedArray.size());
-        
-        sublist = OrderedArray.subList(start, end);
-        // System.out.println(sublist);
-        int x =0;
-        String itemOrdered= null;
-        String modId=null;
-        for(String eachItem:sublist){
-        	x++;
-        	switch(x){
-        	case 1: 
-        		modItem.setItemOrderedSKU(eachItem);
-        		// System.out.println("in modifiedItem table" +modItem.getItemOrderedSKU()+" Order ID:"+orderID);
-        		
-        		break;
-        	case 2:
-        		modItem.setItemOrderedQty(eachItem);
-        		itemOrdered = eachItem;
-        		break;
-        	case 3:
-        		modItem.setItemOrderedName(eachItem);    
-        		modId= orderID + eachItem;
-        		if(!modItemService.exists(modId)){
-        		modItem.setModId(modId);
-        		}
-        		break;
-        	case 4:
-        		modItem.setItemOrderedSize(eachItem);
-        	default: 
-        		if(x>4){x=0;}
-        		break;
-        	}        	
-        }
-         
-        int rlist = 0;
-        // System.out.println("\n HERE THE START AND END "+start+"---"+end);
-        Received = ReceivedArray.subList(start, end);
-        // System.out.println("\n Received "+Received);
-        for(String eachItem:Received){
-        	rlist++;
-        	switch(rlist){
-        	case 1:
-        		modItem.setItemRecievedSKU(eachItem);
-        		break;
-        	case 2:
-        		modItem.setItemRecievedQty(eachItem);
-        		break;
-        	case 3:
-        		modItem.setItemRecievedName(eachItem);
-        		break;
-        	case 4:
-        		modItem.setItemRecievedSize(eachItem);
-        		break;
-        	default:
-        		if(rlist>4){rlist=0;}
-        		break;
-        	}
-        }
-        
-        if(!modItemService.exists(modId))
-        	modItemService.persistModifiedItem(modItem);
-        // System.out.println("Modified ITems"+Received);
-        
-	}
+	List<String> OOSArray = new ArrayList<String>();
+	Pattern oospattern = Pattern.compile("<caption>The following items were out-of-stock and no item(.*?)<caption>"); //SKU
+	Matcher oosmatcher = oospattern.matcher(str);
+	while (oosmatcher.find()) { 
+		modItem.setOrderId(orderID);
+		String value	= oosmatcher.group(1);	
+		Pattern itmpattern = Pattern.compile("<td>(.*?)</td>");
+		Matcher itmmatcher = itmpattern.matcher(value);
+		while(itmmatcher.find()){
+			String value1 = itmmatcher.group(1);			
+			OOSArray.add(html2text(value1));
+		}	
+		// // System.out.println("Out of Stock Array: "+OOSArray);
+		
+			for(int i=0; i<OOSArray.size(); i++){
+				if(OOSArray.get(i).equalsIgnoreCase("Ordered:")){
+					int occ= i++;
+					String modId = null;
+					for(int temOcc=0;temOcc<=4;temOcc++){
+						switch(temOcc){
+						case 0:
+							break;
+						case 1:
+							modItem.setItemOrderedSKU(OOSArray.get(occ));							
+							break;
+						case 2:
+							modItem.setItemOrderedQty(OOSArray.get(occ));
+							break;
+						case 3:
+							modItem.setItemOrderedName(OOSArray.get(occ));
+							modItem.setModId(orderID + OOSArray.get(occ));
+							modId = orderID + OOSArray.get(occ) ;
+							break;
+						case 4:
+							modItem.setItemOrderedSize(OOSArray.get(occ));
+							break;
+						}
+						occ++;
+					}
+					if(!modItemService.exists(modId))
+			        	modItemService.persistModifiedItem(modItem);
+				}
+			}
+			//// // System.exit(1); 
+		
 	}
 	
+	// end OOS
+	
+	//
+	Pattern modPattern = Pattern.compile("<caption>The following items were out-of-stock and another(.*?)<caption>"); //SKU
+	Matcher modmatcher = modPattern.matcher(str);
+	List<String> ModArray = new ArrayList<String>();
+	
+	while (modmatcher.find()) { 
+		// System.out.println("INSIDE MODIFIED ITEMS LOOP");
+		String value	= modmatcher.group(1);	
+		Pattern itmpattern = Pattern.compile("<td>(.*?)</td>");
+		Matcher itmmatcher = itmpattern.matcher(value);
+		while(itmmatcher.find()){
+			String value1 = itmmatcher.group(1);			
+			ModArray.add(html2text(value1));
+			//OOSArray.add(value1);
+		}
+		boolean Recbool = false;
+		String modId = null;
+			for(int i=0; i<ModArray.size(); i++){
+				// System.out.println("MODIFIED ITEMS: "+ModArray);
+				
+				if(ModArray.get(i).equalsIgnoreCase("Ordered:")){
+					int occ= i++;
+					for(int temOcc=0;temOcc<=4;temOcc++){
+						switch(temOcc){
+						case 0:
+							// System.out.println("at 0"+ModArray.get(occ));
+							break;
+						case 1:
+							// System.out.println("SKU: "+ModArray.get(occ));
+							modItem.setItemOrderedSKU(ModArray.get(occ));							
+							break;
+						case 2:
+							// System.out.println("Qty: "+ModArray.get(occ));
+							modItem.setItemOrderedQty(ModArray.get(occ));
+							break;
+						case 3:
+							// System.out.println("Name: "+ModArray.get(occ));
+							modItem.setItemOrderedName(ModArray.get(occ));
+							modItem.setModId(orderID + ModArray.get(occ));
+							modId = orderID + ModArray.get(occ) ;
+							break;
+						case 4:
+							// System.out.println("size: "+ModArray.get(occ));
+							modItem.setItemOrderedSize(ModArray.get(occ));
+							break;
+						}
+						occ++;
+						
+						
+					}
+					Recbool = true;
+					
+				}
+				if(ModArray.get(i).equalsIgnoreCase("Received:") && Recbool){
+					int occ= i++;
+					for(int temOcc=0;temOcc<=4;temOcc++){
+						switch(temOcc){
+						case 0:
+							// System.out.println("R: "+ModArray.get(occ));
+							break;
+						case 1:
+							// System.out.println("R SKU: "+ModArray.get(occ));
+							modItem.setItemRecievedSKU(ModArray.get(occ));							
+							break;
+						case 2:
+							// System.out.println("R Qty: "+ModArray.get(occ));
+							modItem.setItemRecievedQty(ModArray.get(occ));
+							break;
+						case 3:
+							// System.out.println("R Name: "+ModArray.get(occ));
+							modItem.setItemRecievedName(ModArray.get(occ));
+							break;
+						case 4:
+							// System.out.println("R Size: "+ModArray.get(occ));
+							modItem.setItemRecievedSize(ModArray.get(occ));
+							break;
+						}
+						occ++;
+						
+					}
+					// System.out.println("Modified Id:"+modId);
+					if(!(modItemService.exists(modId)) && modId != null && !modId.isEmpty()){
+						modItem.setOrderId(orderID);
+			        	modItemService.persistModifiedItem(modItem);
+			        	modId = null;
+					}
+					Recbool = false;
+				
+				}
+			}
+		}
+	
+	// Modified Weighed
+	
+	Pattern modWPattern = Pattern.compile("<caption>The following weighted items(.*?)<caption>"); //SKU
+	Matcher modWmatcher = modWPattern.matcher(str);
+	List<String> ModWArray = new ArrayList<String>();
+	
+	while (modWmatcher.find()) { 
+		String value	= modWmatcher.group(1);	
+		Pattern itmpattern = Pattern.compile("<td>(.*?)</td>");
+		Matcher itmmatcher = itmpattern.matcher(value);
+		while(itmmatcher.find()){
+			String value1 = itmmatcher.group(1);			
+			ModWArray.add(html2text(value1));
+			//OOSArray.add(value1);
+		}
+		boolean Recbool = false;
+		String modId = null;
+			for(int i=0; i<ModWArray.size(); i++){
+				// System.out.println("MODIFIED ITEMS: "+ModWArray);
+				
+				if(ModWArray.get(i).equalsIgnoreCase("Ordered:")){
+					int occ= i++;
+					for(int temOcc=0;temOcc<=4;temOcc++){
+						switch(temOcc){
+						case 0:
+							// System.out.println("at 0"+ModWArray.get(occ));
+							break;
+						case 1:
+							// System.out.println("SKU: "+ModWArray.get(occ));
+							modItem.setItemOrderedSKU(ModWArray.get(occ));							
+							break;
+						case 2:
+							// System.out.println("Qty: "+ModWArray.get(occ));
+							modItem.setItemOrderedQty(ModWArray.get(occ));
+							break;
+						case 3:
+							// System.out.println("Name: "+ModWArray.get(occ));
+							modItem.setItemOrderedName(ModWArray.get(occ));
+							modItem.setModId(orderID + ModWArray.get(occ));
+							modId = orderID + ModWArray.get(occ) ;
+							break;
+						case 4:
+							// System.out.println("size: "+ModWArray.get(occ));
+							modItem.setItemOrderedSize(ModWArray.get(occ));
+							break;
+						}
+						occ++;
+						
+						
+					}
+					Recbool = true;
+					
+				}
+				if(ModWArray.get(i).equalsIgnoreCase("Received:") && Recbool){
+					int occ= i++;
+					for(int temOcc=0;temOcc<=4;temOcc++){
+						switch(temOcc){
+						case 0:
+							// System.out.println("R: "+ModWArray.get(occ));
+							break;
+						case 1:
+							// System.out.println("R SKU: "+ModWArray.get(occ));
+							modItem.setItemRecievedSKU(ModWArray.get(occ));							
+							break;
+						case 2:
+							// System.out.println("R Qty: "+ModWArray.get(occ));
+							modItem.setItemRecievedQty(ModWArray.get(occ));
+							break;
+						case 3:
+							// System.out.println("R Name: "+ModWArray.get(occ));
+							modItem.setItemRecievedName(ModWArray.get(occ));
+							break;
+						case 4:
+							// System.out.println("R Size: "+ModWArray.get(occ));
+							modItem.setItemRecievedSize(ModWArray.get(occ));
+							break;
+						}
+						occ++;
+						
+					}
+					// System.out.println("Modified Id:"+modId);
+					if(!(modItemService.exists(modId)) && modId != null && !modId.isEmpty()){
+						modItem.setOrderId(orderID);
+			        	modItemService.persistModifiedItem(modItem);
+			        	modId = null;
+					}
+					Recbool = false;
+				
+				}
+			}
+		}
 }finally{
+	System.out.println("Order ID: "+orderID);
         context.close();
 }
         
@@ -1717,7 +1711,7 @@ public void getModifiedItems(String str, String orderID){
 
 public List<String> originalOrderSKU(String str){
 	  	String newstr 	= str.replaceAll("\\s+","");
-	  	//System.out.println(newstr);
+	  	//// // System.out.println(newstr);
 		List<String> custArray = new ArrayList<String>();  
 		//Pattern pattern = Pattern.compile("javascript:ShowDetail(.*?);'><spanstyle"); //SKU
 		Pattern pattern = Pattern.compile("class='pl'align='right'(.*?)</td>"); //SKU
@@ -1726,10 +1720,10 @@ public List<String> originalOrderSKU(String str){
 			String value	= html2text(matcher.group(1)).trim();
 			value	=	value.replace(">", "");
 			//value	=	value.replace("&nbsp", "");
-			//System.out.println("\n"+value);
+			//// // System.out.println("\n"+value);
 		    custArray.add(value);
 		}	  			
-		//System.out.println(custArray);
+		//// // System.out.println(custArray);
 	    return custArray;	   
 	  } 
 
@@ -1741,10 +1735,10 @@ public String custFirstname(String str){
 		String value	= html2text(matcher.group(1)).trim();
 		value	=	value.replace("value=\"", "");
 		value	=	value.replace("\"", "");
-		//System.out.println("\n"+value);
+		//// // System.out.println("\n"+value);
 	    custArray.add(value);
 	}	  	
-	//System.out.println(custArray);
+	//// // System.out.println(custArray);
   return custArray.get(0);	   
 }  
 
@@ -1756,14 +1750,14 @@ public String custLastname(String str){
 			String value	= html2text(matcher.group(1)).trim();
 			value	=	value.replace("value=\"", "");
 			value	=	value.replace("\"", "");
-			//System.out.println("\n"+value);
+			//// // System.out.println("\n"+value);
 			if(value != null && !value.isEmpty()){
 				custArray.add(value);
 			}
 			else
 				custArray.add("");
 		}	  	
-		//System.out.println(custArray);
+		//// // System.out.println(custArray);
 	    return custArray.get(0);	   
 	  }  
 	  
@@ -1776,10 +1770,10 @@ public String custAddress1(String str){
 		String value	= html2text(matcher.group(1)).trim();
 		value	=	value.replace("value=\"", "");
 		value	=	value.replace("\"", "");
-		//System.out.println("\n"+value);
+		//// // System.out.println("\n"+value);
 	    custArray.add(value);
 	}	  	
-	//System.out.println(custArray);
+	//// // System.out.println(custArray);
   return custArray.get(0);	   
 }
 
@@ -1791,10 +1785,10 @@ public String custAddress2(String str){
 			String value	= html2text(matcher.group(1)).trim();
 			value	=	value.replace("value=\"", "");
 			value	=	value.replace("\"", "");
-			//System.out.println("\n"+value);
+			//// // System.out.println("\n"+value);
 		    custArray.add(value);
 		}	  	
-		//System.out.println(custArray);
+		//// // System.out.println(custArray);
 	    return custArray.get(0);	   
 	  }
 
@@ -1806,10 +1800,10 @@ public String custCity(String str){
 			String value	= html2text(matcher.group(1)).trim();
 			value	=	value.replace("value=\"", "");
 			value	=	value.replace("\"", "");
-			//System.out.println("\n"+value);
+			//// // System.out.println("\n"+value);
 		    custArray.add(value);
 		}	  	
-		//System.out.println(custArray);
+		//// // System.out.println(custArray);
 	    return custArray.get(0);	   
 	  }
 
@@ -1821,10 +1815,10 @@ public String custZip(String str){
 			String value	= html2text(matcher.group(1)).trim();
 			value	=	value.replace("value=\"", "");
 			value	=	value.replace("\"", "");
-			//System.out.println("\n"+value);
+			//// // System.out.println("\n"+value);
 		    custArray.add(value);
 		}	  	
-		//System.out.println(custArray);
+		//// // System.out.println(custArray);
 	    return custArray.get(0);	   
 	  }
 
@@ -1836,10 +1830,10 @@ public String custPhone(String str){
 			String value	= html2text(matcher.group(1)).trim();
 			value	=	value.replace("value=\"", "");
 			value	=	value.replace("\"", "");
-			//System.out.println("\n"+value);
+			//// // System.out.println("\n"+value);
 		    custArray.add(value);
 		}	  	
-		//System.out.println(custArray);
+		//// // System.out.println(custArray);
 	    return custArray.get(0);	   
 	  }
 
@@ -1853,10 +1847,10 @@ public String custState(String str){
 			String value	= html2text(matcher.group(1)).trim();
 			value	=	value.replace("value=\"", "");
 			value	=	value.replace("\"", "");
-			//System.out.println("\n"+value);
+			//// // System.out.println("\n"+value);
 		    custArray.add(value);
 		}	  	
-		//System.out.println(custArray);
+		//// // System.out.println(custArray);
 	    return custArray.get(0);	   
 	  }
 
@@ -1911,40 +1905,40 @@ public String orderEmail(String str){
 		value	=	value.replace("value=\"", "");
 		value	=	value.replace("disabled=\"disabled\"/", "");
 		value	=	value.replace("\"", "");		
-		//System.out.println(value);
+		//// // System.out.println(value);
 	    custArray.add(value.trim());
 	}	  	
-	//System.out.println(custArray);
-	//System.exit(1);
+	//// // System.out.println(custArray);
+	//// // System.exit(1);
   return custArray.get(0);	   
 }
 
 public String orderVICcard(String str){
     str = str.replaceAll("\\s+","");
-                                                                                                            //System.out.println(str);
+                                                                                                            //// // System.out.println(str);
     List<String> custArray = new ArrayList<String>(); 
     Pattern pattern = Pattern.compile("VICCard:</td>(.*?)</td>");
     
     Matcher matcher = pattern.matcher(str);
     while (matcher.find()) {
             String value        =        html2text(matcher.group(1)).trim();
-                                                                                                            //System.out.println(value);
+                                                                                                            //// // System.out.println(value);
             if(value != null && !value.isEmpty()) {
-                                                                                                            //System.out.println("IN IF");
-                                                                                                            //System.exit(1);
+                                                                                                            //// // System.out.println("IN IF");
+                                                                                                            //// // System.exit(1);
                     custArray.add(value);
             }
             else {
-                                                                                                            //System.out.println("IN ELSE");
-                                                                                                            //System.exit(1);
+                                                                                                            //// // System.out.println("IN ELSE");
+                                                                                                            //// // System.exit(1);
                     custArray.add("NO VIC CARD");
             }        
     }        
-                                                                                                            //System.out.println(custArray.size());
+                                                                                                            //// // System.out.println(custArray.size());
     if(custArray.size() == 0)
             custArray.add("NO VIC CARD");
-                                                                                                            //System.out.println(custArray.size());
-                                                                                                            //System.exit(1);
+                                                                                                            //// // System.out.println(custArray.size());
+                                                                                                            //// // System.exit(1);
     return custArray.get(0);        
 }
 
@@ -2122,11 +2116,11 @@ public String orderAdditionalCharges(String str){
 		while (matcher.find()) {
 			String value	=	html2text(matcher.group(1));	    
 			if(value != null && !value.isEmpty()){
-		//		System.out.println("\n There a value in IF:"+value+"\n");
+		//		// // System.out.println("\n There a value in IF:"+value+"\n");
 				custArray.add(value);
 			}
 			else {
-	//			System.out.println("\n There a value in ELSE:"+value+"\n");	
+	//			// // System.out.println("\n There a value in ELSE:"+value+"\n");	
 				custArray.add("");
 			}	
 		}	  	
@@ -2170,8 +2164,8 @@ public String FindDateTime(String str){
 	  	timeArray.add(time);	    
 	  }
 	  //orders.setid(str.substring(orderID));
-//	  System.out.println(dateArray);System.out.println(timeArray);	
-//	  System.out.println("\nPattern\n");
+//	  // // System.out.println(dateArray);// // System.out.println(timeArray);	
+//	  // // System.out.println("\nPattern\n");
 	  
 	  return "Date&Time";
 }
@@ -2197,8 +2191,8 @@ public String FindDateTime(String str, int index){
 	  	timeArray.add(time);	    
 	  }
 	  //orders.setid(str.substring(orderID));
-	  /*System.out.println(dateArray);System.out.println(timeArray);	
-	  System.out.println("\nPattern\n");*/
+	  /*// // System.out.println(dateArray);// // System.out.println(timeArray);	
+	  // // System.out.println("\nPattern\n");*/
 	  
 	  return dateArray.get(index)+" "+timeArray.get(index);
 }
@@ -2214,7 +2208,7 @@ public String FindCustomer(String str){
 		custArray.add(cust);	  		  		  
 	  }
 
-	//  System.out.println(custArray);	  
+	//  // // System.out.println(custArray);	  
 	  
 	  return "Customename";
 }
@@ -2248,7 +2242,7 @@ public String FindPhone(String str){
 		  phoneArray.add(phone);	  		  		  
 	  }
 
-	  // System.out.println(phoneArray);	
+	  // // // System.out.println(phoneArray);	
 	  return "Phone";
 }
 public String FindPhone(String str, int index){
@@ -2266,7 +2260,7 @@ public String FindPhone(String str, int index){
 		  phoneArray.add(phone);	  		  		  
 	  }
 
-	  //// System.out.println(phoneArray);	
+	  //// // // System.out.println(phoneArray);	
 	  return phoneArray.get(index);
 }
 
@@ -2284,7 +2278,7 @@ public String FindZip(String str){
 		  zipArray.add(zip);	  		  		  
 	  }
 
-	  // System.out.println(zipArray);	
+	  // // // System.out.println(zipArray);	
 	  return "Zip";
 }
 public String FindZip(String str, int index){
@@ -2301,7 +2295,7 @@ public String FindZip(String str, int index){
 		  zipArray.add(zip);	  		  		  
 	  }
 
-	  //System.out.println(zipArray);	
+	  //// // System.out.println(zipArray);	
 	  return zipArray.get(index);
 }
 public String FindTotal(String str){
@@ -2318,7 +2312,7 @@ public String FindTotal(String str){
 		  totalArray.add(total);	  		  		  
 	  }
 
-//	  System.out.println(totalArray);		  
+//	  // // System.out.println(totalArray);		  
 	  return "Total";
 }
 public String FindTotal(String str, int index){
@@ -2335,7 +2329,7 @@ public String FindTotal(String str, int index){
 		  totalArray.add(total);	  		  		  
 	  }
 
-	  //System.out.println(totalArray);		  
+	  //// // System.out.println(totalArray);		  
 	  return totalArray.get(index);
 }
 public String FindStatus(String str){
@@ -2352,7 +2346,7 @@ public String FindStatus(String str){
 		  statusArray.add(status);	  		  		  
 	  }
 
-//	  System.out.println(statusArray);	 
+//	  // // System.out.println(statusArray);	 
 	  return "Total";
 }
 public String FindStatus(String str, int index){
@@ -2369,7 +2363,7 @@ public String FindStatus(String str, int index){
 		  statusArray.add(status);	  		  		  
 	  }
 
-	  //System.out.println(statusArray);	 
+	  //// // System.out.println(statusArray);	 
 	  return statusArray.get(index);
 }
 public boolean isAlpha(String name) {

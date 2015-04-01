@@ -62,4 +62,11 @@ public class ModifiedItemServiceImpl implements ModifiedItemService{
 		return modifiedItemDAO.exists(modID);
 	}
 
+	@Override
+	@Transactional
+	public void deleteAll(String orderId) {
+		// TODO Auto-generated method stub
+		 modifiedItemDAO.deleteAll(orderId);
+	}
+
 }

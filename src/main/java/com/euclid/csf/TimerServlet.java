@@ -20,18 +20,21 @@ public class TimerServlet extends HttpServlet {
 	public void init(ServletConfig config)  throws ServletException{
 		m_timer = new Timer();
 		HouseKeepingTask task = new HouseKeepingTask();
-		m_timer.scheduleAtFixedRate(task, 0, 5*60*1000);
+		//System.out.println("Running ..."+m_timer);
+		m_timer.scheduleAtFixedRate(task, 0, 3*60*1000);
+		
 	}
 	private class HouseKeepingTask extends TimerTask {
 		int count=0;
         public void run() {
         	try {
-        			new LoadData();
+        		//System.out.println("Running ..."+count++);
+        		new LoadData();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        	System.out.println("Running ..."+count++);
+        	 System.out.println("Running ..."+count++);
         }
 	}
 }

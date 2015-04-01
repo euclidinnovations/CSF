@@ -29,7 +29,7 @@ public class SendEmailController {
 		String subject = "Thank you for shopping with Harris Teeter";
 		
 		
-	    System.out.println("In EMail Controller:" + orderID);
+	    // System.out.println("In EMail Controller:" + orderID);
 		
 	    ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
 	    CustomerService cusService = (CustomerService) context.getBean("customerService");
@@ -41,9 +41,9 @@ public class SendEmailController {
 	    String message = "Dear "+ reciepientName + ", thank you for placing order. Your order number is "
                 + orderID + "\n\t Please Find the Customer Statement Form in the attachment";
 		// prints debug info
-		System.out.println("To: " + recipientAddress);
-		System.out.println("Subject: " + subject);
-		System.out.println("Message: " + message);
+		// System.out.println("To: " + recipientAddress);
+		// System.out.println("Subject: " + subject);
+		// System.out.println("Message: " + message);
 		
 		// creates a simple e-mail object
 		SimpleMailMessage email = new SimpleMailMessage();

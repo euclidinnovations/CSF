@@ -24,6 +24,7 @@ public class CSFSaveData{
 	private String floralSection;
 	private String modifiedItems;
 	private String dob;
+	private String paymentType;
 	
 	
 	/**
@@ -322,6 +323,14 @@ public class CSFSaveData{
 
 	public void setDeliveryPerson(String deliveryPerson) {
 		this.deliveryPerson = deliveryPerson;
+	}
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
 	}
 	
 	

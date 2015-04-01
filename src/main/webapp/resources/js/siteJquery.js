@@ -1,8 +1,13 @@
 var itemCount = 2;
 
     $(document).ready(function(){   
-        $('#HStr8').hide();
-     
+        
+        var buttonValue = $('ci_dd').val();    
+        if(buttonValue == 'Yes'){
+            $('#HStr8').show();
+        }else{
+        	$('#HStr8').hide();
+        }
         // Only notes td can be editable
         $("td.notes").click(function(){
             

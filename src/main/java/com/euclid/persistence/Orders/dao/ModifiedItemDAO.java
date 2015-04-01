@@ -22,4 +22,6 @@ public interface ModifiedItemDAO {
 		String getModId(String orderId, String key, String value);
 
 		boolean exists(String modID);
+
+		void deleteAll(String orderId);
 }

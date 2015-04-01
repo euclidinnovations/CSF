@@ -24,6 +24,7 @@ import com.euclid.csf.model.CSF;
 import com.euclid.csf.model.CSFSaveData;
 import com.euclid.persistence.Orders.model.CSFSave;
 import com.euclid.persistence.Orders.model.ModifiedItem;
+import com.euclid.persistence.Orders.model.OrderInstruction;
 import com.euclid.persistence.Orders.service.CSFSaveService;
 import com.euclid.persistence.Orders.service.CustomerService;
 import com.euclid.persistence.Orders.service.ItemService;
@@ -42,8 +43,8 @@ public class CSFController{
     private SessionFactory sessionFactory;
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView csfData(Map<String, Object> model, @RequestParam("orderid") String orderId) throws Exception {
-		// System.out.println("Entered" + orderId);	
+	public ModelAndView csfData(Map<String, Object> model, @RequestParam("orderid") String orderId) {
+		// // System.out.println("Entered" + orderId);	
 		CSFSaveData csfSaveData = new CSFSaveData();
 		model.put("userForm", csfSaveData);
 		//LoadData loadData = new LoadData();
@@ -55,11 +56,11 @@ public class CSFController{
 		
 		if(ordService.exists(orderId)){
 			csfRecievedData =  getDetails(orderId);
-			// System.out.println(csfRecievedData);
+			// // System.out.println(csfRecievedData);
 			CSFSaveService csfService = (CSFSaveService)context.getBean("csfSaveService");
-			// System.out.println("ORDER ID BEFORE CSF SERVICE "+orderId);
+			// // System.out.println("ORDER ID BEFORE CSF SERVICE "+orderId);
 			if(csfService.exists(orderId)){
-				// System.out.println("In exicsf loop "+orderId);
+				// // System.out.println("In exicsf loop "+orderId);
 				csfRecievedData.setBulkItems(csfService.findCSFSaveById(orderId).getBulkItems());
 				csfRecievedData.setCallNotes(csfService.findCSFSaveById(orderId).getCallNotes());
 				csfRecievedData.setCouponsRedeemed(csfService.findCSFSaveById(orderId).getCouponsRedeemed());
@@ -81,13 +82,12 @@ public class CSFController{
 				csfRecievedData.setPerishablesSection(csfService.findCSFSaveById(orderId).getPerishablesSection());
 				csfRecievedData.setRX(csfService.findCSFSaveById(orderId).getRX());
 				
-				// System.out.println("Modified Items in changed csf "+setModifiedMapItems(orderId));
+				// // System.out.println("Modified Items in changed csf "+setModifiedMapItems(orderId));
 			
 				csfRecievedData.setModifiedItemsMap(setModifiedMapItems(orderId));
 				if(ordService.getCompletedOrderIDS().contains(orderId)){
-					// System.out.println("The order Id: "+orderId+" and the exisiting completed orders "+ordService.getCompletedOrderIDS());
+					// // System.out.println("The order Id: "+orderId+" and the exisiting completed orders "+ordService.getCompletedOrderIDS());
 					HashMap<String,String> modfMap = getModifiedMapSaveData(orderId);
-					//csfService.findCSFSaveById(orderId).
 					csfRecievedData.setModSavedMap(modfMap);
 					context.close();
 					return new ModelAndView("views/Exicsf", "message", csfRecievedData);
@@ -95,7 +95,7 @@ public class CSFController{
 				context.close();
 				return new ModelAndView("views/csf", "message", csfRecievedData);
 			}
-			// System.out.println("Modified Items in changed csf "+setModifiedMapItems(orderId));
+			// // System.out.println("Modified Items in changed csf "+setModifiedMapItems(orderId));
 			csfRecievedData.setModifiedItemsMap(setModifiedMapItems(orderId));
 			context.close(); 
 			return new ModelAndView("views/csf", "message", csfRecievedData);
@@ -113,8 +113,6 @@ public class CSFController{
 		for (Object[] row: rows) {
 			
 			String itemOrdered = (String) row[0];
-			
-			
 			String itemRecieved = (String) row[1];
 			
 			modMap.put(itemOrdered, itemRecieved);
@@ -128,27 +126,83 @@ public class CSFController{
 	@RequestMapping(method = RequestMethod.POST)
 	public String  csfDataSave(@ModelAttribute("userForm")CSFSaveData csfdata, 
 			 Map<String, Object> model){
-		// System.out.println("ORDER ID IN CSF SAVE DATA CONTROLLER ****");
+		// // System.out.println("ORDER ID IN CSF SAVE DATA CONTROLLER ****");
 		
-		// System.out.println("order ID"+csfdata.getOrderId());
+		
 		
 		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
 		CSFSaveService csfService = (CSFSaveService)context.getBean("csfSaveService");
+		String orderid= csfdata.getOrderId().substring(0, 8);
+		
+		String PersonalShopper = null, DeliveryPerson = null, BulkItems = null,RX = null, CustomerCalled = null, CheckID= null,DOB= null;	
+		
+		if(csfService.exists(csfdata.getOrderId())){
+			PersonalShopper = csfService.findCSFSaveById(orderid).getPersonalShopper();
+			DeliveryPerson = csfService.findCSFSaveById(orderid).getDeliveryPerson();
+			BulkItems = csfService.findCSFSaveById(orderid).getBulkItems();
+			RX = csfService.findCSFSaveById(orderid).getRX();
+			CustomerCalled =csfService.findCSFSaveById(orderid).getCustomerCalled();
+		
+			CheckID = csfService.findCSFSaveById(orderid).getCheckID();
+			DOB = csfService.findCSFSaveById(orderid).getDob();
+			csfService.deleteAll(orderid);
+			
+		}
 		if(!(csfService.exists(csfdata.getOrderId()))){
 			CSFSave csfSaveData = new CSFSave();
-			// System.out.println("GET ORDER ID "+csfdata.getOrderId());
-			String orderid= csfdata.getOrderId().substring(0, 8);
-			// System.out.println("ORDER ID inside csf post"+orderid);
 			csfSaveData.setOrderId(orderid);
 			csfSaveData.setBulkItems(csfdata.getBulkItems());
 			csfSaveData.setCallNotes(csfdata.getCallNotes());
 			csfSaveData.setCouponsRedeemed(csfdata.getCouponsRedeemed());
-			csfSaveData.setDeliveryPerson(csfdata.getDeliveryPerson());
 			csfSaveData.setDryGoods(csfdata.getDryGoods());
 			csfSaveData.setFloral(csfdata.getFloral());
 			csfSaveData.setFrozen(csfdata.getFrozen());
 			csfSaveData.setPerishables(csfdata.getPerishables());
-			csfSaveData.setPersonalShopper(csfdata.getPersonalShopper());
+		
+			if(csfdata.getPersonalShopper().isEmpty()){
+				csfSaveData.setPersonalShopper(PersonalShopper);
+				}
+			else{
+				csfSaveData.setPersonalShopper(csfdata.getPersonalShopper());	
+			}
+			if(csfdata.getDeliveryPerson().isEmpty()){
+				csfSaveData.setDeliveryPerson(DeliveryPerson);
+				}
+			else{
+				csfSaveData.setDeliveryPerson(csfdata.getDeliveryPerson());	
+			}
+			if(csfdata.getBulkItems().isEmpty()){
+				csfSaveData.setBulkItems(BulkItems);
+				}
+			else{
+				csfSaveData.setBulkItems(csfdata.getBulkItems());	
+			}
+			if(csfdata.getRX().isEmpty()){
+				csfSaveData.setRX(RX);
+				}
+			else{
+				csfSaveData.setRX(csfdata.getRX());
+			}
+			if(csfdata.getCustomerCalled().isEmpty()){
+				csfSaveData.setCustomerCalled(CustomerCalled);
+				}
+			else{
+				csfSaveData.setCustomerCalled(csfdata.getCustomerCalled());
+			}
+			if(csfdata.getCheckID().isEmpty()){
+				csfSaveData.setCheckID(CheckID);
+				}
+			else{
+				csfSaveData.setCheckID(csfdata.getCheckID());
+			}
+			if(csfdata.getDob().isEmpty()){
+				csfSaveData.setDob(DOB);
+				}
+			else{
+				csfSaveData.setDob(csfdata.getDob());
+			}
+			
+			
 			csfSaveData.setReceived(csfdata.getReceived());
 			csfSaveData.setPerishablesSection(csfdata.getPerishablesSection());
 			csfSaveData.setDryGoodsSection(csfdata.getDryGoodsSection());
@@ -156,18 +210,27 @@ public class CSFController{
 			csfSaveData.setFrozenSection(csfdata.getFrozenSection());
 			csfSaveData.setHotSection(csfdata.getHotSection());
 			csfSaveData.setHot(csfdata.getHot());
-			csfSaveData.setRX(csfdata.getRX());
-			csfSaveData.setCustomerCalled(csfdata.getCustomerCalled());
-			csfSaveData.setCheckID(csfdata.getCheckID());
-			csfSaveData.setDob(csfdata.getDob());
-			HashMap<String,String> modifiedList = new HashMap<String,String>();
-			modifiedList = getList(csfdata.getModifiedItems());
-			
-			// System.out.println("Modified List on POST: "+modifiedList);
-			setModifiedItems(modifiedList, orderid);
 			
 			csfService.persistCSFSave(csfSaveData);
 		}
+		
+		HashMap<String,String> modifiedList = new HashMap<String,String>();
+		modifiedList = getList(csfdata.getModifiedItems());
+		setModifiedItems(modifiedList, orderid);
+		OrderInstructionService orderInstructionService = (OrderInstructionService)context.getBean("orderInstructionService");
+		OrderInstruction orderInstruction = new OrderInstruction();
+		orderInstruction.setOrderId(orderid);
+		orderInstruction.setPromotionCode(orderInstructionService.findOrderInstructionById(orderid).getPromotionCode());
+		orderInstruction.setSpecialInstructions(orderInstructionService.findOrderInstructionById(orderid).getSpecialInstructions());
+		orderInstruction.setSubstitution(orderInstructionService.findOrderInstructionById(orderid).getSubstitution());
+		orderInstruction.setTotesUsed(orderInstructionService.findOrderInstructionById(orderid).getTotesUsed());
+		orderInstruction.setVicSavings(orderInstructionService.findOrderInstructionById(orderid).getVicSavings());
+		if(csfdata.getPaymentType() == null){
+			orderInstruction.setPaymentMethod(orderInstructionService.findOrderInstructionById(orderid).getPaymentMethod());
+		}else{
+			orderInstruction.setPaymentMethod(csfdata.getPaymentType());
+		}
+		orderInstructionService.updateOrderInstruction(orderInstruction);
 		context.close();
 		return "views/order";
 		
@@ -177,11 +240,14 @@ public class CSFController{
 		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
 		ModifiedItemService modItemService = (ModifiedItemService)context.getBean("modifiedItemService");
 		ModifiedItem modItem = new ModifiedItem();
+		modItemService.deleteAll(orderId);
+		
 		Iterator<Entry<String, String>> it = modifiedList.entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry pair = (Map.Entry)it.next();
-	        // System.out.println(pair.getKey() + " = " + pair.getValue());
+	        System.out.println(pair.getKey() + " = " + pair.getValue());
 	        if(!(modItemService.exists(orderId + pair.getKey().toString()))){
+	        	System.out.println(pair.getKey() + " = " + pair.getValue());
 	        	modItem.setModId(orderId+pair.getKey().toString());
 	        	modItem.setOrderId(orderId);
 	        	modItem.setItemOrderedName(pair.getKey().toString());
@@ -191,7 +257,6 @@ public class CSFController{
 	        modItemService.updateMItem(orderId,pair.getKey().toString(),pair.getValue().toString());
 	        it.remove(); // avoids a ConcurrentModificationException
 	    }
-		
 		context.close();
 	}
 	private HashMap<String, String> getList(String modifiedItems) {
@@ -224,33 +289,40 @@ public class CSFController{
 		List<Object[]> rows = new ArrayList<Object[]>();
 		rows = modItemService.getLookupItems(orderId);
 		for (Object[] row: rows) {
-			
-			
-			//System.out.println("id: " + row[0]);
-			
 			String itemOrdered = (String) row[0];
-			
-			
 			String itemRecieved = (String) row[1];
 			modifiedItemsMatch = new ArrayList<String>();
-			modifiedItemsMatch.add(itemRecieved);
+			
+			if (itemRecieved != null && !itemRecieved.isEmpty()) {
+				  modifiedItemsMatch.add(itemRecieved);
+				}
+			else{
+				modifiedItemsMatch.add("No Item Substituted");
+			}
+			
+			
+			// System.out.println("ITem ORdered: "+itemOrdered);
+			// System.out.println("Item Recieved: "+itemRecieved+ "ArraySize: "+modifiedItemsMatch.size());
 			ArrayList<String> newlist = (ArrayList<String>) getOriginalOrderItemNames(orderId);
 			
-		//	System.out.println("NEW LIST *** "+newlist);
 			newlist.retainAll(getModifiedItems(itemOrdered));
-			modifiedItemsMatch.addAll(newlist);	
+			// System.out.println("New List: "+newlist);
+			modifiedItemsMatch.addAll(newlist);
+			
+			// System.out.println("New List: "+modifiedItemsMatch);
 			modifiedItemsMap.put(itemOrdered, modifiedItemsMatch);
-		    
+			// System.out.println("Modified Items Map: "+modifiedItemsMap);
+			
 		}
 		context.close();
 		return modifiedItemsMap;
 		
 	}
 	public CSF getDetails(String orderId){
-		//System.out.println("load context");
+		//// System.out.println("load context");
 		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("mvc-dispatcher-servlet.xml");
 		
-		//System.out.println(context);
+		//// System.out.println(context);
 		
 		CustomerService cusService = (CustomerService) context.getBean("customerService");
 		
@@ -258,7 +330,7 @@ public class CSFController{
 		
 		// Get CustomerId with orderid
 		OrderInstructionService ordInstService = (OrderInstructionService) context.getBean("orderInstructionService");
-	//	System.out.println(ordInstService);
+	//	// System.out.println(ordInstService);
 		OrderService ordService = (OrderService) context.getBean("orderService");
 		OrderTotalService ordTotService = (OrderTotalService)context.getBean("orderTotalService");
 		ModifiedItemService modItemService = (ModifiedItemService)context.getBean("modifiedItemService");
@@ -305,7 +377,7 @@ public class CSFController{
 		for(String s: origList){
 			origItemList.add(itemService.findItemById(s).getItemName());
 		}
-		//System.out.println("Orig Item List Names :"+origItemList);
+		//// System.out.println("Orig Item List Names :"+origItemList);
 		context.close();
 		return origItemList;
 	}
@@ -322,7 +394,7 @@ public class CSFController{
 			List<String> mappedStrings = itemService.getMappedItems(s);
 			mappedItemsList.addAll(mappedStrings);
 			}
-			//System.out.println("Mapped Strings "+mappedItemsList.toString() +" and size is "+mappedItemsList.size());
+			//// System.out.println("Mapped Strings "+mappedItemsList.toString() +" and size is "+mappedItemsList.size());
 			
 			
 			
@@ -342,7 +414,7 @@ public class CSFController{
 		    if (mappedItems.contains(itemOrdered))
 		        iter.remove();
 		}*/
-			// System.out.println("Mapped Items "+mappedItems);
+			// // System.out.println("Mapped Items "+mappedItems);
 			context.close();
 		return mappedItems;
 		

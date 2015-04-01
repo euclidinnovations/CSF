@@ -12,7 +12,8 @@ public interface CSFSaveService {
 
 	void deleteCSFSave(CSFSave csfSave);
 	
-	void deleteAll();
 	
 	Boolean exists(String id);
+
+	void deleteAll(String orderId);
 }

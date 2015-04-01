@@ -53,7 +53,7 @@ public class ItemDAOImpl implements ItemDAO {
 	@Override
 	public List<String> getMappedItems(String itemString) {
 		
-		// System.out.println("Item String : "+itemString);
+		// // System.out.println("Item String : "+itemString);
 		Query query = sessionFactory.getCurrentSession().             
 	    	    createQuery("select t.itemName from Item t where t.itemName LIKE :key");
 	    	        query.setParameter("key", "%"+itemString+"%");

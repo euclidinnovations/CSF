@@ -12,9 +12,10 @@ public interface CSFSaveDAO {
 		  
 		  void deleteCSFSave(CSFSave csfSave);
 
-		  void deleteAll();
 
 
 		  Boolean exists(String id);
+
+		void deleteAll(String OrderId);
 		  
 }

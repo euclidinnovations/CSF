@@ -69,25 +69,26 @@
                        </c:otherwise>
                  </c:choose>
              </h4>
+             <h4>
+				<span class="label label-default left w100">Phone # :</span><span class="custtext">${message.phone}</span>
+			</h4>
 			<!-- <h4>
 				<span class="label label-default left w100">Address :</span><span class="custtext">13836, Ballantyne Meadows Drive, Charlotte, NC 28277</span>
 			</h4> -->
 			
 		</div>
 		<div class="col-sm-4 right">
-			<!-- <h4>
-				<span class="custname custtext"> ${message.orderTotal} </span><span class="label label-default left w100">Order total :</span>
-			</h4>-->
+			 <h4>
+				<span class="custname custtext">  </span><span class="label label-default left w100">Order total :</span>
+			</h4>
 			<h4 class="orderH4">
 			
 				<span class="custtext">${message.orderId}</span><span class="label label-default left w100 marright">Order # :</span>
 			</h4>
-			<h4>
-				<span class="label label-default left w100">Phone # :</span><span class="custtext">${message.phone}</span>
-			</h4>					
-			<!-- <h4 class="vicsavingsH4">
-				<span class="custtext"></span>${message.vicSavings}<span class="label label-default left w100 marright">VIC Savings :</span>
-			</h4> -->
+								
+			<h4 class="vicsavingsH4">
+				<span class="custtext"></span> <span class="label label-default left w100 marright">VIC Savings :</span>
+			</h4>
 		</div>
 	</div> <!-- .col-sm-12 */ -->
 </div><!-- .row */ -->	
@@ -122,11 +123,11 @@
 							</td>
 							<td>
 								<div id="sidd${i.count}">
-									<textarea class="form-contorl input-xlarge pad15 width" id="sidd${i.count}_input"> No item substituted </textarea>
+									<textarea class="form-contorl input-xlarge pad15 width" id="sidd${i.count}_input"></textarea>
 									<span class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" title="tr${i.count}" onmouseover="this.title='';"><img src="resources/images/dropdown-arrow.png" /></span>									
 									<ul class="dropdown-menu" role="menu">
 									<c:forEach items="${list.value}" var="listItem"  varStatus="inLoop"> 
-										<li role="presentation"><a title="sidd${i.count}" href="javascript:void(0)" class="si">${listItem}</a></li>
+										<li class="selected" role="presentation"><a title="sidd${i.count}" href="javascript:void(0)" class="si">${listItem}</a></li>
 										
 										
 									</c:forEach>	                                            
@@ -177,7 +178,6 @@
 							<th style="width:35%;">Department</th>
 							<th style="width:30%;"># Bags</th>
 							<th style="width:30%;">Section #</th>
-							<!-- <th>Notes</th> -->            
 						</tr>
 					</thead>
 					<tbody>
@@ -216,13 +216,13 @@
 							<td colspan="3">
 								<select name="rx_dd" id="rx_dd">
 									<option value="${message.RX}" ${message.RX == 'Yes' ? 'selected' : ''}>Yes</option>
-									<option value="${message.RX}" ${message.RX == 'Yes' ? 'selected' : ''}>No</option>
+									<option value="${message.RX}" ${message.RX == 'No' ? 'selected' : ''}>No</option>
 								</select>
 							</td>
 						</tr>
 						<tr id="HStr7" class="section2 HSStr">
 							<td>Customer Called?</td>
-							<td colspan="2"><select name="cc_dd" id="cc_dd">
+							<td colspan="2"><select name="cusc_dd" id="cusc_dd">
 								<option value="${message.customerCalled}" ${message.customerCalled == 'Yes' ? 'selected' : ''}>Yes</option>
 								<option value="${message.customerCalled}" ${message.customerCalled == 'No' ? 'selected' : ''}>No</option>
 							</select>Notes about call : <form:input path="callNotes" type="text" class="form-contorl input-medium w202 martop10 height" name="custcalled_message" maxlength="25" value="${message.callNotes}" /></td>							
@@ -232,9 +232,10 @@
 							<td><select name="ci_dd" id="ci_dd" onchange="getval(this);">
 								<option value="<c:if test="${message.checkID == null}">N/A</c:if>${message.checkID}" ${message.checkID == 'N/A' ? 'selected' : ''}>N/A</option>
 								<option value="<c:if test="${message.checkID == null}">Yes</c:if>${message.checkID}" ${message.checkID == 'Yes' ? 'selected' : ''}>Yes</option>
-								<option value="<c:if test="${message.checkID == null}">No</c:if>" ${message.checkID == 'No' ? 'selected' : ''}>No</option>
+								<option value="<c:if test="${message.checkID == null}">No</c:if>${message.checkID}"${message.checkID == 'No' ? 'selected' : ''}>No</option>
 							</select>
-						</td>            
+						</td>  
+						         
 					</tr>
 					<tr id="HStr8" class="HSStr" style="display:none;">
 						<td><span class="dobtxt">Enter DOB :</span></td>
@@ -254,10 +255,10 @@
 				<tr id="HStr9" class="payment HSStr">
 					<td>Payment</td>
 					<td colspan="3">
-					<select name="ci_dd" id="ci_dd"}>
+					<select name="py_dd" id="py_dd">
                         <option value="${message.paymentType}" ${message.paymentType == 'Pay With Check' ? 'selected' : ''}>Check</option>
                         <option value="${message.paymentType}" ${message.paymentType == 'Credit Card' ? 'selected' : ''}>Credit Card</option>
-                    	<!-- <option value="${message.paymentType}" ${message.paymentType == 'Contact Store' ? 'selected' : ''}>Contact Store</option> -->
+                    	<!-- <option value="${message.paymentType}" ${message.paymentType == 'Contact Store For Payment' ? 'selected' : ''}>Contact Store</option> -->
                     </select>
 				</td>            
 			</tr>
@@ -293,6 +294,7 @@
  <form:input id="cuscalld" name="CustomerCalled" path="customerCalled" type="hidden" />
  <form:input id="chkIdd" name="CheckId" path="checkID" type="hidden" />
  <form:input id="dobd" name="DOB" path="dob" type="hidden" />
+ <form:input id="pymnt" name="paymentType" path="paymentType" type="hidden" />
  </div> 
 </form:form>
 </div><!-- .container csf */ -->	
@@ -308,45 +310,45 @@ function myFunction() {
 
 <script>
 function goBack() {
-	history.go(-1);
+	window.history.go(-1);
 	return false;
 }
 
 jQuery("#saveCSF").click(function() {
  	var rowCount = $('#bill_table tr').length;
 	
- 	var txt=	"";
+ 	var txt=	"";var appendLast = "";
 	for (var i = 1; i < rowCount; i++) { 
-		var title = jQuery("#tr"+i+" textarea").val();
-    	var val = jQuery("#sidd"+i+" textarea#sidd"+i+"_input").val();
-    	var appendLast = "";
-    	if(i!=rowCount-1)
-    		var appendLast	=	"_";
-    	
+		
+		if (typeof title === "undefined" ){
+    		
+		}
+		else{
+			var title = jQuery("#tr"+i+" textarea").val();
+	    	var val = jQuery("#sidd"+i+" textarea#sidd"+i+"_input").val();
+	    	
+	    	if(i!=rowCount-1)
+	    		var appendLast	=	"_";
 
-
-    	txt = txt+title+"_"+val+appendLast;    	
+			txt = txt+title+"_"+val+appendLast; 
+		}
 	}
-	//alert(txt);
 	$('#modItems').val(txt);
 	var rx = $( "#rx_dd option:selected" ).text();
-	var cc = $( "#ci_dd option:selected" ).text();
-	var chkId = $( "#cc_dd option:selected" ).text();
-	
+	var cc = $( "#cusc_dd option:selected" ).text();
+	var chkId = $( "#ci_dd option:selected" ).text();
+	var paymntType= $( "#py_dd option:selected" ).text();
 	var dob = $("#dobday option:selected").text() +"/" + $("#dobmonth option:selected").text() + "/"+$("#dobyear option:selected").text();
 	
 	$('#rxd').val(rx);
 	$('#cuscalld').val(cc);
 	$('#chkIdd').val(chkId);
 	$('#dobd').val(dob);
+	$('#pymnt').val(paymntType);
 	alert("CSF Saved Succesfully");
 } );
 
-	var rowCount = $('#bill_table tr').length;
-	for (var i = 1; i < rowCount; i++) { 
-		var firstVal	=	jQuery("#sidd"+i+" .dropdown-menu li a").html();
-		jQuery("#tr"+i+" textarea").val(firstVal);
-	}
+	
 
 </script>
 

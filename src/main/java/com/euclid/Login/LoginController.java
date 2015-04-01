@@ -12,8 +12,8 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 @Controller
 public class LoginController extends MultiActionController{
 		
-		@RequestMapping("/login")
-	   public String addLogin(HttpServletRequest request,
+		//@RequestMapping("/login")
+	 /*  public String addLogin(HttpServletRequest request,
 				HttpServletResponse response) throws Exception {
 	      
 			
@@ -21,5 +21,5 @@ public class LoginController extends MultiActionController{
 			//LoadData loadData = new LoadData();	 
 		 
 	      return "views/order"; 
-	   }
+	   }*/
 }

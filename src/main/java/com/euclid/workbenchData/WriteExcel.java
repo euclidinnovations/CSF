@@ -138,7 +138,7 @@ public void setOutputFile(String inputFile) {
 
   private void addLabel(WritableSheet sheet, int column, int row, String s)
       throws WriteException, RowsExceededException {
-	  System.out.println("\n In addLabel");  
+	  // System.out.println("\n In addLabel");  
     Label label;
     label = new Label(column, row, s, times);
     sheet.addCell(label);
@@ -148,8 +148,7 @@ public void setOutputFile(String inputFile) {
     WriteExcel test = new WriteExcel();
     test.setOutputFile("c:/temp/lars.xls");
     test.write();
-    System.out
-        .println("Please check the result file under c:/temp/lars.xls ");
+    // System.out.println("Please check the result file under c:/temp/lars.xls ");
   }
   
   @SuppressWarnings("unused")

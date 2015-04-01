@@ -53,16 +53,19 @@ width: 100%;}
     	<br/><br/><center>    		
     			<h3> Order number ${message.orderId } not found</h3>
     			<br/>
-    			<h4>If you would prefer to contact us by phone, our toll free number is <b>1-800-432-6111</b>. <br/><br/>you can also send an email to customerrelations@harristeeter.com</h4>
+    			<h4>Please verify information was entered correctly, if still experiencing difficulties call System Support @ ext. 3156 <br/></h4>
     		
     	<br/>
     	<form method="POST" action="${pageContext.request.contextPath}/login">
-											<input type="submit" class="btn btn-success" value="Back">
+			<button type="button" class="btn btn-success martop15" value ="Back" onclick="goBack()">Back</button>
     	</form></center></div>
     	</div>
     	
 <script type="text/javascript">
-
+	function goBack() {
+		window.history.go(-1);
+		return false;
+}
 </script>
 </body>
 </html>

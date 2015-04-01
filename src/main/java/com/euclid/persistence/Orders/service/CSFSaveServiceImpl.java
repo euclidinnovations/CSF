@@ -41,15 +41,14 @@ public class CSFSaveServiceImpl implements CSFSaveService{
 
 	@Override
 	@Transactional
-	public void deleteAll() {
-		csfSaveDAO.deleteAll();
+	public void deleteAll(String orderId) {
+		csfSaveDAO.deleteAll(orderId);
 		
 	}
 
 	@Override
 	@Transactional
 	public Boolean exists(String id) {
-		// TODO Auto-generated method stub
 		return csfSaveDAO.exists(id);
 	}
 

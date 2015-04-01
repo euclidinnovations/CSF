@@ -67,25 +67,26 @@
                        </c:otherwise>
                  </c:choose>
              </h4>
+             <h4>
+				<span class="label label-default left w100">Phone # :</span><span class="custtext">${message.phone}</span>
+			</h4>	
 			<!-- <h4>
 				<span class="label label-default left w100">Address :</span><span class="custtext">13836, Ballantyne Meadows Drive, Charlotte, NC 28277</span>
 			</h4> -->
 			
 		</div>
 		<div class="col-sm-4 right">
-			<!-- <h4>
-				<span class="custname custtext"> ${message.orderTotal} </span><span class="label label-default left w100">Order total :</span>
-			</h4>-->
+			 <h4>
+				<span class="custname custtext">  </span><span class="label label-default left w100">Order total :</span>
+			</h4>
 			<h4 class="orderH4">
 			
 				<span class="custtext">${message.orderId}</span><span class="label label-default left w100 marright">Order # :</span>
 			</h4>
-			<h4>
-				<span class="label label-default left w100">Phone # :</span><span class="custtext">${message.phone}</span>
-			</h4>					
-			<!-- <h4 class="vicsavingsH4">
-				<span class="custtext"></span>${message.vicSavings}<span class="label label-default left w100 marright">VIC Savings :</span>
-			</h4> -->
+							
+			 <h4 class="vicsavingsH4">
+				<span class="custtext"></span><span class="label label-default left w100 marright">VIC Savings :</span>
+			</h4> 
 		</div>
 	</div> <!-- .col-sm-12 */ -->
 </div><!-- .row */ -->	
@@ -257,7 +258,9 @@ function myFunction() {
 </script>
 <script>
 function goBack() {
-    window.history.back()
+	window.history.go(-1);
+	
+	return true;
 }
 </script>
 <script type="text/javascript">

@@ -17,6 +17,10 @@ body::after {
   width: 100%; 
 
 }
+li.selected a
+{
+	display: inline;	
+}
 .container {width: 86%;}
 /*Nav bar*/
 	.navbar{margin-bottom: 0px;}

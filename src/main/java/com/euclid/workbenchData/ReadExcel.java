@@ -30,13 +30,11 @@ public class ReadExcel {
           Cell cell = sheet.getCell(j, i);
           CellType type = cell.getType();
           if (type == CellType.LABEL) {
-            System.out.println("I got a label "
-                + cell.getContents());
+            // System.out.println("I got a label "+ cell.getContents());
           }
 
           if (type == CellType.NUMBER) {
-            System.out.println("I got a number "
-                + cell.getContents());
+            // System.out.println("I got a number "+ cell.getContents());
           }
 
         }
@@ -60,14 +58,13 @@ public class ReadExcel {
 	          Cell cell = sheet.getCell(j, i);
 	          CellType type = cell.getType();
 	          if (type == CellType.LABEL) {
-	            /*System.out.println("I got a local file label "
+	            /*// System.out.println("I got a local file label "
 	                + cell.getContents());*/
 	            return cell.getContents();	            
 	          }
 
 	          if (type == CellType.NUMBER) {
-	            System.out.println("I got a number "
-	                + cell.getContents());
+	            // System.out.println("I got a number "+ cell.getContents());
 	          }
 
 	        }

@@ -60,11 +60,11 @@ public class ModifiedItemDAOImpl implements ModifiedItemDAO {
 				query.setString("key", orderId);
 				query.setString("stringKey", key);
 
-		//System.out.println("KEY "+key);
-	//	System.out.println("orderId "+orderId);
+		//// System.out.println("KEY "+key);
+	//	// System.out.println("orderId "+orderId);
 		List<String> rows1 = query.list();
-	//	System.out.println("String rows 1 from get MODIF:"+rows1);
-	//	System.out.println("String rows 1 from get MODIF:"+rows1.get(0));
+	//	// System.out.println("String rows 1 from get MODIF:"+rows1);
+	//	// System.out.println("String rows 1 from get MODIF:"+rows1.get(0));
 		if(rows1.size()!=0){
 			return rows1.get(0);
 			}
@@ -80,18 +80,42 @@ public class ModifiedItemDAOImpl implements ModifiedItemDAO {
 	    	    return (query.uniqueResult() != null);
 	}
 
+	@Override
+	public void deleteAll(String orderId) {
+		try {
+			
+			List<String> ordrs= getModIDORd(orderId);
+			System.out.println("Orders: "+ordrs);
+			
+			if(ordrs.size()>0){
+				for(String eachModId: ordrs){
+					ModifiedItem modItem = (ModifiedItem) sessionFactory.getCurrentSession().get(ModifiedItem.class, eachModId);
+		            deleteModifiedItem(modItem);
+				}
+			}
+			
+       }
 
+        catch (HibernateException e) {
+            e.printStackTrace();
+          //  sessionFactory.getCurrentSession().getTransaction().rollback();
+
+        }
+		
+	}
 	@Override
 	public void updateMItem(String orderId, String key, String value) {
 		try {
-	//		System.out.println("updateMItem:::");
+	//		// System.out.println("updateMItem:::");
 			String modId= orderId + key;
 			String val = getModId(orderId,key,value);
+			
+			
 			if(val!=null){
-		//		System.out.println("updateMItem:::"+modId);
+		//		// System.out.println("updateMItem:::"+modId);
 	            ModifiedItem modItem = (ModifiedItem) sessionFactory.getCurrentSession().get(ModifiedItem.class, val);
 	            deleteModifiedItem(modItem);
-	    //        System.out.println("updateMItem::deleted:"+modId);
+	    //        // System.out.println("updateMItem::deleted:"+modId);
 	            modItem.setModId(modId);
 	            modItem.setOrderId(orderId);
 	            modItem.setItemOrderedName(key);
@@ -106,5 +130,15 @@ public class ModifiedItemDAOImpl implements ModifiedItemDAO {
 
         }
 		
+	}
+
+
+	private List<String> getModIDORd(String orderId) {
+		Query query = sessionFactory.getCurrentSession().
+				createQuery("select c.modId from ModifiedItem c WHERE c.orderId=:key");
+				query.setString("key", orderId);
+
+				List<String> rows = query.list();
+				return rows;
 	}
 }
